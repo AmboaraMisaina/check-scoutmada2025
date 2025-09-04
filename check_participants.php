@@ -100,8 +100,8 @@ Html5Qrcode.getCameras().then(cameras => {
         select.appendChild(option);
     });
 
-    // Lancer automatiquement la première caméra
-    if(cameras.length > 0) startScanner(cameras[0].id);
+    // Lancer automatiquement la dernière caméra
+    if(cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
 
     // Changer caméra selon sélection
     select.addEventListener('change', () => {
@@ -111,11 +111,12 @@ Html5Qrcode.getCameras().then(cameras => {
 
 // Fonction de démarrage du scan
 function startScanner(cameraId) {
-    html5QrcodeScanner = new Html5Qrcode("qr-reader");
-    html5QrcodeScanner.start(
-        cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        onScanSuccess
+    html5QrcodeScanner = new Html5Qrcode(
+      cameraId,
+      { fps: 10, qrbox: { width: 400, height: 400 } },
+      "qr-reader",
+      { fps: 10, qrbox: { width: 400, height: 400 } }
     );
+    html5QrcodeScanner.render(onScanSuccess);
 }
 </script>
