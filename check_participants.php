@@ -4,6 +4,51 @@
 $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
 ?>
 
+
+<style>
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0; width:100vw; height:100vh;
+    background: rgba(0,0,0,0.5);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+}
+
+.modal-content {
+    background:white;
+    padding:2rem;
+    border-radius:20px;
+    text-align:center;
+    max-width:320px;
+    width:90%;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-content h2 { margin-bottom:1rem; color:#333; }
+.modal-content p { margin-bottom:1rem; color:#555; }
+.modal-content button {
+    padding:0.6rem 1.2rem;
+    border:none;
+    border-radius:12px;
+    background:#38ef7d;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    width:100%;
+}
+
+.modal-content button:hover { background:#2ecc71; }
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px #38ef7d; }
+    50% { box-shadow: 0 0 20px #38ef7d; }
+    100% { box-shadow: 0 0 10px #38ef7d; }
+}
+</style>
+
 <div class="scanner-container" style="
     max-width: 360px;
     margin: 2rem auto;
@@ -76,50 +121,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     </div>
 </div>
 
-<style>
-.modal {
-    display:none;
-    position:fixed;
-    top:0; left:0; width:100vw; height:100vh;
-    background: rgba(0,0,0,0.5);
-    z-index:9999;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.modal-content {
-    background:white;
-    padding:2rem;
-    border-radius:20px;
-    text-align:center;
-    max-width:320px;
-    width:90%;
-    box-shadow:0 8px 20px rgba(0,0,0,0.3);
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.modal-content h2 { margin-bottom:1rem; color:#333; }
-.modal-content p { margin-bottom:1rem; color:#555; }
-.modal-content button {
-    padding:0.6rem 1.2rem;
-    border:none;
-    border-radius:12px;
-    background:#38ef7d;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-    width:100%;
-}
-
-.modal-content button:hover { background:#2ecc71; }
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 10px #38ef7d; }
-    50% { box-shadow: 0 0 20px #38ef7d; }
-    100% { box-shadow: 0 0 10px #38ef7d; }
-}
-</style>
 
 <script>
 const evenementId = <?= $evenement_id ?>;
