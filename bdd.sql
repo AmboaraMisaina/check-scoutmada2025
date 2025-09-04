@@ -62,10 +62,6 @@ CREATE TABLE evenements (
     FOREIGN KEY (jour_id) REFERENCES jours_programmes(id) ON DELETE CASCADE
 );
 
--- Add column nb_participation to the evenements table
-ALTER TABLE evenements
-ADD COLUMN nb_participation INT DEFAULT NULL;
-
 CREATE TABLE planing (
     id INT AUTO_INCREMENT PRIMARY KEY,
     participant_id INT NOT NULL,

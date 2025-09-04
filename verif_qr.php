@@ -38,7 +38,7 @@ if ($participant) {
             $checkStmt = $pdo->prepare("SELECT id FROM planing WHERE participant_id = ? AND evenement_id = ?");
             $checkStmt->execute([$participant['id'], $evenement_id]);
             if ($checkStmt->rowCount() > 0) {
-                echo "Erreur : Présence déjà enregistrée pour cet événement. Vous ne pouvez participer qu'une seule fois.";
+                echo "Vous ne pouvez participer qu'une seule fois.";
                 exit;
             } else {
                 // Insère la présence avec date/heure
