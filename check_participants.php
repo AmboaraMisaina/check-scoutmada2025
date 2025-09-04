@@ -30,7 +30,7 @@ const evenementId = <?= $evenement_id ?>;
 function showSuccessModal() {
     document.getElementById('successModal').style.display = "flex";
     setTimeout(function() {
-        window.location.href = "checking.php?checked=1";
+        window.location.href = "dashboard.php";
     }, 1000); // Redirige après 1.5s
 }
 
@@ -43,7 +43,7 @@ function closeErrorModal() {
     document.getElementById('errorModal').style.display = "none";
 
         setTimeout(function() {
-        window.location.href = "checking.php?checked=1";
+        window.location.href = "dashboard.php";
     }, 1000);
 }
 
