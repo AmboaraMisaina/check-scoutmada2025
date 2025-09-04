@@ -27,7 +27,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content success">
-        <h2>✔ Checked succès !</h2>
+        <h2>✔ Participation autorisée !</h2>
         <p>Le participant a bien été enregistré.</p>
         <button onclick="closeModal('successModal')">Fermer</button>
     </div>
@@ -83,7 +83,7 @@ body {
     margin: 1rem auto 0 auto;
     border-radius:20px;
     overflow:hidden;
-    border:4px solid #38ef7d;
+    border:4px solid #d3fde3ff;
     position:relative;
     box-shadow:0 4px 20px rgba(0,0,0,0.4);
 }
@@ -170,7 +170,7 @@ function onScanSuccess(decodedText, decodedResult){
             headers:{'Content-Type':'application/x-www-form-urlencoded'},
             body:'qr_code='+encodeURIComponent(decodedText)+'&evenement_id='+encodeURIComponent(evenementId)
         }).then(r=>r.text())
-          .then(data=>{ if(data.includes("Présence enregistrée")) showSuccessModal(); else showErrorModal(data); })
+          .then(data=>{ if(data.includes("Présence enregistrée")) showSuccessModal("Autorise a entrer "); else showErrorModal(data); })
           .catch(err=>showErrorModal("Erreur : "+err));
     });
 }

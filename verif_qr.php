@@ -24,7 +24,7 @@ if ($participant) {
             echo "Événement introuvable.";
             exit;
         }
-
+        
         // Vérifie si le type du participant est autorisé
         $typesAutorises = explode(',', $evenement['ouvert_a']);
         if (!in_array($participant['type'], $typesAutorises)) {
@@ -38,7 +38,7 @@ if ($participant) {
             $checkStmt = $pdo->prepare("SELECT id FROM planing WHERE participant_id = ? AND evenement_id = ?");
             $checkStmt->execute([$participant['id'], $evenement_id]);
             if ($checkStmt->rowCount() > 0) {
-                echo "Vous ne pouvez participer qu'une seule fois.";
+                echo "Participation refusée.";
                 exit;
             } else {
                 // Insère la présence avec date/heure
