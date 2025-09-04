@@ -78,6 +78,7 @@ function onScanSuccess(decodedText, decodedResult) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
     })
+    alert("tonga eto lo e")
     .then(response => response.text())
     .then(data => {
         if (data.includes("Présence enregistrée")) {
@@ -103,4 +104,5 @@ Html5Qrcode.getCameras().then(cameras => {
 }).catch(err => {
     showErrorModal("Impossible d'accéder à la caméra : " + err);
 });
+html5QrcodeScanner.render(onScanSuccess);
 </script>
