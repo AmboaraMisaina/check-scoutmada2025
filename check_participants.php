@@ -42,10 +42,17 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 </div>
 
 <style>
-body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:white; }
+body {
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background:#121212;
+    color:white;
+}
 
+/* Conteneur principal */
 .scanner-container {
-    max-width: 480px;
+    width: 95vw;         
+    max-width: 600px;    
     margin: 1rem auto;
     padding: 1rem;
     background: #1e1e1e;
@@ -56,14 +63,14 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
 
 /* Sélecteur caméra */
 .camera-select-container { margin-bottom:1rem; }
-.camera-select-container label { font-weight:bold; display:block; margin-bottom:0.5rem; }
+.camera-select-container label { font-weight:bold; display:block; margin-bottom:0.5rem; font-size:1.1rem; }
 .camera-select-container select {
-    width: 90%;
-    max-width: 300px;
-    padding:0.6rem;
+    width: 95%;           
+    max-width: 400px;
+    padding:0.9rem;
     border-radius:12px;
     border:none;
-    font-size:1rem;
+    font-size:1.1rem;
     background:#333;
     color:white;
 }
@@ -71,15 +78,14 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
 /* Scanner */
 #qr-reader {
     width: 100%;
-    max-width: 400px;
-    height: auto;
-    aspect-ratio: 1/1; /* carré responsive */
-    margin:0 auto;
+    height: 65vh;          
+    max-height: 600px;
+    margin: 1rem auto 0 auto;
     border-radius:20px;
     overflow:hidden;
     border:4px solid #38ef7d;
     position:relative;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    box-shadow:0 4px 20px rgba(0,0,0,0.4);
 }
 #qr-reader .overlay {
     position:absolute; top:0; left:0; width:100%; height:100%;
@@ -89,14 +95,14 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
     position:absolute; top:50%; left:50%;
     width:70%; height:70%;
     transform: translate(-50%,-50%);
-    border: 3px dashed #38ef7d;
+    border:3px dashed #38ef7d;
     border-radius:15px;
     animation: pulse 1.5s infinite;
     box-sizing:border-box;
 }
 
 /* Résultat */
-#qr-result { margin-top:1rem; font-weight:bold; font-size:1.2rem; color:#38ef7d; min-height:24px; word-break:break-all; }
+#qr-result { margin-top:1rem; font-weight:bold; font-size:1.3rem; color:#38ef7d; min-height:24px; word-break:break-word; }
 
 /* Modals */
 .modal {
@@ -106,6 +112,7 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
     width:100vw; height:100vh;
     background: rgba(0,0,0,0.5);
     z-index:9999;
+    display:flex;
     align-items:center;
     justify-content:center;
 }
@@ -123,7 +130,7 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
 .modal-content.success { border-top:4px solid #38ef7d; }
 .modal-content.error { border-top:4px solid #e74c3c; }
 .modal-content button {
-    padding:0.7rem;
+    padding:0.8rem;
     border:none;
     border-radius:12px;
     background:#38ef7d;
@@ -141,10 +148,10 @@ body { margin:0; font-family:'Segoe UI', sans-serif; background:#121212; color:w
 }
 
 /* Responsive petits écrans */
-@media(max-width:400px) {
-    #qr-reader { max-width: 90%; aspect-ratio: 1/1; }
-    .modal-content { width: 90%; padding:1.5rem; }
-    #qr-result { font-size:1rem; }
+@media(max-width:480px){
+    #qr-reader { height:60vh; }
+    .camera-select-container select { font-size:1.2rem; padding:1rem; }
+    #qr-result { font-size:1.2rem; }
 }
 </style>
 
@@ -169,7 +176,7 @@ function onScanSuccess(decodedText, decodedResult){
     });
 }
 
-// Caméras
+// Charger les caméras
 Html5Qrcode.getCameras().then(cameras=>{
     const select=document.getElementById('cameraSelect');
     select.innerHTML='';
