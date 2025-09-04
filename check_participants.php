@@ -1,8 +1,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://unpkg.com/html5-qrcode"></script>
+
 <?php
-renderHeader("Scanner QR");
 $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
 ?>
 
@@ -29,7 +29,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         pointer-events: none;
     "></div>
 </div>
-
 <div id="qr-result" style="margin-top:20px; font-weight:bold; text-align:center; color:#333;"></div>
 
 <!-- Modal succès -->
@@ -93,10 +92,7 @@ function onScanSuccess(decodedText, decodedResult) {
 
 html5QrcodeScanner = new Html5QrcodeScanner(
     "qr-reader", 
-    { 
-        fps: 10, qrbox: { width: 250, height: 250 }, 
-        camera : { facingMode: "environment" }
-    }, 
+    { fps: 10, qrbox: { width: 250, height: 250 } }, 
     /* verbose= */ false
 );
 html5QrcodeScanner.render(onScanSuccess);
