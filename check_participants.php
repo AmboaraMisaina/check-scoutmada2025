@@ -112,7 +112,6 @@ body {
     width:100vw; height:100vh;
     background: rgba(0,0,0,0.5);
     z-index:9999;
-    display:flex;
     align-items:center;
     justify-content:center;
 }
@@ -194,7 +193,7 @@ Html5Qrcode.getCameras().then(cameras=>{
 
 function startScanner(cameraId){
     html5QrcodeScanner=new Html5Qrcode("qr-reader");
-    html5QrcodeScanner.start(cameraId,{fps:10,qrbox:{width:250,height:250}},onScanSuccess)
+    html5QrcodeScanner.start(cameraId,{fps:10,qrbox:{width:400  ,height:400}},onScanSuccess)
     .catch(err=>showErrorModal("Erreur caméra : "+err));
 }
 </script>
