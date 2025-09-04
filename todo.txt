@@ -1,0 +1,43 @@
+TO DO LIST : APP CHEK-IN
+NB: TOUT EN PHP PUR 
+
+OK-login page (pas d inscription , mdp hash) 
+OK-bdd : MySQL 
+OK-page: Dashboard : on voit de maniere general les statistiques
+OK-page:  ajouter utilisateur = participant (via le super admin juste car y a pas d inscription)
+OK-page : liste des participants (delegues / observateurs )
+	id
+	nom
+	prenom
+	mail  
+	type (observateur / delegue)
+	qr code (efa misy champ fa mbola nul)
+OK-page : programmes / evenements
+	liste des programmes
+	titre 
+	programme et horaire 
+	evenement type : ouvert  a  qui : multiselect (delegue / observateur )
+(en cours)-page : cheking : presence
+	titre de l event et heure debut et heure fin 
+(en cours) page chek in en temps reel
+	afficher les programmes du moment
+	Exemple: si programme du 19
+8 - 9 : ouverture
+9 - 11 : session plénière
+11 - 12 : Lobbying
+12 - 14 : Déjeuner
+Si on est le 19 ente 11 - 12 : afficher un bouton avec intitulé: Lobbying qui va ouvrir le check via QR	
+
+
+
+MIHARY
+generation contenu code qr
+-BOUTON: generer qr code (via api)
+
+-page planning
+	presence any participants amle evenement, tsy afaka micheck tsony izy raha efa niparticiper
+-page chek in en temps reel (suite): 
+	un bouton qui va ouvrir la camera qui va scanner le qr code
+	ok afaka miditra ou pas ve cette personne si c'est bon ca va ajouter presence amle planning 
+	une fois scanner non pas d acces ou oui il peux acceder 
+	du coup tokony tafiditra anaty planning oe il a acceder
