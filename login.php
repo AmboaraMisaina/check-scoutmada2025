@@ -16,13 +16,14 @@ if ($_POST) {
     $password = $_POST['password'] ?? '';
     
     if ($username && $password) {
-        $stmt = $pdo->prepare("SELECT id, username, password FROM admins WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT id, username, password, role FROM admins WHERE username = ?");
         $stmt->execute([$username]);
         $admin = $stmt->fetch();
         
         if ($admin && password_verify($password, $admin['password'])) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
+            $_SESSION['role'] = $admin['role'];
             header('Location: dashboard.php');
             exit;
         } else {

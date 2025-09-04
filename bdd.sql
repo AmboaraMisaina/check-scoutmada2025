@@ -10,17 +10,24 @@ CREATE TABLE admins (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
+ALTER TABLE admins ADD COLUMN role ENUM('admin', 'checkin') NOT NULL DEFAULT 'admin';
+
+
 -- participants
 CREATE TABLE participants (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    type ENUM('delegue', 'observateur') NOT NULL,
+    type ENUM('Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team') NOT NULL,
     qr_code VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+ALTER TABLE participants 
+MODIFY COLUMN type ENUM('Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team') NOT NULL;
 
 -- admin par défaut (mot de passe: admin123)
 INSERT INTO admins (username, password) VALUES 
@@ -62,6 +69,10 @@ CREATE TABLE evenements (
     FOREIGN KEY (jour_id) REFERENCES jours_programmes(id) ON DELETE CASCADE
 );
 
+-- Add column nb_participation to the evenements table
+ALTER TABLE evenements
+ADD COLUMN nb_participation INT DEFAULT NULL;
+
 CREATE TABLE planing (
     id INT AUTO_INCREMENT PRIMARY KEY,
     participant_id INT NOT NULL,
@@ -100,3 +111,6 @@ INSERT INTO participants (nom, prenom, email, type, qr_code) VALUES
 ('Andrian', 'Luc', 'luc.andrian@test.com', 'delegue', NULL),
 ('Rasolon', 'Sofia', 'sofia.rasolon@test.com', 'observateur', NULL);
 
+
+insert into admins (username, password, role) values
+('checkin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'checkin');

@@ -41,3 +41,9 @@ generation contenu code qr
 	ok afaka miditra ou pas ve cette personne si c'est bon ca va ajouter presence amle planning 
 	une fois scanner non pas d acces ou oui il peux acceder 
 	du coup tokony tafiditra anaty planning oe il a acceder
+
+	(ok)ajout type: Comité d'organisation,WOSM Team
+	(en cours) asiana role ny user : admin - checkin					
+	(ok)ajout nom sur les code qr
+	(ok)ajout bouton download all qr code
+	import

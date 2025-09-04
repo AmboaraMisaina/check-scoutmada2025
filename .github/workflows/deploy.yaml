@@ -1,0 +1,23 @@
+name: 🚀 FTP Deploy
+
+on:
+  push:
+    branches:
+      - main   # ou la branche que tu veux déployer
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 📤 FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: scoutmada2025.mg
+          username: checkin@scoutmada2025.mg
+          password: checkin
+          server-dir: /public_html/   # dossier de ton site sur le serveur
+          local-dir: ./              # dossier local à envoyer

@@ -8,12 +8,16 @@ if (!$jour_id) { header('Location: programmes.php'); exit; }
 $jour = getJourById($pdo, $jour_id);
 $evenements = getEvenementsByJour($pdo, $jour_id);
 
-renderHeader("Programme du {$jour['date_jour']}");
+// Formater la date avec strftime
+setlocale(LC_TIME, 'fr_FR.UTF-8', 'fra');
+$dateFormatee = strftime('%A %e %B %Y', strtotime($jour['date_jour']));
+
+renderHeader("Programme du $dateFormatee");
 ?>
 
 <div class="container">
     <div class="page-header">
-        <h2>Programme du <?= $jour['date_jour'] ?></h2>
+        <h2>Programme du <?= ucfirst($dateFormatee) ?></h2>
     </div>
 
     <div class="card">
@@ -42,8 +46,8 @@ renderHeader("Programme du {$jour['date_jour']}");
                             <td style="padding:0.75rem;"><?= $e['horaire_debut'] ?> - <?= $e['horaire_fin'] ?></td>
                             <td style="padding:0.75rem;"><?= implode(', ', array_map('ucfirst', explode(',', $e['ouvert_a']))) ?></td>
                             <td style="padding:0.75rem;">
-                                <a href="edit_evenement.php?id=<?= $e['id'] ?>" class="btn btn-secondary">✏️ Edit</a>
-                                <a href="delete_evenement.php?id=<?= $e['id'] ?>" class="btn btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️ Supprimer</a>
+                                <a href="edit_evenement.php?id=<?= $e['id'] ?>" class="btn btn-secondary">✏️</a>
+                                <a href="delete_evenement.php?id=<?= $e['id'] ?>" class="btn btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

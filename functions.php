@@ -91,7 +91,7 @@ function addParticipant($pdo, $nom, $prenom, $email, $type)
 
 
 
-function getQrCodeUrl($qrText, $size = 200)
+function getQrCodeUrl($qrText, $size = 300)
 {
     $encodedText = urlencode($qrText);
     return "https://api.qrserver.com/v1/create-qr-code/?data={$encodedText}&size={$size}x{$size}";

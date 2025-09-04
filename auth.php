@@ -14,13 +14,7 @@ function checkAuth()
 function getNavigation()
 {
     return [
-        'dashboard.php' => '📊 Chek-In',
-        'participants.php' => '👥 Participants',
-        'add_participant.php' => '➕ Ajouter Participant',
-        'programmes.php' => '📅 Programmes',
-        'checking.php' => '✅ Checking',
-        'sakafo.php' => '🍽️ Sakafo',
-        'import_participants.php' => '📥 Import Participant'
+        'dashboard.php' => '📊 Chekin',
     ];
 }
 

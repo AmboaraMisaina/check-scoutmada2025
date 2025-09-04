@@ -2,6 +2,23 @@
 require_once 'functions.php';
 checkAuthOrRedirect();
 
+if ($_SESSION['role'] !== 'admin') {
+    renderHeader("Accès interdit");
+    ?>
+    <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
+        <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
+            <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Accès interdit</h2>
+            <p style="font-size:1.1rem; margin-bottom:1.5rem;">Vous n’avez pas les droits nécessaires pour accéder à cette page.</p>
+            <a href="dashboard.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
+                ⬅ Retour au tableau de bord
+            </a>
+        </div>
+    </div>
+    <?php
+    renderFooter();
+    exit;
+}
+
 // Supprimer si paramètre delete est présent
 if (isset($_GET['delete'])) {
     deleteParticipant($pdo, intval($_GET['delete']));
@@ -31,7 +48,6 @@ renderHeader('Participants');
                     <th style="padding: 0.75rem;">Email</th>
                     <th style="padding: 0.75rem;">Type</th>
                     <th style="padding: 0.75rem;">QR Code</th>
-                    <th style="padding: 0.75rem;">Créé le</th>
                     <th style="padding: 0.75rem;">Actions</th>
                 </tr>
             </thead>
@@ -53,10 +69,9 @@ renderHeader('Participants');
                                     -
                                 <?php endif; ?>
                             </td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['created_at']); ?></td>
                             <td style="padding: 0.75rem;">
-                                <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️ Modifier</a>
-                                <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️ Supprimer</a>
+                                <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
+                                <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
