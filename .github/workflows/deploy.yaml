@@ -19,5 +19,5 @@ jobs:
           server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
           password: checkin
-          server-dir: /public_html/   # dossier de ton site sur le serveur
-          local-dir: ./              # dossier local à envoyer
+          server-dir: /public_html/  
+          local-dir: ./
