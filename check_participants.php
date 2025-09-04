@@ -1,46 +1,9 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Scanner QR</title>
 <script src="https://unpkg.com/html5-qrcode"></script>
-
-<?php
-$evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
-?>
-
-<div class="scanner-container">
-
-    <!-- Sélecteur caméra -->
-    <div class="camera-select-container">
-        <label for="cameraSelect">📷 Choisir la caméra :</label>
-        <select id="cameraSelect">
-            <option value="">Chargement...</option>
-        </select>
-    </div>
-
-    <!-- Scanner -->
-    <div id="qr-reader">
-        <div class="overlay"></div>
-        <div id="scan-frame"></div>
-    </div>
-
-    <!-- Résultat -->
-    <div id="qr-result"></div>
-</div>
-
-<!-- Modals succès / erreur -->
-<div id="successModal" class="modal">
-    <div class="modal-content success">
-        <h2>✔ Participation autorisée !</h2>
-        <p>Le participant a bien été enregistré.</p>
-        <button onclick="closeModal('successModal')">Fermer</button>
-    </div>
-</div>
-
-<div id="errorModal" class="modal">
-    <div class="modal-content error">
-        <h2>✖ Erreur</h2>
-        <p id="errorMsg"></p>
-        <button onclick="closeModal('errorModal')">Fermer</button>
-    </div>
-</div>
-
 <style>
 body {
     margin:0;
@@ -153,47 +116,115 @@ body {
     #qr-result { font-size:1.2rem; }
 }
 </style>
+</head>
+<body>
+
+<?php
+$evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
+?>
+
+<div class="scanner-container">
+
+    <!-- Sélecteur caméra -->
+    <div class="camera-select-container">
+        <label for="cameraSelect">📷 Choisir la caméra :</label>
+        <select id="cameraSelect">
+            <option value="">Chargement...</option>
+        </select>
+    </div>
+
+    <!-- Scanner -->
+    <div id="qr-reader">
+        <div class="overlay"></div>
+        <div id="scan-frame"></div>
+    </div>
+
+    <!-- Résultat -->
+    <div id="qr-result"></div>
+</div>
+
+<!-- Modals succès / erreur -->
+<div id="successModal" class="modal">
+    <div class="modal-content success">
+        <h2>✔ Participation autorisée !</h2>
+        <p id="successMsg">Le participant a bien été enregistré.</p>
+        <button onclick="closeModal('successModal')">Fermer</button>
+    </div>
+</div>
+
+<div id="errorModal" class="modal">
+    <div class="modal-content error">
+        <h2>✖ Erreur</h2>
+        <p id="errorMsg"></p>
+        <button onclick="closeModal('errorModal')">Fermer</button>
+    </div>
+</div>
 
 <script>
-const evenementId = <?= $evenement_id ?>;
-let html5QrcodeScanner;
+document.addEventListener('DOMContentLoaded', function() {
+    const evenementId = <?= $evenement_id ?>;
+    let html5QrcodeScanner;
 
-function showSuccessModal() { document.getElementById('successModal').style.display="flex"; }
-function showErrorModal(msg) { document.getElementById('errorMsg').innerText=msg; document.getElementById('errorModal').style.display="flex"; }
-function closeModal(modalId) { document.getElementById(modalId).style.display="none"; window.location.href="dashboard.php"; }
+    function showSuccessModal(msg = "Le participant a bien été enregistré.") {
+        document.getElementById('successMsg').innerText = msg;
+        document.getElementById('successModal').style.display = "flex";
+    }
 
-function onScanSuccess(decodedText, decodedResult){
-    document.getElementById('qr-result').innerText = decodedText;
-    html5QrcodeScanner.stop().then(()=>{
-        fetch('verif_qr.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'qr_code='+encodeURIComponent(decodedText)+'&evenement_id='+encodeURIComponent(evenementId)
-        }).then(r=>r.text())
-          .then(data=>{ if(data.includes("Présence enregistrée")) showSuccessModal("Autorise a entrer "); else showErrorModal(data); })
-          .catch(err=>showErrorModal("Erreur : "+err));
-    });
-}
+    function showErrorModal(msg) { 
+        document.getElementById('errorMsg').innerText = msg; 
+        document.getElementById('errorModal').style.display = "flex"; 
+    }
 
-// Charger les caméras
-Html5Qrcode.getCameras().then(cameras=>{
-    const select=document.getElementById('cameraSelect');
-    select.innerHTML='';
-    cameras.forEach(cam=>{
-        const option=document.createElement('option');
-        option.value=cam.id; option.text=cam.label||`Caméra ${cam.id}`;
-        select.appendChild(option);
-    });
-    if(cameras.length>0) startScanner(cameras[cameras.length-1].id);
+    window.closeModal = function(modalId) { 
+        document.getElementById(modalId).style.display = "none"; 
+        window.location.href="dashboard.php"; 
+    }
 
-    select.addEventListener('change',()=>{ 
-        if(html5QrcodeScanner) html5QrcodeScanner.stop().then(()=>startScanner(select.value));
-    });
-}).catch(err=>showErrorModal("Impossible d'accéder aux caméras : "+err));
+    function onScanSuccess(decodedText, decodedResult){
+        document.getElementById('qr-result').innerText = decodedText;
+        html5QrcodeScanner.stop().then(()=>{
+            fetch('verif_qr.php',{
+                method:'POST',
+                headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                body:'qr_code='+encodeURIComponent(decodedText)+'&evenement_id='+encodeURIComponent(evenementId)
+            }).then(r=>r.text())
+              .then(data=>{ 
+                  if(data.includes("Présence enregistrée")) showSuccessModal("Autorisé à entrer"); 
+                  else showErrorModal(data); 
+              })
+              .catch(err=>showErrorModal("Erreur : "+err));
+        });
+    }
 
-function startScanner(cameraId){
-    html5QrcodeScanner=new Html5Qrcode("qr-reader");
-    html5QrcodeScanner.start(cameraId,{fps:10,qrbox:{width:400  ,height:400}},onScanSuccess)
-    .catch(err=>showErrorModal("Erreur caméra : "+err));
-}
+    // Charger les caméras
+    Html5Qrcode.getCameras().then(cameras=>{
+        const select=document.getElementById('cameraSelect');
+        select.innerHTML='';
+        cameras.forEach(cam=>{
+            const option=document.createElement('option');
+            option.value=cam.id;
+            option.text = cam.label || `Caméra ${cam.id}`;
+            select.appendChild(option);
+        });
+
+        if(cameras.length>0) startScanner(cameras[0].id);
+
+        select.addEventListener('change', ()=>{ 
+            if(html5QrcodeScanner) html5QrcodeScanner.stop().then(()=>startScanner(select.value));
+        });
+
+    }).catch(err => showErrorModal("Impossible d'accéder aux caméras : "+err));
+
+    function startScanner(cameraId){
+        html5QrcodeScanner = new Html5Qrcode("qr-reader");
+        html5QrcodeScanner.start(
+            cameraId,
+            { fps: 10, qrbox: { width: 400, height: 400 } },
+            onScanSuccess
+        ).catch(err => showErrorModal("Erreur caméra : " + err));
+    }
+});
 </script>
+
+</body>
+</html>
