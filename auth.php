@@ -22,7 +22,7 @@ function renderHeader($title = '')
 {
     $nav = getNavigation();
     $currentPage = basename($_SERVER['PHP_SELF']);
-    ?>
+?>
     <!DOCTYPE html>
     <html lang="fr">
 
@@ -56,6 +56,22 @@ function renderHeader($title = '')
                 align-items: center;
                 max-width: 1200px;
                 margin: 0 auto;
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .logo {
+                width: auto;
+                max-width: 180px;
+                height: 50px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                background: rgba(255, 255, 255, 0.1);
+                padding: 3px;
             }
 
             .header h1 {
@@ -197,6 +213,15 @@ function renderHeader($title = '')
                     gap: 1rem;
                 }
 
+                .logo {
+                    height: 40px;
+                    max-width: 140px;
+                }
+
+                .header h1 {
+                    font-size: 1.3rem;
+                }
+
                 .container {
                     padding: 0 0.5rem;
                 }
@@ -215,7 +240,10 @@ function renderHeader($title = '')
     <body>
         <header class="header">
             <div class="header-content">
-                <h1>CHECK-IN</h1>
+                <div class="logo-section">
+                    <img src="logo.png" alt="Logo" class="logo">
+                    <h1>CHECK-IN</h1>
+                </div>
                 <div class="user-info">
                     <span>👋 <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
                     <a href="logout.php" class="logout-btn">Déconnexion</a>
