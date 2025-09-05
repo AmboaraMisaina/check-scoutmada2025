@@ -4,71 +4,23 @@
 $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
 ?>
 
-<div class="scanner-container" style="
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background: #6f6f6fff;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(94, 94, 94, 0.3);
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-">
-    <!-- Sélecteur caméra -->
-    <div style="margin-bottom:1rem; text-align:center; display:none;">
-        <label for="cameraSelect" style="font-weight:bold; margin-bottom:0.5rem; display:block;">📷 Choisir la caméra :</label>
-        <select id="cameraSelect" style="
-            width: 80%;
-            max-width: 300px;
-            padding:0.6rem;
-            border-radius:12px;
-            border:none;
-            font-size:1rem;
-            background:#333;
-            color:white;
-        ">
-            <option value="">Chargement...</option>
-        </select>
+<div class="scanner-container">
     <!-- Scanner -->
-    <div id="qr-reader" style="
-        width: 100%;
-        height: 500px; /* tu peux augmenter ou diminuer selon ton besoin */
-        position: relative;
-        border-radius: 20px;
-        overflow: hidden;
-        border: 4px solid #000000ff;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        background: #000; /* fond noir si pas encore de caméra */
-    ">
-        <!-- Cadre carré -->
-        <div id="scan-frame" style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 70%;
-            aspect-ratio: 1 / 1;   /* carré parfait */
-            transform: translate(-50%, -50%);
-            border: 3px dashed #ffffff; /* blanc bien visible */
-            border-radius: 15px;
-            box-sizing: border-box;
-        "></div>
+    <div id="qr-reader">
+        <!-- Overlay semi-transparent -->
+        <div class="qr-overlay"></div>
+        <!-- Cadre carré sans animation -->
+        <div id="scan-frame"></div>
     </div>
 
     <!-- Résultat -->
-    <div id="qr-result" style="
-        margin-top:1rem;
-        text-align:center;
-        font-weight:bold;
-        font-size:1.1rem;
-        color:#38ef7d;
-        min-height:24px;
-    "></div>
+    <div id="qr-result"></div>
 </div>
 
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content" style="border-top:4px solid #38ef7d;">
-        <h2>✔ Checked succès !</h2>
+        <h2>✔ Succès !</h2>
         <p>Le participant a bien été enregistré.</p>
         <button onclick="closeModal('successModal')">Fermer</button>
     </div>
@@ -83,6 +35,67 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 </div>
 
 <style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #6f6f6f;
+    font-family: 'Segoe UI', sans-serif;
+}
+.scanner-container {
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0.5rem 0 2rem 0;
+    background: #6f6f6f;
+    color: white;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#qr-reader {
+    width: 94vw;
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid #000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    margin: 1.2rem 0 0.7rem 0;
+    background: #222;
+}
+.qr-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.32);
+    z-index: 1;
+    pointer-events: none;
+}
+#scan-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    border: 3px solid #38ef7d;
+    border-radius: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 2;
+}
+#qr-result {
+    margin-top: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #38ef7d;
+    min-height: 24px;
+    word-break: break-all;
+    padding: 0 1rem;
+}
 .modal {
     display:none;
     position:fixed;
@@ -92,31 +105,30 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     align-items:center;
     justify-content:center;
 }
-
 .modal-content {
     background:white;
-    padding:3rem;                 /* plus d’espace intérieur */
-    border-radius:20px;           /* coins arrondis */
+    padding:2rem 1rem;
+    border-radius:16px;
     text-align:center;
-    max-width:600px;              /* largeur max plus grande */
-    width:97%;                    /* occupe presque tout l’écran sur mobile */
+    max-width:95vw;
+    width:97%;
     box-shadow:0 12px 30px rgba(0,0,0,0.35);
     font-family: 'Segoe UI', sans-serif;
-    font-size:1.4rem;             /* texte un peu plus grand */
+    font-size:1.1rem;
 }
 .modal-content h2 {
-    margin-bottom:1.5rem;
-    font-size:1.9rem;             /* titre plus gros */
+    margin-bottom:1rem;
+    font-size:1.4rem;
     color:#333;
 }
 .modal-content p {
-    margin-bottom:1.5rem;
-    font-size:1.3rem;
+    margin-bottom:1.2rem;
+    font-size:1.1rem;
     color:#555;
 }
 .modal-content button {
-    padding:1rem 2rem;           /* bouton plus large et haut */
-    font-size:1.3rem;            /* texte bouton agrandi */
+    padding:0.8rem 1.2rem;
+    font-size:1.1rem;
     border:none;
     border-radius:10px;
     background:#38ef7d;
@@ -125,15 +137,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     cursor:pointer;
     width:100%;
 }
-
-
 .modal-content button:hover { background:#2ecc71; }
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 10px #38ef7d; }
-    50% { box-shadow: 0 0 20px #38ef7d; }
-    100% { box-shadow: 0 0 10px #38ef7d; }
-}
 </style>
 
 <script>
@@ -160,31 +164,19 @@ function onScanSuccess(decodedText, decodedResult) {
     });
 }
 
-// Charger caméras et remplir le select
-Html5Qrcode.getCameras().then(cameras => {
-    const select = document.getElementById('cameraSelect');
-    select.innerHTML = '';
-    cameras.forEach(cam => {
-        const option = document.createElement('option');
-        option.value = cam.id;
-        option.text = cam.label || `Caméra ${cam.id}`;
-        select.appendChild(option);
-    });
-
-    if(cameras.length>0) startScanner(cameras[cameras.length-1].id);
-
-    select.addEventListener('change', () => {
-        if(html5QrcodeScanner) html5QrcodeScanner.stop().then(() => startScanner(select.value));
-    });
-}).catch(err => showErrorModal("Impossible d'accéder aux caméras : "+err));
-
 function startScanner(cameraId) {
     html5QrcodeScanner = new Html5Qrcode("qr-reader");
-    const qrBoxSize = Math.min(350, document.getElementById('qr-reader').offsetWidth * 0.7); // 70% largeur, max 350px
+    const qrBoxSize = Math.min(window.innerWidth * 0.66, 280); // 66% largeur écran, max 280px
     html5QrcodeScanner.start(
         cameraId,
         { fps: 10, qrbox: { width: qrBoxSize, height: qrBoxSize } },
         onScanSuccess
     ).catch(err => showErrorModal("Erreur caméra : " + err));
 }
+
+// Démarrage automatique sur la première caméra
+Html5Qrcode.getCameras().then(cameras => {
+    if(cameras.length>0) startScanner(cameras[0].id);
+    else showErrorModal("Aucune caméra détectée.");
+}).catch(err => showErrorModal("Impossible d'accéder aux caméras : "+err));
 </script>
