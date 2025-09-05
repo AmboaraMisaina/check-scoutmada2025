@@ -106,38 +106,39 @@ body {
     justify-content:center;
 }
 .modal-content {
-    background:white;
-    padding:2rem 1rem;
-    border-radius:16px;
-    text-align:center;
-    max-width:95vw;
-    width:97%;
-    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+    background: white;
+    padding: 2rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 80vw;   /* 80% de la largeur de la fenêtre */
+    width: 100%;
+    margin: 0 auto;    /* centré */
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
     font-family: 'Segoe UI', sans-serif;
-    font-size:1.1rem;
+    font-size: 1.2rem;
 }
 .modal-content h2 {
-    margin-bottom:1rem;
-    font-size:1.4rem;
-    color:#333;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
 }
 .modal-content p {
-    margin-bottom:1.2rem;
-    font-size:1.1rem;
-    color:#555;
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+    color: #555;
 }
 .modal-content button {
-    padding:0.8rem 1.2rem;
-    font-size:1.1rem;
-    border:none;
-    border-radius:10px;
-    background:#38ef7d;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-    width:100%;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background: #38ef7d;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
 }
-.modal-content button:hover { background:#2ecc71; }
+.modal-content button:hover { background: #2ecc71; }
 </style>
 
 <script>
@@ -146,7 +147,14 @@ let html5QrcodeScanner;
 
 function showSuccessModal() { document.getElementById('successModal').style.display = "flex"; }
 function showErrorModal(msg) { document.getElementById('errorMsg').innerText = msg; document.getElementById('errorModal').style.display = "flex"; }
-function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; window.location.href = "dashboard.php"; }
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+    setTimeout(() => {
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras.length > 0) startScanner(cameras[cameras.length-1].id);
+        });
+    }, 500); // 0.5 seconde de délai
+}
 
 function onScanSuccess(decodedText, decodedResult) {
     document.getElementById('qr-result').innerText = decodedText;
@@ -176,7 +184,7 @@ function startScanner(cameraId) {
 
 // Démarrage automatique sur la première caméra
 Html5Qrcode.getCameras().then(cameras => {
-    if(cameras.length>0) startScanner(cameras[0].id);
+    if(cameras.length>0) startScanner(cameras[cameras.length-1].id);
     else showErrorModal("Aucune caméra détectée.");
 }).catch(err => showErrorModal("Impossible d'accéder aux caméras : "+err));
 </script>
