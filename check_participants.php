@@ -55,9 +55,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             top: 50%;
             left: 50%;
             width: 70%;
-            height: 70%;
+            aspect-ratio: 1 / 1;   /* carré parfait */
             transform: translate(-50%, -50%);
-            border: 3px dashed #ffffffff;
+            border: 3px dashed #38ef7d;
             border-radius: 15px;
             animation: pulse 1.5s infinite;
             box-sizing: border-box;
@@ -109,24 +109,24 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     border-radius:20px;           /* coins arrondis */
     text-align:center;
     max-width:600px;              /* largeur max plus grande */
-    width:95%;                    /* occupe presque tout l’écran sur mobile */
+    width:97%;                    /* occupe presque tout l’écran sur mobile */
     box-shadow:0 12px 30px rgba(0,0,0,0.35);
     font-family: 'Segoe UI', sans-serif;
-    font-size:1.2rem;             /* texte un peu plus grand */
+    font-size:1.4rem;             /* texte un peu plus grand */
 }
 .modal-content h2 {
     margin-bottom:1.5rem;
-    font-size:1.8rem;             /* titre plus gros */
+    font-size:1.9rem;             /* titre plus gros */
     color:#333;
 }
 .modal-content p {
     margin-bottom:1.5rem;
-    font-size:1.1rem;
+    font-size:1.3rem;
     color:#555;
 }
 .modal-content button {
     padding:1rem 2rem;           /* bouton plus large et haut */
-    font-size:1.1rem;            /* texte bouton agrandi */
+    font-size:1.3rem;            /* texte bouton agrandi */
     border:none;
     border-radius:10px;
     background:#38ef7d;
