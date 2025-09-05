@@ -19,18 +19,18 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
-    <div class="modal-content" style="border-top:4px solid #38ef7d;">
-        <h2>✔ Succès !</h2>
+    <div class="modal-content success">
+        <h2 class="success">✔ Succès !</h2>
         <p>Le participant a bien été enregistré.</p>
-        <button onclick="closeModal('successModal')">Fermer</button>
+        <button class="success" onclick="closeModal('successModal')">Fermer</button>
     </div>
 </div>
 
 <div id="errorModal" class="modal">
-    <div class="modal-content" style="border-top:4px solid #e74c3c;">
-        <h2>✖ Erreur</h2>
+    <div class="modal-content error">
+        <h2 class="error">✖ Erreur</h2>
         <p id="errorMsg"></p>
-        <button onclick="closeModal('errorModal')">Fermer</button>
+        <button class="error" onclick="closeModal('errorModal')">Fermer</button>
     </div>
 </div>
 
@@ -91,10 +91,15 @@ body {
     text-align: center;
     font-weight: bold;
     font-size: 1.1rem;
-    color: #38ef7d;
     min-height: 24px;
     word-break: break-all;
     padding: 0 1rem;
+}
+#qr-result.success {
+    color: #38ef7d;
+}
+#qr-result.error {
+    color: #e74c3c;
 }
 .modal {
     display:none;
@@ -110,35 +115,38 @@ body {
     padding: 2rem 1rem;
     border-radius: 16px;
     text-align: center;
-    max-width: 80vw;   /* 80% de la largeur de la fenêtre */
+    max-width: 80vw;
     width: 100%;
-    margin: 0 auto;    /* centré */
+    margin: 0 auto;
     box-shadow: 0 12px 30px rgba(0,0,0,0.35);
     font-family: 'Segoe UI', sans-serif;
     font-size: 1.2rem;
+    border-top: 4px solid #ccc;
 }
-.modal-content h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
+.modal-content.success {
+    border-top: 4px solid #38ef7d;
 }
-.modal-content p {
-    margin-bottom: 1.2rem;
-    font-size: 1.2rem;
-    color: #555;
+.modal-content.error {
+    border-top: 4px solid #e74c3c;
 }
-.modal-content button {
-    padding: 0.8rem 1.2rem;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 10px;
+.modal-content h2.success {
+    color: #38ef7d;
+}
+.modal-content h2.error {
+    color: #e74c3c;
+}
+.modal-content button.success {
     background: #38ef7d;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
 }
-.modal-content button:hover { background: #2ecc71; }
+.modal-content button.success:hover {
+    background: #2ecc71;
+}
+.modal-content button.error {
+    background: #e74c3c;
+}
+.modal-content button.error:hover {
+    background: #c0392b;
+}
 </style>
 
 <script>
@@ -154,6 +162,7 @@ function closeModal(modalId) {
             if (cameras.length > 0) startScanner(cameras[cameras.length-1].id);
         });
     }, 500); // 0.5 seconde de délai
+    document.getElementById('qr-result').innerText = "";
 }
 
 function onScanSuccess(decodedText, decodedResult) {
