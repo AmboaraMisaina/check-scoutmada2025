@@ -107,7 +107,7 @@ renderHeader("Ajouter un événement pour le " . htmlspecialchars($jour['titre']
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" name="ouvert_a[]" value="WOSM team"> WOSM team
+                            <input type="checkbox" name="ouvert_a[]" value="WOSM Team"> WOSM Team
                         </label>
                     </li>
                 </ul>

@@ -67,7 +67,7 @@ renderHeader('Ajouter Participant');
                     <option value="Delegue">Délégué</option>
                     <option value="Observateur">Observateur</option>
                     <option value="Comite d'organisation">Comité d'organisation</option>
-                    <option value="WOSM team">WOSM team</option>
+                    <option value="WOSM Team">WOSM Team</option>
                 </select>
             </div>
 

@@ -52,7 +52,7 @@ function getParticipantById(PDO $pdo, int $id)
 
 function addParticipant($pdo, $nom, $prenom, $email, $type)
 {
-    if (!$nom || !$prenom || !$email || !in_array($type, ['delegue', 'observateur'])) {
+    if (!$nom || !$prenom || !$email || !in_array($type, ['Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team'])) {
         return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
     }
 

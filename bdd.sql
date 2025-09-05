@@ -26,12 +26,6 @@ CREATE TABLE participants (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE participants 
-MODIFY COLUMN type ENUM('Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team') NOT NULL;
-
--- admin par défaut (mot de passe: admin123)
-INSERT INTO admins (username, password) VALUES 
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
 
 -- programmes
 CREATE TABLE programmes (
@@ -69,9 +63,6 @@ CREATE TABLE evenements (
     FOREIGN KEY (jour_id) REFERENCES jours_programmes(id) ON DELETE CASCADE
 );
 
--- Add column nb_participation to the evenements table
-ALTER TABLE evenements
-ADD COLUMN nb_participation INT DEFAULT NULL;
 
 CREATE TABLE planing (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,6 +73,19 @@ CREATE TABLE planing (
     FOREIGN KEY (evenement_id) REFERENCES evenements(id) ON DELETE CASCADE
 );
 
+-- Add column nb_participation to the evenements table
+ALTER TABLE evenements
+ADD COLUMN nb_participation INT DEFAULT NULL;
+ALTER TABLE participants 
+MODIFY COLUMN type ENUM('Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team') NOT NULL;
+
+-- admin par défaut (mot de passe: admin123)
+INSERT INTO admins (username, password) VALUES 
+('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
+
+insert into admins (username, password, role) values
+('checkin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'checkin');
 
 -- -------------------
 -- DONNÉES DE TEST
@@ -112,5 +116,3 @@ INSERT INTO participants (nom, prenom, email, type, qr_code) VALUES
 ('Rasolon', 'Sofia', 'sofia.rasolon@test.com', 'observateur', NULL);
 
 
-insert into admins (username, password, role) values
-('checkin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'checkin');

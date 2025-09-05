@@ -78,12 +78,18 @@ renderHeader('Modifier Événement');
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label><br>
+                <label style="margin-left: 1rem;">Ouvert à</label><br>
                 <label>
-                    <input type="checkbox" name="ouvert_a[]" value="delegue" <?= in_array('delegue', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Délégué
+                    <input type="checkbox" name="ouvert_a[]" value="Delegue" <?= in_array('Delegue', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Délégué
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="observateur" <?= in_array('observateur', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observateur
+                    <input type="checkbox" name="ouvert_a[]" value="Observateur" <?= in_array('Observateur', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observateur
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="Comité d'organisation" <?= in_array('Comité d\'organisation', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Comité d'organisation
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="WOSM Team" <?= in_array('WOSM Team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
                 </label>
             </div>
 

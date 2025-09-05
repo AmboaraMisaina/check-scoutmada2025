@@ -86,7 +86,7 @@ renderHeader('Participants');
 
     <div class="card" style="margin-top: 2rem;">
         <a href="add_participant.php" class="btn">➕ Ajouter un participant</a>
-        <a href="dashboard.php" class="btn btn-secondary">📊 Retour au dashboard</a>
+        <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a>
     </div>
 </div>
 
