@@ -28,7 +28,7 @@ if ($participant) {
         // Vérifie si le type du participant est autorisé
         $typesAutorises = explode(',', $evenement['ouvert_a']);
         if (!in_array($participant['type'], $typesAutorises)) {
-            echo "Ce type de participant n'est pas autorisé pour cet événement.  "  . implode(", ", $typesAutorises) . " / " . $participant['type'];
+            echo "Ce type de participant n'est pas autorisé pour cet événement.";
             exit;
         }
 
