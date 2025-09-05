@@ -14,7 +14,22 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     color: white;
     font-family: 'Segoe UI', sans-serif;
 ">
-
+    <!-- Sélecteur caméra -->
+    <div style="margin-bottom:1rem; text-align:center; display:none;">
+        <label for="cameraSelect" style="font-weight:bold; margin-bottom:0.5rem; display:block;">📷 Choisir la caméra :</label>
+        <select id="cameraSelect" style="
+            width: 80%;
+            max-width: 300px;
+            padding:0.6rem;
+            border-radius:12px;
+            border:none;
+            font-size:1rem;
+            background:#333;
+            color:white;
+        ">
+            <option value="">Chargement...</option>
+        </select>
+    </div>
     <!-- Scanner -->
     <div id="qr-reader" style="
         width: 100%;
@@ -77,6 +92,60 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     </div>
 </div>
 
+<style>
+.modal {
+    display:none;
+    position:fixed;
+    top:0; left:0; width:100vw; height:100vh;
+    background: rgba(0,0,0,0.5);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+}
+
+.modal-content {
+    background:white;
+    padding:3rem;                 /* plus d’espace intérieur */
+    border-radius:20px;           /* coins arrondis */
+    text-align:center;
+    max-width:600px;              /* largeur max plus grande */
+    width:95%;                    /* occupe presque tout l’écran sur mobile */
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+    font-family: 'Segoe UI', sans-serif;
+    font-size:1.2rem;             /* texte un peu plus grand */
+}
+.modal-content h2 {
+    margin-bottom:1.5rem;
+    font-size:1.8rem;             /* titre plus gros */
+    color:#333;
+}
+.modal-content p {
+    margin-bottom:1.5rem;
+    font-size:1.1rem;
+    color:#555;
+}
+.modal-content button {
+    padding:1rem 2rem;           /* bouton plus large et haut */
+    font-size:1.1rem;            /* texte bouton agrandi */
+    border:none;
+    border-radius:10px;
+    background:#38ef7d;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    width:100%;
+}
+
+
+.modal-content button:hover { background:#2ecc71; }
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px #38ef7d; }
+    50% { box-shadow: 0 0 20px #38ef7d; }
+    100% { box-shadow: 0 0 10px #38ef7d; }
+}
+</style>
+
 <script>
 const evenementId = <?= $evenement_id ?>;
 let html5QrcodeScanner;
@@ -101,20 +170,27 @@ function onScanSuccess(decodedText, decodedResult) {
     });
 }
 
-// Utiliser directement la caméra arrière (si dispo)
+// Charger caméras et remplir le select
 Html5Qrcode.getCameras().then(cameras => {
-    if (cameras && cameras.length) {
-        let backCamera = cameras.find(cam => cam.label.toLowerCase().includes("back"));
-        let cameraId = backCamera ? backCamera.id : cameras[cameras.length - 1].id;
-        startScanner(cameraId);
-    } else {
-        showErrorModal("Aucune caméra détectée !");
-    }
-}).catch(err => showErrorModal("Impossible d'accéder aux caméras : " + err));
+    const select = document.getElementById('cameraSelect');
+    select.innerHTML = '';
+    cameras.forEach(cam => {
+        const option = document.createElement('option');
+        option.value = cam.id;
+        option.text = cam.label || `Caméra ${cam.id}`;
+        select.appendChild(option);
+    });
+
+    if(cameras.length>0) startScanner(cameras[cameras.length-1].id);
+
+    select.addEventListener('change', () => {
+        if(html5QrcodeScanner) html5QrcodeScanner.stop().then(() => startScanner(select.value));
+    });
+}).catch(err => showErrorModal("Impossible d'accéder aux caméras : "+err));
 
 function startScanner(cameraId) {
     html5QrcodeScanner = new Html5Qrcode("qr-reader");
-    const qrBoxSize = Math.min(350, document.getElementById('qr-reader').offsetWidth * 0.7);
+    const qrBoxSize = Math.min(350, document.getElementById('qr-reader').offsetWidth * 0.7); // 70% largeur, max 350px
     html5QrcodeScanner.start(
         cameraId,
         { fps: 10, qrbox: { width: qrBoxSize, height: qrBoxSize } },
