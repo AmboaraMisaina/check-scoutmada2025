@@ -29,27 +29,18 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         ">
             <option value="">Chargement...</option>
         </select>
-    </div>
     <!-- Scanner -->
     <div id="qr-reader" style="
         width: 100%;
-        height: 400px;
+        height: 500px; /* tu peux augmenter ou diminuer selon ton besoin */
         position: relative;
         border-radius: 20px;
         overflow: hidden;
         border: 4px solid #000000ff;
         box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        background: #000; /* fond noir si pas encore de caméra */
     ">
-        <!-- Overlay semi-transparent -->
-        <div style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-        "></div>
-        <!-- Cadre animé -->
+        <!-- Cadre carré -->
         <div id="scan-frame" style="
             position: absolute;
             top: 50%;
@@ -57,9 +48,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             width: 70%;
             aspect-ratio: 1 / 1;   /* carré parfait */
             transform: translate(-50%, -50%);
-            border: 3px dashed #38ef7d;
+            border: 3px dashed #ffffff; /* blanc bien visible */
             border-radius: 15px;
-            animation: pulse 1.5s infinite;
             box-sizing: border-box;
         "></div>
     </div>
