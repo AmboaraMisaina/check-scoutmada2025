@@ -74,8 +74,10 @@ renderHeader('Modifier Participant');
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>
-                    <option value="delegue" <?= $participant['type'] === 'delegue' ? 'selected' : '' ?>>Délégué</option>
-                    <option value="observateur" <?= $participant['type'] === 'observateur' ? 'selected' : '' ?>>Observateur</option>
+                    <option value="Delegue" <?= $participant['type'] === 'Delegue' ? 'selected' : '' ?>>Délégué</option>
+                    <option value="Observateur" <?= $participant['type'] === 'Observateur' ? 'selected' : '' ?>>Observateur</option>
+                    <option value="Comite d'organisation" <?= $participant['type'] === 'Comite d\'organisation' ? 'selected' : '' ?>>Comité d'organisation</option>
+                    <option value="WOSM team" <?= $participant['type'] === 'WOSM team' ? 'selected' : '' ?>>WOSM team</option>
                 </select>
             </div>
 
