@@ -16,7 +16,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 ">
 
     <!-- Sélecteur caméra -->
-    <div style="margin-bottom:1rem; text-align:center;">
+    <!-- <div style="margin-bottom:1rem; text-align:center;">
         <label for="cameraSelect" style="font-weight:bold; margin-bottom:0.5rem; display:block;">📷 Choisir la caméra :</label>
         <select id="cameraSelect" style="
             width: 80%;
@@ -30,7 +30,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         ">
             <option value="">Chargement...</option>
         </select>
-    </div>
+    </div> -->
 
     <!-- Scanner -->
     <div id="qr-reader" style="
@@ -107,27 +107,37 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
 .modal-content {
     background:white;
-    padding:2rem;
-    border-radius:15px;
+    padding:3rem;                 /* plus d’espace intérieur */
+    border-radius:20px;           /* coins arrondis */
     text-align:center;
-    max-width:350px;
-    width:90%;
-    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    max-width:600px;              /* largeur max plus grande */
+    width:95%;                    /* occupe presque tout l’écran sur mobile */
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
     font-family: 'Segoe UI', sans-serif;
+    font-size:1.2rem;             /* texte un peu plus grand */
 }
-
-.modal-content h2 { margin-bottom:1rem; color:#333; }
-.modal-content p { margin-bottom:1rem; color:#555; }
+.modal-content h2 {
+    margin-bottom:1.5rem;
+    font-size:1.8rem;             /* titre plus gros */
+    color:#333;
+}
+.modal-content p {
+    margin-bottom:1.5rem;
+    font-size:1.1rem;
+    color:#555;
+}
 .modal-content button {
-    padding:0.6rem 1.2rem;
+    padding:1rem 2rem;           /* bouton plus large et haut */
+    font-size:1.1rem;            /* texte bouton agrandi */
     border:none;
-    border-radius:8px;
+    border-radius:10px;
     background:#38ef7d;
     color:white;
     font-weight:bold;
     cursor:pointer;
     width:100%;
 }
+
 
 .modal-content button:hover { background:#2ecc71; }
 

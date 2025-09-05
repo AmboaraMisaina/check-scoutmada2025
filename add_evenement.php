@@ -88,10 +88,31 @@ renderHeader("Ajouter un événement pour le " . htmlspecialchars($jour['titre']
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label><br>
-                <label><input type="checkbox" name="ouvert_a[]" value="delegue"> Délégué</label>
-                <label style="margin-left: 1rem;"><input type="checkbox" name="ouvert_a[]" value="observateur"> Observateur</label>
-            </div>
+                <label>Ouvert à</label>
+                <ul style="list-style-type: disc; margin-left: 2rem; font-family: sans-serif;">
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="Observateur"> Observateur
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="Delegue"> Délégué
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="Comite d'organisation"> Comité d'organisation
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="WOSM team"> WOSM team
+                        </label>
+                    </li>
+                </ul>
+
+            </div><br>
 
             <div class="form-group">
                 <label for="unique_event">
