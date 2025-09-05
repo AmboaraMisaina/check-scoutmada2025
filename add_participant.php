@@ -64,8 +64,10 @@ renderHeader('Ajouter Participant');
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>
-                    <option value="delegue">Délégué</option>
-                    <option value="observateur">Observateur</option>
+                    <option value="Delegue">Délégué</option>
+                    <option value="Observateur">Observateur</option>
+                    <option value="Comite d'organisation">Comité d'organisation</option>
+                    <option value="WOSM team">WOSM team</option>
                 </select>
             </div>
 

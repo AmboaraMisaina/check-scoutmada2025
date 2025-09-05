@@ -182,9 +182,10 @@ Html5Qrcode.getCameras().then(cameras => {
 
 function startScanner(cameraId) {
     html5QrcodeScanner = new Html5Qrcode("qr-reader");
+    const qrBoxSize = Math.min(350, document.getElementById('qr-reader').offsetWidth * 0.7); // 70% largeur, max 350px
     html5QrcodeScanner.start(
         cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
+        { fps: 10, qrbox: { width: qrBoxSize, height: qrBoxSize } },
         onScanSuccess
     ).catch(err => showErrorModal("Erreur caméra : " + err));
 }
