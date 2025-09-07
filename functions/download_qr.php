@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php';
+require_once 'functions/functions.php';
 
 // =======================
 // CONFIGURATION GLOBALE - STANDARD BADGE

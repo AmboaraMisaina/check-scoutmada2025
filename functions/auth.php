@@ -15,6 +15,8 @@ function getNavigation()
 {
     return [
         'dashboard.php' => '📊 Chekin',
+        'participants.php' => '👥 Participants',
+        'dashboard.php' => '📅 Programmes',
     ];
 }
 
@@ -241,8 +243,8 @@ function renderHeader($title = '')
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <img src="logo.png" alt="Logo" class="logo">
-                    <h1>CHECK-IN</h1>
+                    <img src="assets/logo.png" alt="Logo" class="logo">
+                    <h1>CHECK-IN ASC ASYF 2025  </h1>
                 </div>
                 <div class="user-info">
                     <span>👋 <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>

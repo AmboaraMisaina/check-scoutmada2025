@@ -1,7 +1,7 @@
 <?php
-require_once 'auth.php';
-require_once 'db.php';
-require_once 'functions.php';
+require_once 'functions/auth.php';
+require_once 'functions/db.php';
+require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 // Définir le timezone à Madagascar
@@ -51,7 +51,7 @@ renderHeader('Checking');
             if ($filter === 'current' && !$e['enCours']) continue;
 
             $evenementAffiche = true;
-            $urlCheck = "check_participants.php?evenement_id=" . $e['id'];
+            $urlCheck = "functions/check_participants.php?evenement_id=" . $e['id'];
         ?>
             <a href="<?= $urlCheck ?>"
                 class="card"

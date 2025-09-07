@@ -1,6 +1,6 @@
 <?php
-require_once 'db.php';
-require_once 'auth.php';
+require_once 'functions/db.php';
+require_once 'functions/auth.php';
 
 // Vérifie si l'utilisateur est connecté
 function checkAuthOrRedirect()

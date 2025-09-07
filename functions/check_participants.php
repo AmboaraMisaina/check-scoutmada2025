@@ -169,7 +169,7 @@ function closeModal(modalId) {
 function onScanSuccess(decodedText, decodedResult) {
     document.getElementById('qr-result').innerText = decodedText;
     html5QrcodeScanner.stop().then(() => {
-        fetch('verif_qr.php', {
+        fetch('functions/verif_qr.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
