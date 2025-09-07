@@ -12,7 +12,8 @@ $evenements = getEvenementsByJour($pdo, $jour_id);
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fra');
 $dateFormatee = strftime('%A %e %B %Y', strtotime($jour['date_jour']));
 
-renderHeader("Programme du $dateFormatee");
+include 'includes/header.php';
+
 ?>
 
 <div class="container">

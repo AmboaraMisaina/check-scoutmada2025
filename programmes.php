@@ -3,7 +3,8 @@ require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 if ($_SESSION['role'] !== 'admin') {
-    renderHeader("Accès interdit");
+    include 'includes/header.php';
+
     ?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
         <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
@@ -25,7 +26,8 @@ if (isset($_GET['delete'])) {
 }
 
 $jours = getAllJoursProgrammes($pdo);
-renderHeader('Programmes');
+include 'includes/header.php';
+
 ?>
 
 <div class="container">

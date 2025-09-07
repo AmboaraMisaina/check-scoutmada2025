@@ -40,7 +40,7 @@ if ($_POST) {
     }
 }
 
-renderHeader('Modifier Événement');
+include 'includes/header.php';
 ?>
 
 <div class="container">

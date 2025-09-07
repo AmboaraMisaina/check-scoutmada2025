@@ -33,7 +33,7 @@ if ($_POST) {
     }
 }
 
-renderHeader('Modifier Participant');
+include 'includes/header.php';
 ?>
 
 <div class="container">

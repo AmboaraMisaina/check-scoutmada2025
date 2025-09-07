@@ -49,7 +49,7 @@ if ($_POST) {
     }
 }
 
-renderHeader("Ajouter un événement pour le " . htmlspecialchars($jour['titre']));
+include 'includes/header.php';
 ?>
 
 <div class="container">

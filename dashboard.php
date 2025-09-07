@@ -11,7 +11,9 @@ $aujourdhui = $_GET['date'] ?? date('Y-m-d');
 $filter = $_GET['filter'] ?? 'current'; // 'current' ou 'all'
 
 $evenements = getEvenementsDuJour($pdo, $aujourdhui);
-renderHeader('Dashboard');
+
+include 'includes/header.php';
+
 ?>
 
 <div class="container">

@@ -12,7 +12,7 @@ $filter = $_GET['filter'] ?? 'current'; // 'current' ou 'all'
 
 $evenements = getEvenementsDuJour($pdo, $aujourdhui);
 
-renderHeader('Checking');
+include 'includes/header.php';
 ?>
 
 <div class="container">

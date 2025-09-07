@@ -23,7 +23,7 @@ if ($_POST) {
     }
 }
 
-renderHeader('Ajouter Participant');
+include 'includes/header.php';
 ?>
 
 <div class="container">

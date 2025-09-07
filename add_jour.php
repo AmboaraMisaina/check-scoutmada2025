@@ -23,7 +23,7 @@ if ($_POST) {
     }
 }
 
-renderHeader('Ajouter une Journée');
+include 'includes/header.php';
 ?>
 <div class="container">
     <div class="page-header">
