@@ -51,7 +51,6 @@ renderHeader('Participants');
                 <tr style="background: #f1f1f1;">
                     <th style="padding: 0.75rem;">ID</th>
                     <th style="padding: 0.75rem;">Nom</th>
-                    <th style="padding: 0.75rem;">Prénom</th>
                     <th style="padding: 0.75rem;">Email</th>
                     <th style="padding: 0.75rem;">Type</th>
                     <th style="padding: 0.75rem;">QR Code</th>
@@ -64,7 +63,6 @@ renderHeader('Participants');
                         <tr style="border-bottom: 1px solid #e1e5e9;">
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['id']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['nom']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['prenom']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['email']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['type']); ?></td>
                             <td style="padding: 0.75rem;">

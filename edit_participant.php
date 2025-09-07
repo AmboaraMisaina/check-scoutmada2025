@@ -74,10 +74,14 @@ renderHeader('Modifier Participant');
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>
-                    <option value="Delegue" <?= $participant['type'] === 'Delegue' ? 'selected' : '' ?>>Délégué</option>
-                    <option value="Observateur" <?= $participant['type'] === 'Observateur' ? 'selected' : '' ?>>Observateur</option>
-                    <option value="Comité d'organisation" <?= $participant['type'] === 'Comité d\'organisation' ? 'selected' : '' ?>>Comité d'organisation</option>
-                    <option value="WOSM Team" <?= $participant['type'] === 'WOSM Team' ? 'selected' : '' ?>>WOSM Team</option>
+                    <option value="delegate" <?= $participant['type'] === 'delegate' ? 'selected' : '' ?>>Delegate</option>
+                    <option value="observer" <?= $participant['type'] === 'observer' ? 'selected' : '' ?>>Dbserver</option>
+                    <option value="organizing_comittee" <?= $participant['type'] === 'organizing_comittee' ? 'selected' : '' ?>>Organizing comittee</option>
+                    <option value="wosm_team" <?= $participant['type'] === 'wosm_team' ? 'selected' : '' ?>>WOSM Team</option>
+                    <option value="volunteer" <?= $participant['type'] === 'volunteer' ? 'selected' : '' ?>>Volunteer</option>
+                    <option value="staff" <?= $participant['type'] === 'staff' ? 'selected' : '' ?>>Staff</option>
+                    <option value="partner" <?= $participant['type'] === 'partner' ? 'selected' : '' ?>>Partner</option>
+                    <option value="guest" <?= $participant['type'] === 'guest' ? 'selected' : '' ?>>Guest</option>
                 </select>
             </div>
 

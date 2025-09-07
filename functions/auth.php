@@ -14,9 +14,9 @@ function checkAuth()
 function getNavigation()
 {
     return [
-        'dashboard.php' => '📊 Chekin',
+        'dashboard.php' => '✔️ Chekin',
         'participants.php' => '👥 Participants',
-        'dashboard.php' => '📅 Programmes',
+        'programmes.php' => '📅 Programmes',
     ];
 }
 
@@ -72,7 +72,7 @@ function renderHeader($title = '')
                 height: 50px;
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 1);
                 padding: 3px;
             }
 
@@ -243,7 +243,7 @@ function renderHeader($title = '')
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
-                    <img src="assets/logo.png" alt="Logo" class="logo">
+                    <img src="assets/logo-short.png" alt="Logo" class="logo">
                     <h1>CHECK-IN ASC ASYF 2025  </h1>
                 </div>
                 <div class="user-info">

@@ -1,5 +1,6 @@
 <?php
 require_once 'functions/functions.php';
+require_once 'functions/db.php';
 
 
 if ($_SESSION['role'] !== 'admin') {
@@ -36,8 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
     fclose($handle);
     $message = "<div style='margin-top:1rem; text-align:center; color:green; font-weight:bold;'>$imported participants importés.</div>";
 }
-
-
 
 renderHeader('Import Participants');
 ?>

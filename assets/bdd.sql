@@ -77,7 +77,7 @@ CREATE TABLE planing (
 ALTER TABLE evenements
 ADD COLUMN nb_participation INT DEFAULT NULL;
 ALTER TABLE participants 
-MODIFY COLUMN type ENUM('Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team') NOT NULL;
+MODIFY COLUMN type ENUM('delegate', 'observer', 'organizing_comittee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest') NOT NULL;
 
 -- admin par défaut (mot de passe: admin123)
 INSERT INTO admins (username, password) VALUES 
@@ -97,22 +97,5 @@ INSERT INTO jours_programmes (titre, date_jour) VALUES
 ('Journée Passée', DATE_SUB(CURDATE(), INTERVAL 1 DAY)),
 ('Journée Futur', DATE_ADD(CURDATE(), INTERVAL 1 DAY));
 
--- Événements
-INSERT INTO evenements (jour_id, titre, description, horaire_debut, horaire_fin, ouvert_a) VALUES
-(1, 'Événement Matin ohatra misakafo maraina', 'Test événement aujourd\'hui matin', '09:00:00', '12:00:00', 'delegue,observateur'),
-(1, 'Événement Après-midi ohatra milalao', 'Test événement aujourd\'hui après-midi', '14:00:00', '16:00:00', 'delegue'),
-(2, 'Événement Passé', 'Événement d\'hier', '10:00:00', '11:00:00', 'observateur'),
-(3, 'Événement Futur', 'Événement demain', '15:00:00', '17:00:00', 'delegue,observateur');
-
-
-INSERT INTO evenements (jour_id, titre, description, horaire_debut, horaire_fin, ouvert_a) VALUES
-(1, 'Événement Soir', 'Test événement ce soir', '18:00:00', '23:59:00', 'delegue,observateur');
-
--- Participants
-INSERT INTO participants (nom, prenom, email, type, qr_code) VALUES
-('Rakoto', 'Jean', 'jean.rakoto@test.com', 'delegue', NULL),
-('Rabe', 'Marie', 'marie.rabe@test.com', 'observateur', NULL),
-('Andrian', 'Luc', 'luc.andrian@test.com', 'delegue', NULL),
-('Rasolon', 'Sofia', 'sofia.rasolon@test.com', 'observateur', NULL);
 
 

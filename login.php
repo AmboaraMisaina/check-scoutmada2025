@@ -34,6 +34,7 @@ if ($_POST) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
