@@ -159,9 +159,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     .success-icon,
     .error-icon {
-        font-size: 50vw;
-        width: 50vw;
-        height: 50vw;
+        font-size: 30vw;
+        width: 30vw;
+        height: 30vw;
         margin-bottom: 20px;
         display: flex;
         align-items: center;
@@ -190,7 +190,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     .success-text {
-        font-size: 20vw;
+        font-size: 10vw;
         font-weight: bold;
         color: #00ff88;
         letter-spacing: 3px;
@@ -205,7 +205,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     .error-text {
-        font-size: 20vw;
+        font-size: 10vw;
         font-weight: bold;
         color: #ff4757;
         letter-spacing: 3px;
