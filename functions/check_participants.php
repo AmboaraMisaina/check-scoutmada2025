@@ -1,9 +1,31 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <?php
+require "functions.php";
 $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
-?>
 
+    // Récupérer les infos de l'événement
+    $evenement = null;
+    if ($evenement_id) {
+        $evenement = getEvenementById($pdo, $evenement_id);
+    }
+?>
+<?php if ($evenement): ?>
+    <div style="text-align:center; margin-top:2rem; margin-bottom:1.5rem;">
+        <h2 style="margin-bottom:0.5rem;"><?= htmlspecialchars($evenement['titre']) ?></h2>
+        <div style="font-size:1.1rem; color:#f1f1f1;">
+            <?php
+                if (!empty($evenement['date_evenement'])) {
+                    $date = date('d/m/Y', strtotime($evenement['date_evenement']));
+                    echo "Date : $date";
+                }
+                if (!empty($evenement['horaire_debut']) && !empty($evenement['horaire_fin'])) {
+                    echo " &mdash; {$evenement['horaire_debut']} à {$evenement['horaire_fin']}";
+                }
+            ?>
+        </div>
+    </div>
+<?php endif; ?>
 <div class="scanner-container">
     <!-- Scanner -->
     <div id="qr-reader">
@@ -32,6 +54,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         <div class="status-text error-text">KO</div>
     </div>
 </div>
+
+
 
 <style>
     /* 🌟 Fond général */
