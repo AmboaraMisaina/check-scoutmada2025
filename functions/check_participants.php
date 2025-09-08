@@ -153,10 +153,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         }
     }
 
-    /* Icônes énormes avec glow */
     .success-icon,
     .error-icon {
-        font-size: 180px;
+        font-size: 300px;
         font-weight: bold;
         margin-bottom: 25px;
         display: flex;
