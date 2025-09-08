@@ -9,7 +9,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     <div id="qr-reader">
         <!-- Overlay semi-transparent -->
         <div class="qr-overlay"></div>
-        <!-- Cadre carré sans animation -->
+        <!-- Cadre carré stylé -->
         <div id="scan-frame"></div>
     </div>
 
@@ -34,50 +34,53 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 </div>
 
 <style>
+    /* 🌟 Fond général */
     body {
         margin: 0;
         padding: 0;
-        background: #6f6f6f;
         font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        color: white;
+        overflow-x: hidden;
     }
 
+    /* Conteneur principal */
     .scanner-container {
         width: 100vw;
         min-height: 100vh;
-        margin: 0;
-        padding: 0.5rem 0 2rem 0;
-        background: #6f6f6f;
-        color: white;
-        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 1rem;
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
     }
 
+    /* 📱 Scanner */
     #qr-reader {
         width: 94vw;
         max-width: 420px;
         aspect-ratio: 1 / 1;
         position: relative;
-        border-radius: 16px;
+        border-radius: 24px;
         overflow: hidden;
-        border: 3px solid #000;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        margin: 1.2rem 0 0.7rem 0;
-        background: #222;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        margin: 1.5rem 0;
+        background: rgba(34, 34, 34, 0.6);
+        backdrop-filter: blur(12px);
     }
 
+    /* Overlay semi-transparent */
     .qr-overlay {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.32);
+        inset: 0;
+        background: rgba(0, 0, 0, 0.25);
         z-index: 1;
         pointer-events: none;
     }
 
+    /* Cadre de scan stylé avec glow + pulse */
     #scan-frame {
         position: absolute;
         top: 50%;
@@ -85,110 +88,147 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         width: 70%;
         aspect-ratio: 1 / 1;
         transform: translate(-50%, -50%);
-        border: 3px solid #38ef7d;
-        border-radius: 0;
-        box-sizing: border-box;
-        pointer-events: none;
+        border: 4px solid #00ff88;
+        border-radius: 16px;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+        animation: pulse 2s infinite;
         z-index: 2;
     }
 
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+        }
+
+        50% {
+            box-shadow: 0 0 40px rgba(0, 255, 136, 1);
+        }
+
+        100% {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+        }
+    }
+
+    /* Résultat texte */
     #qr-result {
-        margin-top: 1.2rem;
+        margin-top: 1rem;
         text-align: center;
         font-weight: bold;
-        font-size: 1.1rem;
-        min-height: 24px;
+        font-size: 1.2rem;
+        min-height: 28px;
         word-break: break-all;
         padding: 0 1rem;
     }
 
-    #qr-result.success {
-        color: #38ef7d;
-    }
-
-    #qr-result.error {
-        color: #e74c3c;
-    }
-
+    /* Modals */
     .modal {
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(255, 255, 255, 0.2);
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
+    /* Contenu modal */
     .modal-content {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 200px;
-        height: 200px;
-        background: transparent;
-        border-radius: 20px;
-        text-align: center;
+        animation: popIn 0.5s ease forwards;
     }
 
+    @keyframes popIn {
+        0% {
+            transform: scale(0.6);
+            opacity: 0;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* Icônes énormes avec glow */
     .success-icon,
     .error-icon {
-        font-size: 80px;
+        font-size: 180px;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 120px;
-        height: 120px;
+        width: 180px;
+        height: 180px;
         border-radius: 50%;
+        animation: glow 1.5s infinite alternate;
     }
 
+    @keyframes glow {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(1.05);
+        }
+    }
+
+    /* Succès */
     .success-icon {
-        color: #38ef7d;
-        background: rgba(56, 239, 125, 0.1);
-        border: 3px solid #38ef7d;
-    }
-
-    .error-icon {
-        color: #e74c3c;
-        background: rgba(231, 76, 60, 0.1);
-        border: 3px solid #e74c3c;
-    }
-
-    .status-text {
-        font-size: 28px;
-        font-weight: bold;
-        letter-spacing: 2px;
+        color: #00ff88;
+        background: rgba(0, 255, 136, 0.15);
+        border: 5px solid #00ff88;
+        box-shadow: 0 0 40px rgba(0, 255, 136, 0.7);
     }
 
     .success-text {
-        color: #38ef7d;
+        font-size: 32px;
+        font-weight: bold;
+        color: #00ff88;
+        letter-spacing: 3px;
+    }
+
+    /* Erreur */
+    .error-icon {
+        color: #ff4757;
+        background: rgba(255, 71, 87, 0.15);
+        border: 5px solid #ff4757;
+        box-shadow: 0 0 40px rgba(255, 71, 87, 0.7);
     }
 
     .error-text {
-        color: #e74c3c;
+        font-size: 32px;
+        font-weight: bold;
+        color: #ff4757;
+        letter-spacing: 3px;
     }
 
+    /* 🔘 Bouton premium */
     #quit-scan-btn {
-        background: #e74c3c;
+        background: linear-gradient(135deg, #ff6b6b, #c0392b);
         color: white;
         border: none;
-        padding: 12px 24px;
+        padding: 14px 32px;
         font-size: 16px;
-        border-radius: 8px;
+        border-radius: 50px;
         cursor: pointer;
         margin-top: 20px;
         font-family: 'Segoe UI', sans-serif;
-        transition: background 0.3s ease;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
     }
 
     #quit-scan-btn:hover {
-        background: #c0392b;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(231, 76, 60, 0.6);
     }
 </style>
 
@@ -198,7 +238,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     function showSuccessModal() {
         document.getElementById('successModal').style.display = "flex";
-        // Auto-fermer après 2 secondes
         setTimeout(() => {
             closeModal('successModal');
         }, 2000);
@@ -206,7 +245,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     function showErrorModal(msg) {
         document.getElementById('errorModal').style.display = "flex";
-        // Auto-fermer après 3 secondes
         setTimeout(() => {
             closeModal('errorModal');
         }, 3000);
@@ -218,7 +256,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             Html5Qrcode.getCameras().then(cameras => {
                 if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
             });
-        }, 500); // 0.5 seconde de délai
+        }, 500);
         document.getElementById('qr-result').innerText = "";
     }
 
@@ -236,13 +274,14 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                 .then(data => {
                     if (data.includes("Présence enregistrée")) showSuccessModal();
                     else showErrorModal(data);
-                }).catch(err => showErrorModal("Erreur : " + err));
+                })
+                .catch(err => showErrorModal("Erreur : " + err));
         });
     }
 
     function startScanner(cameraId) {
         html5QrcodeScanner = new Html5Qrcode("qr-reader");
-        const qrBoxSize = Math.min(window.innerWidth * 0.66, 280); // 66% largeur écran, max 280px
+        const qrBoxSize = Math.min(window.innerWidth * 0.66, 280);
         html5QrcodeScanner.start(
             cameraId, {
                 fps: 10,
@@ -255,18 +294,18 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         ).catch(err => showErrorModal("Erreur caméra : " + err));
     }
 
-    // Démarrage automatique sur la première caméra
+    // Démarrage auto
     Html5Qrcode.getCameras().then(cameras => {
         if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
         else showErrorModal("Aucune caméra détectée.");
     }).catch(err => showErrorModal("Impossible d'accéder aux caméras : " + err));
 
-    // Fermer les modals en cliquant sur l'arrière-plan
-    document.getElementById('successModal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal('successModal');
+    // Fermer modals en cliquant dessus
+    document.getElementById('successModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('successModal')) closeModal('successModal');
     });
 
-    document.getElementById('errorModal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal('errorModal');
+    document.getElementById('errorModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('errorModal')) closeModal('errorModal');
     });
 </script>
