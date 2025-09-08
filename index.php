@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Si l'utilisateur est déjà connecté, rediriger vers le dashboard
+// Si l'utilisateur est déjà connecté, rediriger vers le checkin
 if (isset($_SESSION['admin_id'])) {
-    header('Location: dashboard.php');
+    header('Location: checkin.php');
     exit;
 }
 

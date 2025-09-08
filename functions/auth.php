@@ -14,9 +14,10 @@ function checkAuth()
 function getNavigation()
 {
     return [
-        'dashboard.php' => '📊 Chekin',
+        'checkin.php' => '✅ Check-in',
+        'programmes.php' => '📅 Programmes',
         'participants.php' => '👥 Participants',
-        'dashboard.php' => '📅 Programmes',
+        'add_user.php' => '➕ Ajouter un utilisateur',
     ];
 }
 

@@ -5,7 +5,7 @@ require_once 'functions/db.php';
 
 // Si déjà connecté, rediriger
 if (isset($_SESSION['admin_id'])) {
-    header('Location: dashboard.php');
+    header('Location: checkin.php');
     exit;
 }
 
@@ -24,7 +24,7 @@ if ($_POST) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
             $_SESSION['role'] = $admin['role'];
-            header('Location: dashboard.php');
+            header('Location: checkin.php');
             exit;
         } else {
             $error = 'Identifiants incorrects';

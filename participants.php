@@ -9,8 +9,8 @@ if ($_SESSION['role'] !== 'admin') {
         <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
             <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Accès interdit</h2>
             <p style="font-size:1.1rem; margin-bottom:1.5rem;">Vous n’avez pas les droits nécessaires pour accéder à cette page.</p>
-            <a href="dashboard.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
-                ⬅ Retour au tableau de bord
+            <a href="checkin.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
+                ⬅ Retour
             </a>
         </div>
     </div>
@@ -42,7 +42,6 @@ include 'includes/header.php';
         <a href="add_participant.php" class="btn">➕ Ajouter un participant</a>
         <a href="import_participants.php" class="btn btn-primary">📥 Importer des participants</a>
         <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Télécharger tous les QR Codes</a>
-        <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a>
     </div>
 
     <!-- Conteneur scrollable pour le tableau -->
@@ -50,9 +49,8 @@ include 'includes/header.php';
         <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
             <thead>
                 <tr style="background: #f1f1f1;">
-                    <th style="padding: 0.75rem;">ID</th>
+                    <!-- <th style="padding: 0.75rem;">ID</th> -->
                     <th style="padding: 0.75rem;">Nom</th>
-                    <th style="padding: 0.75rem;">Prénom</th>
                     <th style="padding: 0.75rem;">Email</th>
                     <th style="padding: 0.75rem;">Type</th>
                     <th style="padding: 0.75rem;">QR Code</th>
@@ -63,9 +61,8 @@ include 'includes/header.php';
                 <?php if ($participants): ?>
                     <?php foreach ($participants as $p): ?>
                         <tr style="border-bottom: 1px solid #e1e5e9;">
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['id']); ?></td>
+                            <!-- <td style="padding: 0.75rem;"><?= htmlspecialchars($p['id']); ?></td> -->
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['nom']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['prenom']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['email']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['type']); ?></td>
                             <td style="padding: 0.75rem;">

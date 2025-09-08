@@ -15,7 +15,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     <!-- Résultat -->
     <div id="qr-result"></div>
-    <button id="quit-scan-btn" onclick="window.location.href='../dashboard.php'">Quitter le scan</button>
+    <button id="quit-scan-btn" onclick="window.location.href='../checkin.php'">Quitter le scan</button>
 </div>
 
 <!-- Modals succès / erreur -->
