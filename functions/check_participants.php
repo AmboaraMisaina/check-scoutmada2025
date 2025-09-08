@@ -187,7 +187,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     .success-text {
-        font-size: 32px;
+        font-size: 20vw;
         font-weight: bold;
         color: #00ff88;
         letter-spacing: 3px;
@@ -202,7 +202,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     .error-text {
-        font-size: 32px;
+        font-size: 20vw;
         font-weight: bold;
         color: #ff4757;
         letter-spacing: 3px;
