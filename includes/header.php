@@ -222,7 +222,7 @@
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
-                <img src="assets/logo.png" alt="Logo" class="logo">
+                <img src="assets/logo-short.png" alt="Logo" class="logo">
                 <h1>CHECK-IN ASC ASYF 2025  </h1>
             </div>
             <div class="user-info">
