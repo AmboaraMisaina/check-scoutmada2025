@@ -71,7 +71,7 @@ include 'includes/header.php';
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_debut'] ?? '-'); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_fin'] ?? '-'); ?></td>
                             <td style="padding: 0.75rem;">
-                                <a href="view_evenement.php?id=<?= $e['id']; ?>" class="btn btn-secondary">🔍</a>
+                                <a href="edit_evenement.php?id=<?= $e['id']; ?>" class="btn btn-secondary">🔍</a>
                                 <a href="programmes.php?delete=<?= $e['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️</a>
                             </td>
                         </tr>
