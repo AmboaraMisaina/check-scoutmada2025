@@ -3,10 +3,12 @@
 require_once 'functions/db.php';
 
 // Générer le bon hash pour 'admin123'
+
+$hashAdmin = hash('sha256', $password);
 $passwordAdmin = 'admin123';
 $passwordCheckin = 'checkin123';
-$correctHashAdmin = password_hash($passwordAdmin, PASSWORD_DEFAULT);
-$correctHashCheckin = password_hash($passwordCheckin, PASSWORD_DEFAULT);
+$correctHashAdmin = hash('sha256', $passwordAdmin);
+$correctHashCheckin = hash('sha256', $passwordCheckin);
 
 echo "<h1>Correction du mot de passe admin</h1>";
 echo "<p><strong>Mot de passe :</strong> admin123</p>";

@@ -1,6 +1,6 @@
 <?php
 require_once 'functions/functions.php';
-checkAuthOrRedirect();
+// checkAuthOrRedirect();
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
