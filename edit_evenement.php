@@ -27,14 +27,15 @@ if ($_POST) {
     $horaire_fin = $_POST['horaire_fin'] ?? '';
     $ouvert_a = $_POST['ouvert_a'] ?? [];
     $date_evenement = $_POST['date'] ?? '';
+    $participation_unique = isset($_POST['unique_event']) ? 1 : 0;
 
      // Validation de base
 
     if (!$titre || !$horaire_debut || !$horaire_fin || !$date_evenement) {
         $error = "Veuillez remplir tous les champs obligatoires.";
     } else {
-        
-        $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id);
+
+        $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id, $participation_unique);
         if ($result) {
             $message = "Événement mis à jour avec succès.";
             $evenement = getEvenementById($pdo, $id);
