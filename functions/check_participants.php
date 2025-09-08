@@ -34,40 +34,41 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 </div>
 
 <style>
-    /* 🌟 Fond général */
     body {
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #4b6cb7, #182848);
+        background: linear-gradient(135deg, #6a0dad, #4b6cb7, #182848);
+        /* violet dominant */
         color: white;
         overflow-x: hidden;
     }
 
-    /* Conteneur principal */
     .scanner-container {
         width: 100vw;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        /* centré verticalement */
         padding: 1rem;
-        backdrop-filter: blur(10px);
         box-sizing: border-box;
     }
 
-    /* 📱 Scanner */
     #qr-reader {
-        width: 94vw;
-        max-width: 420px;
+        width: 90vw;
+        /* presque toute la largeur écran */
+        max-width: 500px;
+        /* limite sur grand écran */
         aspect-ratio: 1 / 1;
         position: relative;
         border-radius: 24px;
         overflow: hidden;
         border: 2px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        margin: 1.5rem 0;
-        background: rgba(34, 34, 34, 0.6);
+        margin: 1rem 0;
+        background: rgba(34, 34, 34, 0.65);
         backdrop-filter: blur(12px);
     }
 
@@ -80,38 +81,40 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         pointer-events: none;
     }
 
-    /* Cadre de scan stylé avec glow + pulse */
+    /* Cadre de scan avec glow + pulse */
     #scan-frame {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 70%;
+        width: 80%;
+        /* plus grand que précédemment */
         aspect-ratio: 1 / 1;
         transform: translate(-50%, -50%);
-        border: 4px solid #00ff88;
-        border-radius: 16px;
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+        border: 4px solid #9b59b6;
+        /* violet glow */
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(155, 89, 182, 0.7);
         animation: pulse 2s infinite;
         z-index: 2;
     }
 
     @keyframes pulse {
         0% {
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
         }
 
         50% {
-            box-shadow: 0 0 40px rgba(0, 255, 136, 1);
+            box-shadow: 0 0 50px rgba(155, 89, 182, 1);
         }
 
         100% {
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
         }
     }
 
-    /* Résultat texte */
+    /* Texte résultat */
     #qr-result {
-        margin-top: 1rem;
+        margin-top: 1.2rem;
         text-align: center;
         font-weight: bold;
         font-size: 1.2rem;
@@ -153,17 +156,17 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         }
     }
 
-    /* Icônes énormes avec glow */
+    /* Icônes succès / erreur */
     .success-icon,
     .error-icon {
-        font-size: 180px;
+        font-size: 160px;
         font-weight: bold;
         margin-bottom: 25px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 180px;
-        height: 180px;
+        width: 160px;
+        height: 160px;
         border-radius: 50%;
         animation: glow 1.5s infinite alternate;
     }
@@ -208,9 +211,10 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         letter-spacing: 3px;
     }
 
-    /* 🔘 Bouton premium */
+    /* Bouton quitter scan */
     #quit-scan-btn {
-        background: linear-gradient(135deg, #ff6b6b, #c0392b);
+        background: linear-gradient(135deg, #9b59b6, #6a0dad);
+        /* violet dominant */
         color: white;
         border: none;
         padding: 14px 32px;
@@ -223,12 +227,12 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         text-transform: uppercase;
         font-weight: bold;
         transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
     }
 
     #quit-scan-btn:hover {
         transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(231, 76, 60, 0.6);
+        box-shadow: 0 10px 25px rgba(155, 89, 182, 0.6);
     }
 </style>
 
