@@ -155,14 +155,16 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     .success-icon,
     .error-icon {
-        font-size: 300px;
-        font-weight: bold;
+        font-size: 500px;
+        /* ou plus selon ton envie */
+        width: 500px;
+        /* agrandir le conteneur */
+        height: 500px;
+        /* agrandir le conteneur */
         margin-bottom: 25px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 180px;
-        height: 180px;
         border-radius: 50%;
         animation: glow 1.5s infinite alternate;
     }
