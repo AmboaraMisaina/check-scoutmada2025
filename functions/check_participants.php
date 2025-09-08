@@ -21,17 +21,15 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content success">
-        <h2 class="success">✔ Succès !</h2>
-        <p>Le participant a bien été enregistré.</p>
-        <button class="success" onclick="closeModal('successModal')">Fermer</button>
+        <h2>✔</h2>
+        <p>OK</p>
     </div>
 </div>
 
 <div id="errorModal" class="modal">
     <div class="modal-content error">
-        <h2 class="error">✖ Erreur</h2>
-        <p id="errorMsg"></p>
-        <button class="error" onclick="closeModal('errorModal')">Fermer</button>
+        <h2>✖</h2>
+        <p>KO</p>
     </div>
 </div>
 
@@ -112,6 +110,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         color: #e74c3c;
     }
 
+    /* === MODALES SIMPLIFIÉES === */
     .modal {
         display: none;
         position: fixed;
@@ -119,56 +118,44 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(255, 255, 255, 0.2);
+        /* Fond semi-transparent blanc */
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
     .modal-content {
-        background: white;
-        padding: 2rem 1rem;
-        border-radius: 16px;
+        background: transparent;
+        /* pas de fond */
         text-align: center;
-        max-width: 80vw;
-        width: 100%;
-        margin: 0 auto;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
         font-family: 'Segoe UI', sans-serif;
-        font-size: 1.2rem;
-        border-top: 4px solid #ccc;
+        box-shadow: none;
+        border: none;
     }
 
-    .modal-content.success {
-        border-top: 4px solid #38ef7d;
+    .modal-content h2 {
+        font-size: 8rem;
+        /* très gros ✔ ou ✖ */
+        margin: 0;
     }
 
-    .modal-content.error {
-        border-top: 4px solid #e74c3c;
+    .modal-content p {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-top: 1rem;
     }
 
-    .modal-content h2.success {
+    .modal-content.success h2,
+    .modal-content.success p {
         color: #38ef7d;
+        /* Vert */
     }
 
-    .modal-content h2.error {
+    .modal-content.error h2,
+    .modal-content.error p {
         color: #e74c3c;
-    }
-
-    .modal-content button.success {
-        background: #38ef7d;
-    }
-
-    .modal-content button.success:hover {
-        background: #2ecc71;
-    }
-
-    .modal-content button.error {
-        background: #e74c3c;
-    }
-
-    .modal-content button.error:hover {
-        background: #c0392b;
+        /* Rouge */
     }
 </style>
 
@@ -181,7 +168,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     function showErrorModal(msg) {
-        document.getElementById('errorMsg').innerText = msg;
         document.getElementById('errorModal').style.display = "flex";
     }
 
@@ -195,21 +181,23 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         document.getElementById('qr-result').innerText = "";
     }
 
-function onScanSuccess(decodedText, decodedResult) {
-    document.getElementById('qr-result').innerText = decodedText;
-    html5QrcodeScanner.stop().then(() => {
-        fetch('verif_qr.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
-        })
-        .then(r => r.text())
-        .then(data => {
-            if(data.includes("Présence enregistrée")) showSuccessModal();
-            else showErrorModal(data);
-        }).catch(err => showErrorModal("Erreur : " + err));
-    });
-}
+    function onScanSuccess(decodedText, decodedResult) {
+        document.getElementById('qr-result').innerText = decodedText;
+        html5QrcodeScanner.stop().then(() => {
+            fetch('verif_qr.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
+                })
+                .then(r => r.text())
+                .then(data => {
+                    if (data.includes("Présence enregistrée")) showSuccessModal();
+                    else showErrorModal(data);
+                }).catch(err => showErrorModal("Erreur : " + err));
+        });
+    }
 
     function startScanner(cameraId) {
         html5QrcodeScanner = new Html5Qrcode("qr-reader");
