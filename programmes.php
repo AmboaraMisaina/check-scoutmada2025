@@ -5,7 +5,7 @@ checkAuthOrRedirect();
 if ($_SESSION['role'] !== 'admin') {
     include 'includes/header.php';
 
-    ?>
+?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
         <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
             <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Accès interdit</h2>
@@ -15,7 +15,7 @@ if ($_SESSION['role'] !== 'admin') {
             </a>
         </div>
     </div>
-    <?php
+<?php
     renderFooter();
     exit;
 }
