@@ -1,12 +1,12 @@
 <?php
-// fix_admin.php - Script pour corriger le mot de passe de l'admin
+// fix_admin.php - Script pour corriger le mot de passe de l'admin et du checkin (hashage SHA-256)
 require_once 'functions/db.php';
 
-// Générer le bon hash pour 'admin123'
-
-$hashAdmin = hash('sha256', $password);
+// Définir les mots de passe
 $passwordAdmin = 'admin123';
 $passwordCheckin = 'checkin123';
+
+// Générer les hash SHA-256
 $correctHashAdmin = hash('sha256', $passwordAdmin);
 $correctHashCheckin = hash('sha256', $passwordCheckin);
 
@@ -39,13 +39,13 @@ try {
         $stmtCheckin->execute();
         $checkin = $stmtCheckin->fetch();
 
-        if ($admin && password_verify($passwordAdmin, $admin['password'])) {
+        if ($admin && $admin['password'] === $correctHashAdmin) {
             echo "<p style='color: green;'><strong>✅ Vérification :</strong> Le mot de passe fonctionne maintenant !</p>";
         } else {
             echo "<p style='color: red;'><strong>❌ Erreur :</strong> La vérification a échoué.</p>";
         }
 
-        if ($checkin && password_verify($passwordCheckin, $checkin['password'])) {
+        if ($checkin && $checkin['password'] === $correctHashCheckin) {
             echo "<p style='color: green;'><strong>✅ Vérification :</strong> Le mot de passe pour 'checkin' fonctionne maintenant !</p>";
         } else {
             echo "<p style='color: red;'><strong>❌ Erreur :</strong> La vérification pour 'checkin' a échoué.</p>";
