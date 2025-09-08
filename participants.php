@@ -39,10 +39,11 @@ renderHeader('Participants');
     </div>
 
     <div class="card" style="margin-top: 2rem;">
-        <a href="add_participant.php" class="btn">➕ Ajouter un participant</a>
-        <a href="import_participants.php" class="btn btn-primary">📥 Importer des participants</a>
-        <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Télécharger tous les QR Codes</a>
-        <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a>
+        <a href="add_participant.php" class="btn">➕ Add participant</a>
+        <a href="add_guest.php" class="btn">➕ Add guest</a>
+        <a href="import_participants.php" class="btn btn-primary">📥 Import participants</a>
+        <!-- <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Download all QR Codes</a> -->
+        <!-- <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a> -->
     </div>
 
     <div class="card">
@@ -50,9 +51,9 @@ renderHeader('Participants');
             <thead>
                 <tr style="background: #f1f1f1;">
                     <th style="padding: 0.75rem;">ID</th>
-                    <th style="padding: 0.75rem;">Nom</th>
+                    <th style="padding: 0.75rem;">Name</th>
                     <th style="padding: 0.75rem;">Email</th>
-                    <th style="padding: 0.75rem;">Type</th>
+                    <th style="padding: 0.75rem;">Category</th>
                     <th style="padding: 0.75rem;">QR Code</th>
                     <th style="padding: 0.75rem;">Actions</th>
                 </tr>

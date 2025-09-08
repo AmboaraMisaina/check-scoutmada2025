@@ -12,7 +12,7 @@ if ($_POST) {
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
     $email = trim($_POST['mail'] ?? '');
-    $type = $_POST['type'] ?? '';
+    $type = 'guest';
 
     $result = addParticipant($pdo, $nom, $prenom, $email, $type); // Fonction centralisée
 
@@ -23,13 +23,13 @@ if ($_POST) {
     }
 }
 
-renderHeader('Add Participant');
+renderHeader('Add guest');
 ?>
 
 <div class="container">
     <div class="page-header">
-        <h2>Add participant</h2>
-        <p>Fill participant informations</p>
+        <h2>Add guest</h2>
+        <p>Fill guest informations</p>
     </div>
 
     <div class="card">
@@ -57,21 +57,6 @@ renderHeader('Add Participant');
                 <label for="mail" style="display:block; margin-bottom:0.5rem;">Email</label>
                 <input type="email" id="mail" name="mail" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="type" style="display:block; margin-bottom:0.5rem;">Type</label>
-                <select id="type" name="type" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
-                    <option value="">-- Sélectionner --</option>
-                    <option value="delegate">Delegate</option>
-                    <option value="observer">Observateur</option>
-                    <option value="organizing_comittee">Comité d'organisation</option>
-                    <option value="wosm_team">WOSM Team</option>
-                    <option value="volunteer">Volunteer</option>
-                    <option value="staff">Staff</option>
-                    <option value="partner">Partner</option>
-                </select>
             </div>
 
             <button type="submit" class="btn" style="margin-top:1rem;">Register</button>
