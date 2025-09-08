@@ -46,30 +46,34 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     /* Conteneur principal */
     .scanner-container {
-        width: 100vw;
-        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        /* centré verticalement */
+        min-height: 100vh;
         padding: 1rem;
         backdrop-filter: blur(10px);
         box-sizing: border-box;
     }
 
+
     /* 📱 Scanner */
     #qr-reader {
-        width: 94vw;
-        max-width: 420px;
-        aspect-ratio: 1 / 1;
+        width: 90vw;
+        max-width: 600px;
+        aspect-ratio: 0.9 / 1;
         position: relative;
         border-radius: 24px;
         overflow: hidden;
         border: 2px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        margin: 1.5rem 0;
+        margin: 1.5rem auto;
+        /* centré horizontalement */
         background: rgba(34, 34, 34, 0.6);
         backdrop-filter: blur(12px);
     }
+
 
     /* Overlay semi-transparent */
     .qr-overlay {
@@ -281,14 +285,16 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     function startScanner(cameraId) {
         html5QrcodeScanner = new Html5Qrcode("qr-reader");
-        const qrBoxSize = Math.min(window.innerWidth * 0.66, 280);
+        const scannerWidth = document.getElementById('qr-reader').clientWidth;
+        const qrBoxSize = scannerWidth * 0.7;
+
         html5QrcodeScanner.start(
             cameraId, {
                 fps: 10,
                 qrbox: {
                     width: qrBoxSize,
                     height: qrBoxSize
-                }
+                } // carré
             },
             onScanSuccess
         ).catch(err => showErrorModal("Erreur caméra : " + err));
