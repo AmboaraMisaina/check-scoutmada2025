@@ -21,17 +21,15 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content success">
-        <h2 class="success">✔ Succès !</h2>
-        <p>Le participant a bien été enregistré.</p>
-        <button class="success" onclick="closeModal('successModal')">Fermer</button>
+        <div class="success-icon">✓</div>
+        <div class="status-text success-text">OK</div>
     </div>
 </div>
 
 <div id="errorModal" class="modal">
     <div class="modal-content error">
-        <h2 class="error">✖ Erreur</h2>
-        <p id="errorMsg"></p>
-        <button class="error" onclick="closeModal('errorModal')">Fermer</button>
+        <div class="error-icon">✗</div>
+        <div class="status-text error-text">KO</div>
     </div>
 </div>
 
@@ -119,55 +117,77 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(255, 255, 255, 0.2);
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
     .modal-content {
-        background: white;
-        padding: 2rem 1rem;
-        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 200px;
+        background: transparent;
+        border-radius: 20px;
         text-align: center;
-        max-width: 80vw;
-        width: 100%;
-        margin: 0 auto;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 1.2rem;
-        border-top: 4px solid #ccc;
     }
 
-    .modal-content.success {
-        border-top: 4px solid #38ef7d;
+    .success-icon,
+    .error-icon {
+        font-size: 80px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
     }
 
-    .modal-content.error {
-        border-top: 4px solid #e74c3c;
+    .success-icon {
+        color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+        border: 3px solid #38ef7d;
     }
 
-    .modal-content h2.success {
+    .error-icon {
+        color: #e74c3c;
+        background: rgba(231, 76, 60, 0.1);
+        border: 3px solid #e74c3c;
+    }
+
+    .status-text {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .success-text {
         color: #38ef7d;
     }
 
-    .modal-content h2.error {
+    .error-text {
         color: #e74c3c;
     }
 
-    .modal-content button.success {
-        background: #38ef7d;
-    }
-
-    .modal-content button.success:hover {
-        background: #2ecc71;
-    }
-
-    .modal-content button.error {
+    #quit-scan-btn {
         background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-family: 'Segoe UI', sans-serif;
+        transition: background 0.3s ease;
     }
 
-    .modal-content button.error:hover {
+    #quit-scan-btn:hover {
         background: #c0392b;
     }
 </style>
@@ -178,11 +198,18 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     function showSuccessModal() {
         document.getElementById('successModal').style.display = "flex";
+        // Auto-fermer après 2 secondes
+        setTimeout(() => {
+            closeModal('successModal');
+        }, 2000);
     }
 
     function showErrorModal(msg) {
-        document.getElementById('errorMsg').innerText = msg;
         document.getElementById('errorModal').style.display = "flex";
+        // Auto-fermer après 3 secondes
+        setTimeout(() => {
+            closeModal('errorModal');
+        }, 3000);
     }
 
     function closeModal(modalId) {
@@ -233,4 +260,13 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
         else showErrorModal("Aucune caméra détectée.");
     }).catch(err => showErrorModal("Impossible d'accéder aux caméras : " + err));
+
+    // Fermer les modals en cliquant sur l'arrière-plan
+    document.getElementById('successModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal('successModal');
+    });
+
+    document.getElementById('errorModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal('errorModal');
+    });
 </script>
