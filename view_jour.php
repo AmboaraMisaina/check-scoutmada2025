@@ -2,11 +2,6 @@
 require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
-$jour_id = intval($_GET['id'] ?? 0);
-if (!$jour_id) { header('Location: programmes.php'); exit; }
-
-$jour = getJourById($pdo, $jour_id);
-$evenements = getEvenementsByJour($pdo, $jour_id);
 
 // Formater la date avec strftime
 setlocale(LC_TIME, 'fr_FR.UTF-8', 'fra');
@@ -21,7 +16,7 @@ include 'includes/header.php';
     </div>
 
     <div class="card">
-        <a href="add_evenement.php?jour_id=<?= $jour_id ?>" class="btn">➕ Ajouter un événement</a>
+        <a href="add_evenement.php" class="btn">➕ Ajouter un événement</a>
     </div>
 
     <div class="card">

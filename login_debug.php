@@ -10,8 +10,8 @@ error_reporting(E_ALL);
 
 // Si déjà connecté, rediriger
 if (isset($_SESSION['admin_id'])) {
-    echo "DEBUG: Déjà connecté, redirection vers dashboard...<br>";
-    header('Location: ../dashboard.php');
+    echo "DEBUG: Déjà connecté, redirection vers checkin...<br>";
+    header('Location: ../checkin.php');
     exit;
 }
 
@@ -45,7 +45,7 @@ if ($_POST) {
                     $debug .= "DEBUG: Session créée, redirection...<br>";
                     // Attendre 2 secondes pour voir le debug
                     echo $debug;
-                    echo "<script>setTimeout(function(){ window.location.href = 'dashboard.php'; }, 2000);</script>";
+                    echo "<script>setTimeout(function(){ window.location.href = 'checkin.php'; }, 2000);</script>";
                     exit;
                 } else {
                     $debug .= "DEBUG: Échec de la vérification du mot de passe<br>";

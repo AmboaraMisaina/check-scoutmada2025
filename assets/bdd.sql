@@ -70,11 +70,6 @@ INSERT INTO admins (username, password, role) VALUES
 -- DONNÉES DE TEST
 -- -------------------
 
--- Journées programmées
-INSERT INTO jours_programmes (titre, date_jour) VALUES
-('Journée Test', CURDATE()),  -- Aujourd'hui
-('Journée Passée', DATE_SUB(CURDATE(), INTERVAL 1 DAY)),
-('Journée Futur', DATE_ADD(CURDATE(), INTERVAL 1 DAY));
 
 -- Événements
 INSERT INTO evenements (jour_id, titre, description, horaire_debut, horaire_fin, ouvert_a) VALUES

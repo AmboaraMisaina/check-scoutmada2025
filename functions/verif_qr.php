@@ -35,14 +35,14 @@ if ($participant) {
         // Vérifie la règle de participation
         if ($evenement['nb_participation'] == 1) {
             // Un seul check-in autorisé
-            $checkStmt = $pdo->prepare("SELECT id FROM planing WHERE participant_id = ? AND evenement_id = ?");
+            $checkStmt = $pdo->prepare("SELECT id FROM enregistrement WHERE participant_id = ? AND evenement_id = ?");
             $checkStmt->execute([$participant['id'], $evenement_id]);
             if ($checkStmt->rowCount() > 0) {
                 echo "Participation refusée.";
                 exit;
             } else {
                 // Insère la présence avec date/heure
-                $insertStmt = $pdo->prepare("INSERT INTO planing (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
+                $insertStmt = $pdo->prepare("INSERT INTO enregistrement (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
                 if ($insertStmt->execute([$participant['id'], $evenement_id])) {
                     echo "Présence enregistrée pour " . htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
                 } else {
@@ -51,7 +51,7 @@ if ($participant) {
             }
         } else {
             // Participation illimitée (enregistre à chaque fois)
-            $insertStmt = $pdo->prepare("INSERT INTO planing (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
+            $insertStmt = $pdo->prepare("INSERT INTO enregistrement (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
             if ($insertStmt->execute([$participant['id'], $evenement_id])) {
                 echo "Présence enregistrée pour " . htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
             } else {

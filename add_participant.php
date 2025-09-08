@@ -61,15 +61,6 @@ include 'includes/header.php';
 
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label for="type" style="display:block; margin-bottom:0.5rem;">Type</label>
-                <!-- <select id="type" name="type" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
-                    <option value="">-- Sélectionner --</option>
-                    <option value="Delegue">Délégué</option>
-                    <option value="Observateur">Observateur</option>
-                    <option value="Comite d'organisation">Comité d'organisation</option>
-                    <option value="WOSM Team">WOSM Team</option>
-                </select> -->
-
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>

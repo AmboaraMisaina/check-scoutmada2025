@@ -27,7 +27,7 @@ function getParticipantById(PDO $pdo, int $id)
 
 function addParticipant($pdo, $nom, $prenom, $email, $type)
 {
-    if (!$nom || !$prenom || !$email || !in_array($type, ['Delegue', 'Observateur', 'Comité d\'organisation', 'WOSM Team'])) {
+    if (!$email || !in_array($type, ['delegate', 'observer', 'organizing_comittee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest'])) {
         return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
     }
 
@@ -77,37 +77,13 @@ function deleteParticipant(PDO $pdo, $id)
     $stmt = $pdo->prepare("DELETE FROM participants WHERE id=?");
     return $stmt->execute([$id]);
 }
-// ---------------- JOURS PROGRAMMES ----------------
-function getAllJoursProgrammes($pdo)
-{
-    $stmt = $pdo->query("SELECT * FROM jours_programmes ORDER BY date_jour ASC");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
-function getJourById(PDO $pdo, int $id)
-{
-    $stmt = $pdo->prepare("SELECT * FROM jours_programmes WHERE id=?");
-    $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-
-function addJourProgramme(PDO $pdo, string $date_jour)
-{
-    $stmt = $pdo->prepare("INSERT INTO jours_programmes (date_jour) VALUES (?)");
-    return $stmt->execute([$date_jour]);
-}
-
-function deleteJourProgramme(PDO $pdo, int $id)
-{
-    $stmt = $pdo->prepare("DELETE FROM jours_programmes WHERE id=?");
-    return $stmt->execute([$id]);
-}
 
 // ---------------- EVENEMENTS ----------------
-function getEvenementsByJour(PDO $pdo, int $jour_id)
+function getEvenementsByJour(PDO $pdo, DateTime $date)
 {
-    $stmt = $pdo->prepare("SELECT * FROM evenements WHERE jour_id=? ORDER BY horaire_debut ASC");
-    $stmt->execute([$jour_id]);
+    $stmt = $pdo->prepare("SELECT * FROM evenements WHERE date_evenement=? ORDER BY horaire_debut ASC");
+    $stmt->execute([$date->format('Y-m-d')]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -118,18 +94,18 @@ function getEvenementById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function addEvenement(PDO $pdo, $jour_id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [])
+function addEvenement(PDO $pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [])
 {
     $ouvert_a_str = implode(',', $ouvert_a);
-    $stmt = $pdo->prepare("INSERT INTO evenements (jour_id, titre, description, horaire_debut, horaire_fin, ouvert_a) VALUES (?, ?, ?, ?, ?, ?)");
-    return $stmt->execute([$jour_id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str]);
+    $stmt = $pdo->prepare("INSERT INTO evenements (date_evenement, titre, description, horaire_debut, horaire_fin, ouvert_a) VALUES (?, ?, ?, ?, ?, ?)");
+    return $stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str]);
 }
 
-function updateEvenement(PDO $pdo, $id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [])
+function updateEvenement(PDO $pdo, $date_evenement , $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [])
 {
     $ouvert_a_str = implode(',', $ouvert_a);
-    $stmt = $pdo->prepare("UPDATE evenements SET titre=?, description=?, horaire_debut=?, horaire_fin=?, ouvert_a=? WHERE id=?");
-    return $stmt->execute([$titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str, $id]);
+    $stmt = $pdo->prepare("UPDATE evenements SET date_evenement=?, titre=?, description=?, horaire_debut=?, horaire_fin=?, ouvert_a=? WHERE id=?");
+    return $stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str]);
 }
 
 function deleteEvenement(PDO $pdo, $id)
@@ -166,9 +142,9 @@ function getEvenementsDuJour(PDO $pdo, string $date, string $timezone = 'Indian/
     $maintenant = time();
 
     $stmt = $pdo->prepare("
-        SELECT e.*, j.date_evenement
+        SELECT e.*, e.date_evenement
         FROM evenements e
-        WHERE j.date_evenement = ?
+        WHERE e.date_evenement = ?
         ORDER BY e.horaire_debut ASC
     ");
     $stmt->execute([$date]);
