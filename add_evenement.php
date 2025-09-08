@@ -89,28 +89,48 @@ include 'includes/header.php';
 
             <div class="form-group">
                 <label>Ouvert à</label>
-                <ul style="list-style-type: disc; margin-left: 2rem; font-family: sans-serif;">
-                    <li>
-                        <label>
-                            <input type="checkbox" name="ouvert_a[]" value="Observateur"> Observateur
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox" name="ouvert_a[]" value="Delegue"> Délégué
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox" name="ouvert_a[]" value="Comite d'organisation"> Comité d'organisation
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox" name="ouvert_a[]" value="WOSM Team"> WOSM Team
-                        </label>
-                    </li>
-                </ul>
+                    <ul style="list-style-type: disc; margin-left: 2rem; font-family: sans-serif;">
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="observer"> Observer
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="Delegate"> Delegate
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="organizing_comittee"> Organizing comittee
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="wosm_team"> WOSM Team
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="volunteer"> Volunteer
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="staff"> Staff
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="partner"> Partner
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="guest"> Guest
+                            </label>
+                        </li>
+                    </ul>
 
             </div><br>
 

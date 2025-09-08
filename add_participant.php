@@ -61,6 +61,15 @@ include 'includes/header.php';
 
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label for="type" style="display:block; margin-bottom:0.5rem;">Type</label>
+                <!-- <select id="type" name="type" required
+                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                    <option value="">-- Sélectionner --</option>
+                    <option value="Delegue">Délégué</option>
+                    <option value="Observateur">Observateur</option>
+                    <option value="Comite d'organisation">Comité d'organisation</option>
+                    <option value="WOSM Team">WOSM Team</option>
+                </select> -->
+
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>
@@ -68,6 +77,14 @@ include 'includes/header.php';
                     <option value="Observateur">Observateur</option>
                     <option value="Comite d'organisation">Comité d'organisation</option>
                     <option value="WOSM Team">WOSM Team</option>
+                    <option value="delegate">Delegate</option>
+                    <option value="observer">Observateur</option>
+                    <option value="organizing_comittee">Comité d'organisation</option>
+                    <option value="wosm_team">WOSM Team</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="staff">Staff</option>
+                    <option value="partner">Partner</option>
+                    <option value="guest">Guest</option>
                 </select>
             </div>
 
