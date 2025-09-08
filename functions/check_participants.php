@@ -59,9 +59,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     /* 📱 Scanner */
     #qr-reader {
-        width: 98vw;
-        max-width: 800px;
-        aspect-ratio: 0.98 / 1;
+        width: 97vw;
+        max-width: 750px;
+        aspect-ratio: 0.97 / 1;
         position: relative;
         border-radius: 24px;
         overflow: hidden;
