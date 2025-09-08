@@ -101,11 +101,11 @@ function addEvenement(PDO $pdo, $date_evenement, $titre, $description, $horaire_
     return $stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str]);
 }
 
-function updateEvenement(PDO $pdo, $date_evenement , $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [])
+function updateEvenement(PDO $pdo, $date_evenement , $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a = [], $id)
 {
     $ouvert_a_str = implode(',', $ouvert_a);
     $stmt = $pdo->prepare("UPDATE evenements SET date_evenement=?, titre=?, description=?, horaire_debut=?, horaire_fin=?, ouvert_a=? WHERE id=?");
-    return $stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str]);
+    return $stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_str, $id]);
 }
 
 function deleteEvenement(PDO $pdo, $id)

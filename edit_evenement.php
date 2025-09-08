@@ -30,7 +30,7 @@ if ($_POST) {
     if (!$titre || !$horaire_debut || !$horaire_fin) {
         $error = "Veuillez remplir tous les champs obligatoires.";
     } else {
-        $result = updateEvenement($pdo, $id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a);
+        $result = updateEvenement($pdo, $id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id);
         if ($result) {
             $message = "Événement mis à jour avec succès.";
             $evenement = getEvenementById($pdo, $id); // reload
