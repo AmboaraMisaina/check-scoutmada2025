@@ -166,10 +166,9 @@ function getEvenementsDuJour(PDO $pdo, string $date, string $timezone = 'Indian/
     $maintenant = time();
 
     $stmt = $pdo->prepare("
-        SELECT e.*, j.date_jour
+        SELECT e.*, j.date_evenement
         FROM evenements e
-        JOIN jours_programmes j ON e.jour_id = j.id
-        WHERE j.date_jour = ?
+        WHERE j.date_evenement = ?
         ORDER BY e.horaire_debut ASC
     ");
     $stmt->execute([$date]);

@@ -97,7 +97,7 @@ include 'includes/header.php';
                         </li>
                         <li>
                             <label>
-                                <input type="checkbox" name="ouvert_a[]" value="Delegate"> Delegate
+                                <input type="checkbox" name="ouvert_a[]" value="delegate"> Delegate
                             </label>
                         </li>
                         <li>
