@@ -227,7 +227,7 @@
             </div>
             <div class="user-info">
                 <span>👋 <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
-                <a href="logout.php" class="logout-btn">Déconnexion</a>
+                <a href="functions/logout.php" class="logout-btn">Déconnexion</a>
             </div>
         </div>
     </header>
