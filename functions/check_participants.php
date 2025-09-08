@@ -39,7 +39,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         margin: 0;
         padding: 0;
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #4b6cb7, #182848);
+        background: linear-gradient(135deg, #8e44ad, #d16ba5);
         color: white;
         overflow-x: hidden;
     }
@@ -50,7 +50,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        /* centré verticalement */
         min-height: 100vh;
         padding: 1rem;
         backdrop-filter: blur(10px);
@@ -60,9 +59,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     /* 📱 Scanner */
     #qr-reader {
-        width: 90vw;
-        max-width: 600px;
-        aspect-ratio: 0.9 / 1;
+        width: 97vw;
+        max-width: 700px;
+        aspect-ratio: 0.95 / 1;
         position: relative;
         border-radius: 24px;
         overflow: hidden;
