@@ -12,8 +12,10 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 ?>
 <?php if ($evenement): ?>
     <div style="text-align:center; margin-top:2rem; margin-bottom:1.5rem;">
-        <h2 style="margin-bottom:0.5rem; font-size:60 px "><?= htmlspecialchars($evenement['titre']) ?></h2>
-        <div style="font-size:60 px; color:#f1f1f1;">
+        <h2 style="margin-bottom:0.5rem; font-size:2.5rem; font-weight:bold; color:#fff;">
+            <?= htmlspecialchars($evenement['titre']) ?>
+        </h2>
+        <div style="font-size:1.5rem; color:#f1f1f1; font-weight:500;">
             <?php
                 if (!empty($evenement['date_evenement'])) {
                     $date = date('d/m/Y', strtotime($evenement['date_evenement']));
@@ -297,7 +299,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
                 })
                 .then(r => r.text())
-                .then(data => {
+                .then (data => {
                     if (data.includes("Présence enregistrée")) showSuccessModal();
                     else showErrorModal(data);
                 })
