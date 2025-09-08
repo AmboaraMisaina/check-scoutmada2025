@@ -1,7 +1,7 @@
 <?php
 // login.php
 session_start();
-require_once 'db.php';
+require_once 'functions/db.php';
 
 // Si déjà connecté, rediriger
 if (isset($_SESSION['admin_id'])) {
@@ -34,6 +34,7 @@ if ($_POST) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

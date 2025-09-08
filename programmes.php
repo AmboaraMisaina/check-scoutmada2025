@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php';
+require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 if ($_SESSION['role'] !== 'admin') {

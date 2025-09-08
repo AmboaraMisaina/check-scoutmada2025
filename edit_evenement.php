@@ -1,7 +1,7 @@
 <?php
-require_once 'auth.php';
-require_once 'db.php';
-require_once 'functions.php';
+require_once 'functions/auth.php';
+require_once 'functions/db.php';
+require_once 'functions/functions.php';
 checkAuth();
 
 $id = intval($_GET['id'] ?? 0);
@@ -78,12 +78,30 @@ renderHeader('Modifier Événement');
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label><br>
+                <label style="margin-left: 1rem;">Ouvert à</label><br>
                 <label>
-                    <input type="checkbox" name="ouvert_a[]" value="delegue" <?= in_array('delegue', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Délégué
+                    <input type="checkbox" name="ouvert_a[]" value="delegate" <?= in_array('delegate', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Délégué
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="observateur" <?= in_array('observateur', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observateur
+                    <input type="checkbox" name="ouvert_a[]" value="observer" <?= in_array('observer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observateur
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="organizing_comittee" <?= in_array('organizing_comittee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Comité d'organisation
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="wosm_team" <?= in_array('wosm_team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="volunteer" <?= in_array('volunteer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Volunteer
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="staff" <?= in_array('staff', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Staff
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="partner" <?= in_array('partner', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Partner
+                </label>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="guest" <?= in_array('guest', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Guest
                 </label>
             </div>
 

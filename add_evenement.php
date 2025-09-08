@@ -1,7 +1,7 @@
 <?php
-require_once 'auth.php';
-require_once 'db.php';
-require_once 'functions.php';
+require_once 'functions/auth.php';
+require_once 'functions/db.php';
+require_once 'functions/functions.php';
 checkAuth();
 
 // Récupération de l'ID de la journée
@@ -88,10 +88,51 @@ renderHeader("Ajouter un événement pour le " . htmlspecialchars($jour['titre']
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label><br>
-                <label><input type="checkbox" name="ouvert_a[]" value="delegue"> Délégué</label>
-                <label style="margin-left: 1rem;"><input type="checkbox" name="ouvert_a[]" value="observateur"> Observateur</label>
-            </div>
+                <label>Ouvert à</label>
+                <ul style="list-style-type: disc; margin-left: 2rem; font-family: sans-serif;">
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="observer"> Observer
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="oelegate"> Delegate
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="organizing_comittee"> Organizing comittee
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="wosm_team"> WOSM Team
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="volunteer"> Volunteer
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="staff"> Staff
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="partner"> Partner
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" name="ouvert_a[]" value="guest"> Guest
+                        </label>
+                    </li>
+                </ul>
+
+            </div><br>
 
             <div class="form-group">
                 <label for="unique_event">

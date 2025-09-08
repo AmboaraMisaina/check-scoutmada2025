@@ -1,7 +1,7 @@
 <?php
 // login_debug.php - Version debug pour tester
 session_start();
-require_once '../db.php';
+require_once '../functions/db.php';
 
 // Debug: afficher les erreurs PHP
 ini_set('display_errors', 1);

@@ -1,7 +1,7 @@
 <?php
-require_once 'auth.php';
-require_once 'db.php';
-require_once 'functions.php';
+require_once 'functions/auth.php';
+require_once 'functions/db.php';
+require_once 'functions/functions.php';
 checkAuth();
 
 $message = '';
@@ -64,8 +64,14 @@ renderHeader('Ajouter Participant');
                 <select id="type" name="type" required
                     style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                     <option value="">-- Sélectionner --</option>
-                    <option value="delegue">Délégué</option>
-                    <option value="observateur">Observateur</option>
+                    <option value="delegate">Delegate</option>
+                    <option value="observer">Observateur</option>
+                    <option value="organizing_comittee">Comité d'organisation</option>
+                    <option value="wosm_team">WOSM Team</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="staff">Staff</option>
+                    <option value="partner">Partner</option>
+                    <option value="guest">Guest</option>
                 </select>
             </div>
 

@@ -1,6 +1,6 @@
 <?php
 // fix_admin.php - Script pour corriger le mot de passe de l'admin
-require_once '../db.php';
+require_once '../functions/db.php';
 
 // Générer le bon hash pour 'admin123'
 $passwordAdmin = 'admin123';

@@ -3,7 +3,7 @@ name: 🚀 FTP Deploy
 on:
   push:
     branches:
-      - main   # ou la branche que tu veux déployer
+      - main # ou la branche que tu veux déployer
 
 jobs:
   ftp-deploy:
@@ -18,6 +18,6 @@ jobs:
         with:
           server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
-          password: checkin
-          server-dir: /public_html/  
+          password: scoutmada2025
+          server-dir: /public_html/
           local-dir: ./

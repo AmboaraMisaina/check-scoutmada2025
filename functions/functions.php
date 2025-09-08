@@ -25,34 +25,9 @@ function getParticipantById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Ajoute un participant
-// function addParticipant($pdo, $nom, $prenom, $email, $type)
-// {
-//     if (!$nom || !$prenom || !$email || !in_array($type, ['delegue', 'observateur'])) {
-//         return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
-//     }
-
-//     // Vérifier si l'email existe
-//     $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
-//     $stmt->execute([$email]);
-//     if ($stmt->rowCount() > 0) {
-//         return ['success' => false, 'message' => 'Un participant avec cet email existe déjà.'];
-//     }
-
-//     // Insertion
-//     $stmt = $pdo->prepare("INSERT INTO participants (nom, prenom, email, type) VALUES (?, ?, ?, ?)");
-//     if ($stmt->execute([$nom, $prenom, $email, $type])) {
-//         return ['success' => true, 'message' => 'Participant ajouté avec succès !'];
-//     } else {
-//         return ['success' => false, 'message' => 'Erreur lors de l\'ajout du participant.'];
-//     }
-// }
-
-
-
 function addParticipant($pdo, $nom, $prenom, $email, $type)
 {
-    if (!$nom || !$prenom || !$email || !in_array($type, ['delegue', 'observateur'])) {
+    if (!$nom || !in_array($type, ['delegate', 'observer', 'organizing_comittee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest'])) {
         return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
     }
 

@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php';
+require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 $jour_id = intval($_GET['id'] ?? 0);

@@ -1,7 +1,7 @@
 <?php
-require_once 'auth.php';
-require_once 'db.php';
-require_once 'functions.php'; // On inclut les fonctions centralisées
+require_once 'functions/auth.php';
+require_once 'functions/db.php';
+require_once 'functions/functions.php'; // On inclut les fonctions centralisées
 checkAuth();
 
 // Récupérer les statistiques via la fonction
@@ -33,7 +33,7 @@ renderHeader('Dashboard');
             if ($filter === 'current' && !$e['enCours']) continue;
 
             $evenementAffiche = true;
-            $urlCheck = "check_participants.php?evenement_id=" . $e['id'];
+            $urlCheck = "functions/check_participants.php?evenement_id=" . $e['id'];
         ?>
             <a href="<?= $urlCheck ?>"
             class="card"
@@ -81,16 +81,6 @@ renderHeader('Dashboard');
 
     <div style="display: grid; grid-template-columns: repeat(3, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
         
-    </div>
-
-    <div class="card">
-        <h3 style="margin-bottom: 1rem;">Actions rapides</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <a href="participants.php" class="btn btn-secondary">👥 Voir tous les participants</a>
-            <a href="programmes.php" class="btn btn-info">📅 Voir tous les programmes</a>
-            <a href="download_qr.php?download_all=1" class="btn btn-success">📅 Télécharger tous les QR Codes</a>
-            <a href="import_participants.php" class="btn btn-primary">📥 Importer des participants</a>
-        </div>
     </div>
 </div>
 

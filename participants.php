@@ -1,5 +1,5 @@
 <?php
-require_once 'functions.php';
+require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 if ($_SESSION['role'] !== 'admin') {
@@ -38,13 +38,19 @@ renderHeader('Participants');
         <p>Visualisez tous les participants enregistrés</p>
     </div>
 
+    <div class="card" style="margin-top: 2rem;">
+        <a href="add_participant.php" class="btn">➕ Ajouter un participant</a>
+        <a href="import_participants.php" class="btn btn-primary">📥 Importer des participants</a>
+        <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Télécharger tous les QR Codes</a>
+        <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a>
+    </div>
+
     <div class="card">
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #f1f1f1;">
                     <th style="padding: 0.75rem;">ID</th>
                     <th style="padding: 0.75rem;">Nom</th>
-                    <th style="padding: 0.75rem;">Prénom</th>
                     <th style="padding: 0.75rem;">Email</th>
                     <th style="padding: 0.75rem;">Type</th>
                     <th style="padding: 0.75rem;">QR Code</th>
@@ -57,7 +63,6 @@ renderHeader('Participants');
                         <tr style="border-bottom: 1px solid #e1e5e9;">
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['id']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['nom']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['prenom']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['email']); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['type']); ?></td>
                             <td style="padding: 0.75rem;">
@@ -82,11 +87,6 @@ renderHeader('Participants');
                 <?php endif; ?>
             </tbody>
         </table>
-    </div>
-
-    <div class="card" style="margin-top: 2rem;">
-        <a href="add_participant.php" class="btn">➕ Ajouter un participant</a>
-        <a href="dashboard.php" class="btn btn-secondary">📊 Retour au dashboard</a>
     </div>
 </div>
 
