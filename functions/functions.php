@@ -184,3 +184,45 @@ function getEvenementsDuJour(PDO $pdo, string $date, string $timezone = 'Indian/
 
     return $evenements;
 }
+
+/**
+ * CRUD pour la table admins
+ */
+
+// Créer un admin
+function createAdmin($pdo, $username, $password, $role) {
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)");
+    return $stmt->execute([$username, $hash, $role]);
+}
+
+// Lire un admin par ID
+function getAdminById($pdo, $id) {
+    $stmt = $pdo->prepare("SELECT * FROM admins WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Lire tous les admins
+function getAllAdmins($pdo) {
+    $stmt = $pdo->query("SELECT * FROM admins ORDER BY id DESC");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Mettre à jour un admin (mot de passe optionnel)
+function updateAdmin($pdo, $id, $username, $role, $password = null) {
+    if ($password) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("UPDATE admins SET username = ?, password = ?, role = ? WHERE id = ?");
+        return $stmt->execute([$username, $hash, $role, $id]);
+    } else {
+        $stmt = $pdo->prepare("UPDATE admins SET username = ?, role = ? WHERE id = ?");
+        return $stmt->execute([$username, $role, $id]);
+    }
+}
+
+// Supprimer un admin
+function deleteAdmin($pdo, $id) {
+    $stmt = $pdo->prepare("DELETE FROM admins WHERE id = ?");
+    return $stmt->execute([$id]);
+}
