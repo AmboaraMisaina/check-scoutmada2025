@@ -51,7 +51,7 @@
             height: 50px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 1);
             padding: 3px;
         }
 
