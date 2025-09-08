@@ -12,8 +12,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 ?>
 <?php if ($evenement): ?>
     <div style="text-align:center; margin-top:2rem; margin-bottom:1.5rem;">
-        <h2 style="margin-bottom:0.5rem;"><?= htmlspecialchars($evenement['titre']) ?></h2>
-        <div style="font-size:1.1rem; color:#f1f1f1;">
+        <h2 style="margin-bottom:0.5rem; font-size:60 px "><?= htmlspecialchars($evenement['titre']) ?></h2>
+        <div style="font-size:60 px; color:#f1f1f1;">
             <?php
                 if (!empty($evenement['date_evenement'])) {
                     $date = date('d/m/Y', strtotime($evenement['date_evenement']));
