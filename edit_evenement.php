@@ -26,14 +26,18 @@ if ($_POST) {
     $horaire_debut = $_POST['horaire_debut'] ?? '';
     $horaire_fin = $_POST['horaire_fin'] ?? '';
     $ouvert_a = $_POST['ouvert_a'] ?? [];
+    $date_evenement = $_POST['date'] ?? '';
 
-    if (!$titre || !$horaire_debut || !$horaire_fin) {
+     // Validation de base
+
+    if (!$titre || !$horaire_debut || !$horaire_fin || !$date_evenement) {
         $error = "Veuillez remplir tous les champs obligatoires.";
     } else {
-        $result = updateEvenement($pdo, $id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id);
+        
+        $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id);
         if ($result) {
             $message = "Événement mis à jour avec succès.";
-            $evenement = getEvenementById($pdo, $id); // reload
+            $evenement = getEvenementById($pdo, $id);
         } else {
             $error = "Une erreur est survenue lors de la mise à jour.";
         }

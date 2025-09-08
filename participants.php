@@ -67,7 +67,7 @@ include 'includes/header.php';
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($p['type']); ?></td>
                             <td style="padding: 0.75rem;">
                                 <?php if ($p['qr_code']): ?>
-                                    <button onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>')" style="padding:0.3rem 0.7rem; border-radius:5px; background:#38ef7d; color:white; border:none; font-weight:bold; cursor:pointer;">
+                                    <button onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>', '<?= htmlspecialchars($p['nom']) ?>')" style="padding:0.3rem 0.7rem; border-radius:5px; background:#38ef7d; color:white; border:none; font-weight:bold; cursor:pointer;">
                                         Voir QR
                                     </button>
                                 <?php else: ?>
@@ -94,7 +94,7 @@ include 'includes/header.php';
 <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
     <div style="background:white; padding:2rem; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.2); min-width:300px; text-align:center; position:relative;">
         <span style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;" onclick="closeQrModal()">&times;</span>
-        <h3 style="margin-bottom:1rem;">QR Code du participant</h3>
+        <h3 id="qrParticipantName" style="margin-bottom:1rem;"></h3>
         <img id="qrImg" src="" alt="QR Code" style="margin-bottom:1rem; max-width:200px;">
         <br>
         <a id="qrDownload" href="#" download style="padding:0.5rem 1rem; background:#38ef7d; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
@@ -104,11 +104,13 @@ include 'includes/header.php';
 </div>
 
 <script>
-    function showQrModal(id, qrText) {
+    // Ajoute le paramètre nom à showQrModal
+    function showQrModal(id, qrText, nom) {
         var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(qrText) + "&size=200x200";
         document.getElementById('qrImg').src = qrUrl;
         document.getElementById('qrDownload').href = "download_qr.php?id=" + id;
         document.getElementById('qrDownload').removeAttribute('download');
+        document.getElementById('qrParticipantName').innerText = nom;
         document.getElementById('qrModal').style.display = "flex";
     }
 
