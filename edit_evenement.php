@@ -86,8 +86,8 @@ include 'includes/header.php';
             </div>
 
             <div class="form-group">
-                <label style="margin-left: 1rem;">Ouvert à</label><br>
-                <label>
+                <label>Ouvert à</label><br>
+                <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="delegate" <?= in_array('delegate', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Delegate
                 </label>
                 <label style="margin-left: 1rem;">
