@@ -13,7 +13,7 @@ CREATE TABLE participants (
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    type ENUM('delegate', 'observer', 'organizing_comittee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest') NOT NULL,
+    type ENUM('delegate', 'observer', 'organizing_committee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest') NOT NULL,
     qr_code VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

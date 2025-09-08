@@ -27,7 +27,7 @@ function getParticipantById(PDO $pdo, int $id)
 
 function addParticipant($pdo, $nom, $prenom, $email, $type)
 {
-    // if (!$email || !in_array($type, ['delegate', 'observer', 'organizing_comittee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest'])) {
+    // if (!$email || !in_array($type, ['delegate', 'observer', 'organizing_committee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest'])) {
     //     return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
     // }
 

@@ -66,7 +66,7 @@ include 'includes/header.php';
                     <option value="">-- Sélectionner --</option>
                     <option value="delegate">Delegate</option>
                     <option value="observer">Observateur</option>
-                    <option value="organizing_comittee">Comité d'organisation</option>
+                    <option value="organizing_committee">Comité d'organisation</option>
                     <option value="wosm_team">WOSM Team</option>
                     <option value="volunteer">Volunteer</option>
                     <option value="staff">Staff</option>
