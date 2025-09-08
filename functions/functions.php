@@ -191,7 +191,7 @@ function getEvenementsDuJour(PDO $pdo, string $date, string $timezone = 'Indian/
 
 // Créer un admin
 function createAdmin($pdo, $username, $password, $role) {
-    $hash = password_hash($password, PASSWORD_DEFAULT);
+    $hash = hash('sha256', $password);
     $stmt = $pdo->prepare("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)");
     return $stmt->execute([$username, $hash, $role]);
 }

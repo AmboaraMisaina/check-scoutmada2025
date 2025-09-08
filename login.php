@@ -22,7 +22,7 @@ if ($_POST) {
         echo($password);
         echo($admin['password']);
         // Vérification du hashage du mot de passe
-        if ($admin && !empty($admin['password']) && password_verify($password, $admin['password'])) {
+        if ($admin && !empty($admin['password']) && hash('sha256', $password) === $admin['password']) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
             $_SESSION['role'] = $admin['role'];
