@@ -58,10 +58,11 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     #qr-reader {
         width: 90vw;
-        /* presque toute la largeur écran */
+        /* largeur de la caméra par rapport à l'écran */
         max-width: 500px;
         /* limite sur grand écran */
         aspect-ratio: 1 / 1;
+        /* carré */
         position: relative;
         border-radius: 24px;
         overflow: hidden;
@@ -159,7 +160,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     /* Icônes succès / erreur */
     .success-icon,
     .error-icon {
-        font-size: 160px;
+        font-size: 250px;
         font-weight: bold;
         margin-bottom: 25px;
         display: flex;
