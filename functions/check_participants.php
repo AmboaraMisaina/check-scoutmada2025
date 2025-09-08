@@ -21,15 +21,17 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content success">
-        <h2>✔</h2>
-        <p>OK</p>
+        <h2 class="success">✔ Succès !</h2>
+        <p>Le participant a bien été enregistré.</p>
+        <button class="success" onclick="closeModal('successModal')">Fermer</button>
     </div>
 </div>
 
 <div id="errorModal" class="modal">
     <div class="modal-content error">
-        <h2>✖</h2>
-        <p>KO</p>
+        <h2 class="error">✖ Erreur</h2>
+        <p id="errorMsg"></p>
+        <button class="error" onclick="closeModal('errorModal')">Fermer</button>
     </div>
 </div>
 
@@ -110,7 +112,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         color: #e74c3c;
     }
 
-    /* === MODALES SIMPLIFIÉES === */
     .modal {
         display: none;
         position: fixed;
@@ -118,44 +119,56 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.2);
-        /* Fond semi-transparent blanc */
+        background: rgba(0, 0, 0, 0.5);
         z-index: 9999;
         align-items: center;
         justify-content: center;
     }
 
     .modal-content {
-        background: transparent;
-        /* pas de fond */
+        background: white;
+        padding: 2rem 1rem;
+        border-radius: 16px;
         text-align: center;
+        max-width: 80vw;
+        width: 100%;
+        margin: 0 auto;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
         font-family: 'Segoe UI', sans-serif;
-        box-shadow: none;
-        border: none;
+        font-size: 1.2rem;
+        border-top: 4px solid #ccc;
     }
 
-    .modal-content h2 {
-        font-size: 8rem;
-        /* très gros ✔ ou ✖ */
-        margin: 0;
+    .modal-content.success {
+        border-top: 4px solid #38ef7d;
     }
 
-    .modal-content p {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-top: 1rem;
+    .modal-content.error {
+        border-top: 4px solid #e74c3c;
     }
 
-    .modal-content.success h2,
-    .modal-content.success p {
+    .modal-content h2.success {
         color: #38ef7d;
-        /* Vert */
     }
 
-    .modal-content.error h2,
-    .modal-content.error p {
+    .modal-content h2.error {
         color: #e74c3c;
-        /* Rouge */
+    }
+
+    .modal-content button.success {
+        background: #38ef7d;
+    }
+
+    .modal-content button.success:hover {
+        background: #2ecc71;
+    }
+
+    .modal-content button.error {
+        background: #e74c3c;
+    }
+
+    .modal-content button.error:hover {
+        background: #c0392b;
     }
 </style>
 
@@ -168,6 +181,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     function showErrorModal(msg) {
+        document.getElementById('errorMsg').innerText = msg;
         document.getElementById('errorModal').style.display = "flex";
     }
 
