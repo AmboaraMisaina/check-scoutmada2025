@@ -1,5 +1,5 @@
 <?php
-require_once 'functions/db.php';
+require_once 'db.php';
 
 if (!isset($_POST['qr_code'])) {
     echo "Aucun code QR reçu.";

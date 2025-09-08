@@ -1,6 +1,6 @@
 <?php
-require_once 'functions/db.php';
-require_once 'functions/auth.php';
+require_once 'db.php';
+require_once 'auth.php';
 
 // Vérifie si l'utilisateur est connecté
 function checkAuthOrRedirect()
@@ -56,14 +56,6 @@ function addParticipant($pdo, $nom, $prenom, $email, $type)
         return ['success' => false, 'message' => 'Erreur lors de l\'ajout du participant.'];
     }
 }
-
-// function getQrCodeUrl($qrText, $size = 200)
-// {
-//     // Génère l'URL du QR code via l'API externe
-//     $encodedText = urlencode($qrText);
-//     return "https://api.qrserver.com/v1/create-qr-code/?data={$encodedText}&size={$size}x{$size}";
-// }
-
 
 
 function getQrCodeUrl($qrText, $size = 300)

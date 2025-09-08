@@ -15,7 +15,6 @@ $dateFormatee = strftime('%A %e %B %Y', strtotime($jour['date_jour']));
 include 'includes/header.php';
 
 ?>
-
 <div class="container">
     <div class="page-header">
         <h2>Programme du <?= ucfirst($dateFormatee) ?></h2>
