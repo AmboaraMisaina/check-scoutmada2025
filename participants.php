@@ -4,7 +4,7 @@ checkAuthOrRedirect();
 
 if ($_SESSION['role'] !== 'admin') {
     include 'includes/header.php';
-    ?>
+?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
         <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
             <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Accès interdit</h2>
@@ -14,7 +14,7 @@ if ($_SESSION['role'] !== 'admin') {
             </a>
         </div>
     </div>
-    <?php
+<?php
     renderFooter();
     exit;
 }
@@ -45,8 +45,9 @@ include 'includes/header.php';
         <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a>
     </div>
 
-    <div class="card">
-        <table style="width: 100%; border-collapse: collapse;">
+    <!-- Conteneur scrollable pour le tableau -->
+    <div class="card" style="overflow-x:auto;">
+        <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
             <thead>
                 <tr style="background: #f1f1f1;">
                     <th style="padding: 0.75rem;">ID</th>
@@ -106,16 +107,17 @@ include 'includes/header.php';
 </div>
 
 <script>
-function showQrModal(id, qrText) {
-    var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(qrText) + "&size=200x200";
-    document.getElementById('qrImg').src = qrUrl;
-    document.getElementById('qrDownload').href = "download_qr.php?id=" + id;
-    document.getElementById('qrDownload').removeAttribute('download'); // Le script force le téléchargement
-    document.getElementById('qrModal').style.display = "flex";
-}
-function closeQrModal() {
-    document.getElementById('qrModal').style.display = "none";
-}
+    function showQrModal(id, qrText) {
+        var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(qrText) + "&size=200x200";
+        document.getElementById('qrImg').src = qrUrl;
+        document.getElementById('qrDownload').href = "download_qr.php?id=" + id;
+        document.getElementById('qrDownload').removeAttribute('download');
+        document.getElementById('qrModal').style.display = "flex";
+    }
+
+    function closeQrModal() {
+        document.getElementById('qrModal').style.display = "none";
+    }
 </script>
 
 <?php renderFooter(); ?>
