@@ -113,6 +113,13 @@ include 'includes/header.php';
                 </label>
             </div>
 
+
+             <div class="form-group">
+                <label for="unique_event">
+                    <input type="checkbox" id="unique_event" name="unique_event" value="1" <?= $evenement['unique_event'] ? 'checked' : '' ?>>
+                    Événement à participation unique
+                </label>
+            </div>
             <button type="submit" class="btn">Mettre à jour</button>
         </form>
     </div>
