@@ -18,13 +18,15 @@ if ($_POST) {
     if ($username && $password) {
         $stmt = $pdo->prepare("SELECT id, username, password, role FROM admins WHERE username = ?");
         $stmt->execute([$username]);
-        $admin = $stmt->fetch();
-        
-        if ($admin && password_verify($password, $admin['password'])) {
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo($password);
+        echo($admin['password']);
+        // Vérification du hashage du mot de passe
+        if ($admin && !empty($admin['password']) && password_verify($password, $admin['password'])) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
             $_SESSION['role'] = $admin['role'];
-            header('Location: dashboard.php');
+            // header('Location: dashboard.php');
             exit;
         } else {
             $error = 'Identifiants incorrects';
