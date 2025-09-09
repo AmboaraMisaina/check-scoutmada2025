@@ -219,18 +219,39 @@ photoInput.addEventListener('change', function(event) {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-            const MAX_WIDTH = 600;
-            const scale = Math.min(1, MAX_WIDTH / img.width);
+            const MAX_WIDTH = 600;   // largeur max
+            const MAX_HEIGHT = 600; // hauteur max
+            let width = img.width;
+            let height = img.height;
+
+            // Redimension proportionnel
+            if (width > height) {
+                if (width > MAX_WIDTH) {
+                    height = Math.round(height * (MAX_WIDTH / width));
+                    width = MAX_WIDTH;
+                }
+            } else {
+                if (height > MAX_HEIGHT) {
+                    width = Math.round(width * (MAX_HEIGHT / height));
+                    height = MAX_HEIGHT;
+                }
+            }
+
             const canvas = photoPreview;
-            canvas.width = img.width * scale;
-            canvas.height = img.height * scale;
+            canvas.width = width;
+            canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Compression en JPEG (qualité 0.7 = 70%)
+            const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+
             canvas.style.display = 'block';
-            photoDataInput.value = canvas.toDataURL('image/png');
+            photoDataInput.value = compressedData;
         }
         img.src = e.target.result;
     }
     reader.readAsDataURL(file);
 });
 </script>
+
