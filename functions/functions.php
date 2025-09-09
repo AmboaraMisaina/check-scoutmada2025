@@ -25,7 +25,7 @@ function getParticipantById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id)
+function addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id, $photoPath = null)
 {
     // Vérifier les champs obligatoires
     if (!$nom || !$prenom || !$email || !$type || !$pays_id) {
@@ -40,8 +40,8 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id)
     }
 
     // Insertion avec pays
-    $stmt = $pdo->prepare("INSERT INTO participants (nom, email, type, pays) VALUES (?, ?, ?, ?, ?)");
-    if ($stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays_id])) {
+    $stmt = $pdo->prepare("INSERT INTO participants (nom, email, type, pays , photo) VALUES (?, ?, ?, ?, ?)");
+    if ($stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays_id, $photoPath])) {
         // Récupérer l'ID du participant inséré
         $participantId = $pdo->lastInsertId();
 

@@ -24,16 +24,36 @@ if ($_POST) {
     if (!$paysData) {
         $error = "Le pays sélectionné n'est pas valide.";
     } else {
-        // Ici tu peux récupérer l'id du pays
         $pays_id = $paysData['id'];
 
-        // Appel à ta fonction centrale avec pays_id
-        $result = addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id);
+        // Gestion de la photo uploadée
+        $photoPath = null;
+        if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
+            // photoData contient la base64 compressée
+            $data = $_POST['photoData'];
+            $data = str_replace('data:image/png;base64,', '', $data);
+            $data = str_replace(' ', '+', $data);
+            $decoded = base64_decode($data);
 
-        if ($result['success']) {
-            $message = $result['message'];
+            $uploadDir = 'uploads/photos/';
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+            $photoName = uniqid('participant_') . '.png';
+            $photoPath = $uploadDir . $photoName;
+
+            file_put_contents($photoPath, $decoded);
         } else {
-            $error = $result['message'];
+            $error = "Photo obligatoire.";
+        }
+
+        if (!$error) {
+            // Appel à la fonction addParticipant
+            $result = addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id, $photoPath);
+
+            if ($result['success']) {
+                $message = $result['message'];
+            } else {
+                $error = $result['message'];
+            }
         }
     }
 }
@@ -46,7 +66,6 @@ include 'includes/header.php';
   position: relative;
   width: 100%;
 }
-
 #nso, #nso-suggestion {
   width: 100%;
   padding: 0.5rem;
@@ -55,66 +74,77 @@ include 'includes/header.php';
   font-family: inherit;
   font-size: inherit;
 }
-
 #nso-suggestion {
   position: absolute;
   top: 0;
   left: 0;
-  color: #aaa; /* suggestion en gris */
+  color: #aaa;
   pointer-events: none;
 }
 </style>
-<div class="container">
-    <div class="page-header">
-        <h2>Add participant</h2>
-        <p>Fill in the participant's information</p>
+
+<div class="container" style="max-width:500px; margin:2rem auto;">
+    <div class="page-header" style="margin-bottom:2rem;">
+        <h2 style="margin-bottom:0.5rem;">Add participant</h2>
+        <p style="color:#555;">Fill in the participant's information</p>
     </div>
 
-    <div class="card">
+    <div class="card" style="padding:2rem; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
         <?php if ($message): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+            <div class="alert alert-success" style="background:#eafaf1; color:#27ae60; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem;">
+                <?= htmlspecialchars($message) ?>
+            </div>
         <?php endif; ?>
         <?php if ($error): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+            <div class="alert alert-error" style="background:#fdeaea; color:#e74c3c; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem;">
+                <?= htmlspecialchars($error) ?>
+            </div>
         <?php endif; ?>
 
-        <form method="POST">
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="prenom" style="display:block; margin-bottom:0.5rem;">First name</label>
+        <form method="POST" id="participantForm" autocomplete="off">
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="prenom" style="display:block; margin-bottom:0.4rem; font-weight:500;">First name</label>
                 <input type="text" id="prenom" name="prenom" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="nom" style="display:block; margin-bottom:0.5rem;">Last name</label>
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="nom" style="display:block; margin-bottom:0.4rem; font-weight:500;">Last name</label>
                 <input type="text" id="nom" name="nom" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="mail" style="display:block; margin-bottom:0.5rem;">Email</label>
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="mail" style="display:block; margin-bottom:0.4rem; font-weight:500;">Email</label>
                 <input type="email" id="mail" name="mail" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
             </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="photo" style="display:block; margin-bottom:0.5rem;">Photo</label>
-                <input type="file" id="photo" name="photo" accept="image/*" capture="environment" required>
-                <canvas id="photo-preview" style="display:none; margin-top:10px; max-width:200px;"></canvas>
+            <!-- Photo -->
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="photo" style="display:block; margin-bottom:0.4rem; font-weight:500;">Photo</label>
+                <input type="file" id="photo" accept="image/*" capture="environment"
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
+                <canvas id="photo-preview" style="display:none; margin-top:10px; max-width:200px; border-radius:8px; border:1px solid #eee;"></canvas>
+                <input type="hidden" name="photoData" id="photoData">
             </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="nso" style="display:block; margin-bottom:0.5rem;">NSO (Country)</label>
-                <div class="autocomplete-wrapper">
-                    <input type="text" id="nso" name="nso" autocomplete="off" required>
-                    <input type="text" id="nso-suggestion" tabindex="-1" disabled>
+            <!-- NSO (Country) -->
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="nso" style="display:block; margin-bottom:0.4rem; font-weight:500;">NSO (Country)</label>
+                <div class="autocomplete-wrapper" style="width:100%;">
+                    <input type="text" id="nso" name="nso" autocomplete="off" required
+                        style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+                    <input type="text" id="nso-suggestion" tabindex="-1" disabled
+                        style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; position:absolute; top:0; left:0; color:#aaa; pointer-events:none; background:transparent;">
                 </div>
             </div>
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="type" style="display:block; margin-bottom:0.5rem;">Category</label>
+            <!-- Category -->
+            <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label for="type" style="display:block; margin-bottom:0.4rem; font-weight:500;">Category</label>
                 <select id="type" name="type" required
-                    style="width:100%; padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
                     <option value="">-- Select --</option>
                     <option value="delegate">Delegate</option>
                     <option value="observer">Observer</option>
@@ -126,14 +156,17 @@ include 'includes/header.php';
                 </select>
             </div>
 
-            <button type="submit" class="btn" style="margin-top:1rem;">Add Participant</button>
+            <button type="submit" class="btn"
+                style="width:100%; padding:0.8rem; background:#38ef7d; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; margin-top:1rem;">
+                Add Participant
+            </button>
         </form>
     </div>
 </div>
 
 <?php renderFooter(); ?>
 
-
+<!-- JS Autocomplete -->
 <script>
 const countries = [
 <?php foreach ($pays as $p): ?>
@@ -146,12 +179,7 @@ const suggestion = document.getElementById("nso-suggestion");
 
 input.addEventListener("input", () => {
   const value = input.value.toLowerCase();
-
-  if (!value) {
-    suggestion.value = "";
-    return;
-  }
-
+  if (!value) { suggestion.value = ""; return; }
   const match = countries.find(c => c.toLowerCase().startsWith(value));
   suggestion.value = match ? input.value + match.slice(value.length) : "";
 });
@@ -167,9 +195,11 @@ input.addEventListener("keydown", e => {
 });
 </script>
 
+<!-- JS Photo Capture & Compression -->
 <script>
 const photoInput = document.getElementById('photo');
 const photoPreview = document.getElementById('photo-preview');
+const photoDataInput = document.getElementById('photoData');
 
 photoInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -179,7 +209,6 @@ photoInput.addEventListener('change', function(event) {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-            // Définir largeur max pour la compression
             const MAX_WIDTH = 600;
             const scale = Math.min(1, MAX_WIDTH / img.width);
             const canvas = photoPreview;
@@ -188,6 +217,8 @@ photoInput.addEventListener('change', function(event) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             canvas.style.display = 'block';
+            // enregistrer l'image compressée en base64
+            photoDataInput.value = canvas.toDataURL('image/png');
         }
         img.src = e.target.result;
     }
