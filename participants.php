@@ -39,14 +39,6 @@ include 'includes/header.php';
 
 <div class="container">
 
-    <!-- Affichage des warnings -->
-    <?php if (!empty($_SESSION['warning'])): ?>
-        <div id="warningMessage" style="background:#fff3cd; color:#856404; padding:1rem; border-radius:5px; margin-bottom:1rem; border:1px solid #ffeeba;">
-            <?= htmlspecialchars($_SESSION['warning']); ?>
-        </div>
-        <?php unset($_SESSION['warning']); ?>
-    <?php endif; ?>
-
     <!-- Header page -->
     <div class="page-header" style="margin-bottom:1.5rem;">
         <h2>Participants</h2>
@@ -58,6 +50,7 @@ include 'includes/header.php';
         <a href="add_participant.php" class="btn">➕ Add Participant</a>
         <a href="add_guest.php" class="btn">➕ Add Guest</a>
         <a href="import_participants.php" class="btn btn-primary">📥 Import Participants</a>
+        <!-- <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Download All QR Codes</a> -->
     </div>
 
     <!-- Filtre -->
@@ -75,9 +68,9 @@ include 'includes/header.php';
     </div>
 
     <!-- Table des participants -->
-    <form method="post" action="functions/print_badge.php" id="printForm" target="downloadFrame">
+    <form method="post" action="functions/print_badge.php" id="printForm">
         <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
-            <button type="submit" class="btn btn-success" onclick="handlePrint()">🖨️ Print Selected Badges</button>
+            <button type="submit" class="btn btn-success">🖨️ Print Selected Badges</button>
         </div>
 
         <div class="card" style="overflow-x:auto;">
@@ -89,6 +82,7 @@ include 'includes/header.php';
                         <th style="padding:0.75rem;">Email</th>
                         <th style="padding:0.75rem;">Country</th>
                         <th style="padding:0.75rem;">Category</th>
+                        <!-- <th style="padding:0.75rem;">QR Code</th> -->
                         <th style="padding:0.75rem;">Printed</th>
                         <th style="padding:0.75rem;">Actions</th>
                     </tr>
@@ -102,6 +96,11 @@ include 'includes/header.php';
                                 <td><?= htmlspecialchars($p['email']); ?></td>
                                 <td><?= htmlspecialchars($p['pays']); ?></td>
                                 <td><?= htmlspecialchars($p['type']); ?></td>
+                                <!-- <td>
+                                    <?php if ($p['qr_code']): ?>
+                                        <button type="button" onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>', '<?= htmlspecialchars($p['nom']) ?>')" class="btn btn-success" style="padding:0.3rem 0.7rem;">Voir QR</button>
+                                    <?php else: ?> - <?php endif; ?>
+                                </td> -->
                                 <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
                                 <td>
                                     <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
@@ -111,27 +110,40 @@ include 'includes/header.php';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" style="text-align:center; padding:1rem;">No participants found.</td>
+                            <td colspan="8" style="text-align:center; padding:1rem;">No participants found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </form>
+</div>
 
-    <!-- iframe invisible pour le téléchargement -->
-    <iframe name="downloadFrame" style="display:none;"></iframe>
+<!-- Fenêtre modale QR Code -->
+<div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:white; padding:2rem; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.2); min-width:300px; text-align:center; position:relative;">
+        <span style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;" onclick="closeQrModal()">&times;</span>
+        <h3 id="qrParticipantName" style="margin-bottom:1rem;"></h3>
+        <img id="qrImg" src="" alt="QR Code" style="margin-bottom:1rem; max-width:200px;">
+        <br>
+        <a id="qrDownload" href="#" download class="btn btn-success" style="padding:0.5rem 1rem;">Download QR Code</a>
+    </div>
 </div>
 
 <script>
-function toggleAll(source) {
-    document.querySelectorAll('.print-checkbox').forEach(cb => { if (!cb.disabled) cb.checked = source.checked; });
+function showQrModal(id, qrText, nom) {
+    var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(qrText) + "&size=200x200";
+    document.getElementById('qrImg').src = qrUrl;
+    document.getElementById('qrDownload').href = "functions/download_qr.php?id=" + id;
+    document.getElementById('qrDownload').removeAttribute('download');
+    document.getElementById('qrParticipantName').innerText = nom;
+    document.getElementById('qrModal').style.display = "flex";
 }
 
-// Rafraîchir et afficher le warning après traitement
-function handlePrint() {
-    // Optionnel : tu peux afficher un toast ici avant le reload
-    setTimeout(() => { window.location.reload(); }, 1000);
+function closeQrModal() { document.getElementById('qrModal').style.display = "none"; }
+
+function toggleAll(source) {
+    document.querySelectorAll('.print-checkbox').forEach(cb => { if (!cb.disabled) cb.checked = source.checked; });
 }
 </script>
 
