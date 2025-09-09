@@ -28,8 +28,11 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         </div>
     </div>
 <?php endif; ?>
-<div id="participant-photo" style="margin: 1rem auto; text-align:center;">
-    <img id="participant-img" src="" alt="Photo participant" style="max-width:200px; display:none; border-radius:10px; border:2px solid #fff;">
+<div id="participant-photo" style="margin: 1.5rem auto 0 auto; display: flex; justify-content: center;">
+    <div id="photo-wrapper" style="width:97vw; max-width:750px; aspect-ratio:0.97/1; display:flex; align-items:center; justify-content:center;">
+        <img id="participant-img" src="" alt="Photo participant"
+            style="width:100%; height:100%; object-fit:cover; border-radius:24px; border:4px solid #fff; display:none; background:#eee;">
+    </div>
 </div>
 <div class="scanner-container">
     <!-- Scanner -->
