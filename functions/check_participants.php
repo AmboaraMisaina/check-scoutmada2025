@@ -274,7 +274,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         document.getElementById('successModal').style.display = "flex";
         setTimeout(() => {
             closeModal('successModal');
-        }, 2000);
+        }, 3000);
     }
 
     function showErrorModal(msg) {
@@ -290,7 +290,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             Html5Qrcode.getCameras().then(cameras => {
                 if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
             });
-        }, 500);
+        }, 1000);
         document.getElementById('qr-result').innerText = "";
     }
 
@@ -305,7 +305,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             .then(r => r.json()) // ← on renvoie JSON maintenant
             .then(data => {
                 if (data.success) {
-                    showSuccessModal();
                     // afficher la photo
                     if (data.photo_path) {
                         const img = document.getElementById('participant-img');
@@ -314,6 +313,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                         img.style.display = 'block';
                         bloc.style.display = 'flex';
                     }
+                    showSuccessModal();
                 } else {
                     showErrorModal(data.message || "Erreur lors de l'enregistrement");
                 }
