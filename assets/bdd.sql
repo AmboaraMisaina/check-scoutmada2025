@@ -3,9 +3,13 @@ CREATE TABLE admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'checkin') NOT NULL DEFAULT 'admin',
+    role ENUM('admin', 'checkin' ,'registration') NOT NULL DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE admins
+MODIFY COLUMN role ENUM('admin', 'checkin', 'registration') NOT NULL DEFAULT 'admin';
+
 
 -- participants
 CREATE TABLE participants (
@@ -15,9 +19,15 @@ CREATE TABLE participants (
     email VARCHAR(150) NOT NULL UNIQUE,
     type ENUM('delegate', 'observer', 'organizing_committee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest') NOT NULL,
     qr_code VARCHAR(255) NULL,
+    pays VARCHAR(100) NULL,
+    photo VARCHAR(255) NULL,
+    isPrinted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+alter table participants add column isPrinted BOOLEAN DEFAULT FALSE;
+alter table participants add column pays VARCHAR(100) NULL;
 
 
 -- Table pour les événements d'une journée
@@ -44,6 +54,13 @@ CREATE TABLE enregistrement (
     FOREIGN KEY (evenement_id) REFERENCES evenements(id) ON DELETE CASCADE
 );
 
+create table pays (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    code VARCHAR(10) NOT NULL
+);
+
+alter table participants add column photo VARCHAR(255) NULL;
 
 
 -- ========================================//===========================================
@@ -53,6 +70,109 @@ CREATE TABLE enregistrement (
 
 
 
+INSERT INTO pays (nom, code) VALUES
+('Afghanistan', 'AF'),
+('Afrique du Sud', 'ZA'),
+('Albanie', 'AL'),
+('Algérie', 'DZ'),
+('Allemagne', 'DE'),
+('Andorre', 'AD'),
+('Angola', 'AO'),
+('Arabie Saoudite', 'SA'),
+('Argentine', 'AR'),
+('Arménie', 'AM'),
+('Australie', 'AU'),
+('Autriche', 'AT'),
+('Azerbaïdjan', 'AZ'),
+('Bahamas', 'BS'),
+('Bahreïn', 'BH'),
+('Bangladesh', 'BD'),
+('Barbade', 'BB'),
+('Belgique', 'BE'),
+('Belize', 'BZ'),
+('Bénin', 'BJ'),
+('Bhoutan', 'BT'),
+('Biélorussie', 'BY'),
+('Birmanie', 'MM'),
+('Bolivie', 'BO'),
+('Bosnie-Herzégovine', 'BA'),
+('Botswana', 'BW'),
+('Brésil', 'BR'),
+('Brunei', 'BN'),
+('Bulgarie', 'BG'),
+('Burkina Faso', 'BF'),
+('Burundi', 'BI'),
+('Cambodge', 'KH'),
+('Cameroun', 'CM'),
+('Canada', 'CA'),
+('Cap-Vert', 'CV'),
+('Chili', 'CL'),
+('Chine', 'CN'),
+('Chypre', 'CY'),
+('Colombie', 'CO'),
+('Comores', 'KM'),
+('Congo (Brazzaville)', 'CG'),
+('Congo (Kinshasa)', 'CD'),
+('Corée du Nord', 'KP'),
+('Corée du Sud', 'KR'),
+('Costa Rica', 'CR'),
+('Côte d’Ivoire', 'CI'),
+('Croatie', 'HR'),
+('Cuba', 'CU'),
+('Danemark', 'DK'),
+('Djibouti', 'DJ'),
+('Dominique', 'DM'),
+('Égypte', 'EG'),
+('Émirats arabes unis', 'AE'),
+('Équateur', 'EC'),
+('Érythrée', 'ER'),
+('Espagne', 'ES'),
+('Estonie', 'EE'),
+('Eswatini', 'SZ'),
+('États-Unis', 'US'),
+('Éthiopie', 'ET'),
+('Fidji', 'FJ'),
+('Finlande', 'FI'),
+('France', 'FR'),
+('Gabon', 'GA'),
+('Gambie', 'GM'),
+('Géorgie', 'GE'),
+('Ghana', 'GH'),
+('Grèce', 'GR'),
+('Grenade', 'GD'),
+('Guatemala', 'GT'),
+('Guinée', 'GN'),
+('Guinée-Bissau', 'GW'),
+('Guinée équatoriale', 'GQ'),
+('Guyana', 'GY'),
+('Haïti', 'HT'),
+('Honduras', 'HN'),
+('Hongrie', 'HU'),
+('Inde', 'IN'),
+('Indonésie', 'ID'),
+('Irak', 'IQ'),
+('Iran', 'IR'),
+('Irlande', 'IE'),
+('Islande', 'IS'),
+('Israël', 'IL'),
+('Italie', 'IT'),
+('Jamaïque', 'JM'),
+('Japon', 'JP'),
+('Jordanie', 'JO'),
+('Kazakhstan', 'KZ'),
+('Kenya', 'KE'),
+('Kirghizistan', 'KG'),
+('Kiribati', 'KI'),
+('Koweït', 'KW'),
+('Laos', 'LA'),
+('Lesotho', 'LS'),
+('Lettonie', 'LV'),
+('Liban', 'LB'),
+('Libéria', 'LR'),
+('Libye', 'LY'),
+('Liechtenstein', 'LI'),
+('Lituanie', 'LT'),
+('Luxembourg', 'LU');
 
 
 

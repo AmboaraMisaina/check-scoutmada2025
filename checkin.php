@@ -18,7 +18,7 @@ include 'includes/header.php';
 
 <div class="container">
     <div class="page-header">
-        <h2>Evenement en cours</h2>
+        <h2>Ongoing Events</h2>
     </div>
 
 
@@ -66,7 +66,7 @@ include 'includes/header.php';
                 </p>
                 <?php if ($e['enCours']): ?>
                     <span style="background:#fff; color:#11998e; padding:0.3rem 0.7rem; border-radius:5px; font-weight:bold;">
-                        EN COURS
+                        Ongoing
                     </span>
                 <?php endif; ?>
             </a>
@@ -77,7 +77,7 @@ include 'includes/header.php';
 
     <?php if (!$evenementAffiche): ?>
         <div class="card" style="text-align: center; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding:1rem; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-top:1rem;">
-            <p style="margin:0; text-align:center;">Aucun événement à afficher pour ce filtre.</p>
+            <p style="margin:0; text-align:center;">No ongoing events.</p>
         </div>
     <?php endif; ?>
 

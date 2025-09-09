@@ -2,12 +2,28 @@
 require_once 'functions/auth.php';
 require_once 'functions/db.php';
 require_once 'functions/functions.php';
+$countries = require "country.php"; // <- ton fichier avec le tableau des pays
 checkAuth();
+
+if ($_SESSION['role'] !== 'admin' &&  $_SESSION['role'] !== 'registration') {
+    include 'includes/header.php';
+    ?>
+    <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
+        <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
+            <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Forbidden  </h2>
+            <p style="font-size:1.1rem; margin-bottom:1.5rem;"> <?= $_SESSION['role'] ?>  You do not have the necessary rights to access this page.</p>
+            <a href="checkin.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
+                ⬅ Back
+            </a>
+        </div>
+    </div>
+    <?php
+    renderFooter();
+    exit;
+}
 
 $message = '';
 $error = '';
-
-$pays = getAllPays($pdo);
 
 if ($_POST) {
     $nom = trim($_POST['nom'] ?? '');
@@ -15,17 +31,13 @@ if ($_POST) {
     $email = trim($_POST['mail'] ?? '');
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
+    // Vérification que le pays est valide dans le tableau
+    $normalizedNso = mb_strtolower(trim($nso));
+    $normalizedCountries = array_map(function($c){ return mb_strtolower(trim($c)); }, $countries);
 
-    // Vérification que le pays existe dans la base
-    $stmt = $pdo->prepare("SELECT id FROM pays WHERE nom = :nom LIMIT 1");
-    $stmt->execute(['nom' => $nso]);
-    $paysData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$paysData) {
+    if (!in_array($normalizedNso, $normalizedCountries)) {
         $error = "Le pays sélectionné n'est pas valide.";
-    } else {
-        $pays_id = $paysData['id'];
-
+} else {
         // Gestion de la photo uploadée
         $photoPath = null;
         if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
@@ -46,8 +58,8 @@ if ($_POST) {
         }
 
         if (!$error) {
-            // Appel à la fonction addParticipant
-            $result = addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id, $photoPath);
+            $nso = ucfirst($nso);
+            $result = addParticipant($pdo, $nom, $prenom, $email, $type, $nso, $photoPath);
 
             if ($result['success']) {
                 $message = $result['message'];
@@ -125,7 +137,9 @@ include 'includes/header.php';
                 <label for="photo" style="display:block; margin-bottom:0.4rem; font-weight:500;">Photo</label>
                 <input type="file" id="photo" accept="image/*"
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-                <canvas id="photo-preview" style="display:none; margin-top:10px; max-width:200px; border-radius:8px; border:1px solid #eee;"></canvas>
+                <div style="display:flex; justify-content:center; margin-top:1rem;">
+                    <canvas id="photo-preview" style="display:none; border-radius:16px; border:2px solid #eee; max-width:180px; max-height:180px;"></canvas>
+                </div>
                 <input type="hidden" name="photoData" id="photoData">
             </div>
 
@@ -168,11 +182,7 @@ include 'includes/header.php';
 
 <!-- JS Autocomplete -->
 <script>
-const countries = [
-<?php foreach ($pays as $p): ?>
-  "<?= addslashes($p['nom']) ?>",
-<?php endforeach; ?>
-];
+const countries = <?= json_encode($countries, JSON_UNESCAPED_UNICODE) ?>;
 
 const input = document.getElementById("nso");
 const suggestion = document.getElementById("nso-suggestion");
@@ -195,7 +205,7 @@ input.addEventListener("keydown", e => {
 });
 </script>
 
-<!-- JS Photo Capture & Compression -->
+<!-- JS Photo Capture -->
 <script>
 const photoInput = document.getElementById('photo');
 const photoPreview = document.getElementById('photo-preview');
@@ -217,7 +227,6 @@ photoInput.addEventListener('change', function(event) {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             canvas.style.display = 'block';
-            // enregistrer l'image compressée en base64
             photoDataInput.value = canvas.toDataURL('image/png');
         }
         img.src = e.target.result;

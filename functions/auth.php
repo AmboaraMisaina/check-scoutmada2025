@@ -15,9 +15,9 @@ function getNavigation()
 {
     return [
         'checkin.php' => '✅ Check-in',
-        'programmes.php' => '📅 Programmes',
+        'programmes.php' => '📅 Programs',
         'participants.php' => '👥 Participants',
-        'add_user.php' => '➕ Ajouter un utilisateur',
+        'add_user.php' => '➕ Add User',
     ];
 }
 

@@ -1,7 +1,28 @@
+<?php
+require 'functions.php';
+checkAuthOrRedirect();
+
+if ($_SESSION['role'] !== 'admin' &&  $_SESSION['role'] !== 'checkin') {
+    include '../includes/header.php';
+    ?>
+    <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
+        <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
+            <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Forbidden</h2>
+            <p style="font-size:1.1rem; margin-bottom:1.5rem;">You do not have the necessary rights to access this page.</p>
+            <a href="../checkin.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
+                ⬅ Back
+            </a>
+        </div>
+    </div>
+    <?php
+    renderFooter();
+    exit;
+}
+?>
+
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <?php
-require "functions.php";
 $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0;
 
     // Récupérer les infos de l'événement

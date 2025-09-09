@@ -3,7 +3,7 @@ name: 🚀 FTP Deploy
 on:
   push:
     branches:
-      - include   # ou la branche que tu veux déployer
+      - include
 
 jobs:
   ftp-deploy:

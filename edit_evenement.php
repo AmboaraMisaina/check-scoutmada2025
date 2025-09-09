@@ -50,7 +50,7 @@ include 'includes/header.php';
 
 <div class="container">
     <div class="page-header">
-        <h2>Modifier l'événement</h2>
+        <h2>Edit Event</h2>
     </div>
 
     <div class="card">
@@ -63,7 +63,7 @@ include 'includes/header.php';
 
         <form method="POST">
             <div class="form-group">
-                <label for="titre">Titre de l'événement</label>
+                <label for="titre">Event Title</label>
                 <input type="text" id="titre" name="titre" value="<?= htmlspecialchars($evenement['titre']) ?>" required>
             </div>
 
@@ -77,17 +77,17 @@ include 'includes/header.php';
             </div>
 
             <div class="form-group">
-                <label for="horaire_debut">Horaire de début</label>
+                <label for="horaire_debut">Start Time</label>
                 <input type="time" id="horaire_debut" name="horaire_debut" value="<?= $evenement['horaire_debut'] ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="horaire_fin">Horaire de fin</label>
+                <label for="horaire_fin">End Time</label>
                 <input type="time" id="horaire_fin" name="horaire_fin" value="<?= $evenement['horaire_fin'] ?>" required>
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label><br>
+                <label>Open to</label><br>
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="delegate" <?= in_array('delegate', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Delegate
                 </label>
@@ -118,10 +118,10 @@ include 'includes/header.php';
              <div class="form-group">
                 <label for="unique_event">
                     <input type="checkbox" id="unique_event" name="unique_event" value="1" <?= $evenement['nb_participation'] ? 'checked' : '' ?>>
-                    Événement à participation unique
+                    Unique Participation Event
                 </label>
             </div>
-            <button type="submit" class="btn">Mettre à jour</button>
+            <button type="submit" class="btn">Update</button>
         </form>
     </div>
 </div>
