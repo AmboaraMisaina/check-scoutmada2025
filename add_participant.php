@@ -123,7 +123,7 @@ include 'includes/header.php';
             <!-- Photo -->
             <div class="form-group" style="margin-bottom: 1.2rem;">
                 <label for="photo" style="display:block; margin-bottom:0.4rem; font-weight:500;">Photo</label>
-                <input type="file" id="photo" accept="image/*" capture="environment"
+                <input type="file" id="photo" accept="image/*"
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
                 <canvas id="photo-preview" style="display:none; margin-top:10px; max-width:200px; border-radius:8px; border:1px solid #eee;"></canvas>
                 <input type="hidden" name="photoData" id="photoData">
