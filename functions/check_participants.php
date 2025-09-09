@@ -306,7 +306,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     // afficher la photo
                     if (data.photo_path) {
                         const img = document.getElementById('participant-img');
-                        img.src = data.photo_path;
+                        img.src = "../" + data.photo_path;
                         img.style.display = 'block';
                     }
                 } else {
