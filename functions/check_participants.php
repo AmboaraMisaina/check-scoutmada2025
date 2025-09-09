@@ -29,7 +29,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     </div>
 <?php endif; ?>
 <div id="participant-photo" style="margin: 1.5rem auto 0 auto; display: flex; justify-content: center;">
-    <div id="photo-wrapper" style="width:97vw; max-width:750px; aspect-ratio:0.97/1; display:flex; align-items:center; justify-content:center;">
+    <div id="photo-wrapper" style="width:97vw; max-width:750px; aspect-ratio:0.97/1; display:none; align-items:center; justify-content:center;">
         <img id="participant-img" src="" alt="Photo participant"
             style="width:100%; height:100%; object-fit:cover; border-radius:24px; border:4px solid #fff; display:none; background:#eee;">
     </div>
@@ -309,8 +309,10 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     // afficher la photo
                     if (data.photo_path) {
                         const img = document.getElementById('participant-img');
+                        const bloc = document.getElementById('photo-wrapper');
                         img.src = "../" + data.photo_path;
                         img.style.display = 'block';
+                        bloc.style.display = 'flex';
                     }
                 } else {
                     showErrorModal(data.message || "Erreur lors de l'enregistrement");
@@ -323,6 +325,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     function startScanner(cameraId) {
         html5QrcodeScanner = new Html5Qrcode("qr-reader");
         const scannerWidth = document.getElementById('qr-reader').clientWidth;
+        const bloc = document.getElementById('photo-wrapper');
+        bloc.style.display = 'none';
         const qrBoxSize = scannerWidth * 0.7;
 
         html5QrcodeScanner.start(
