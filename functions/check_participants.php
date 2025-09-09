@@ -28,6 +28,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         </div>
     </div>
 <?php endif; ?>
+<div id="participant-photo" style="margin: 1rem auto; text-align:center;">
+    <img id="participant-img" src="" alt="Photo participant" style="max-width:200px; display:none; border-radius:10px; border:2px solid #fff;">
+</div>
 <div class="scanner-container">
     <!-- Scanner -->
     <div id="qr-reader">
@@ -292,18 +295,25 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         document.getElementById('qr-result').innerText = decodedText;
         html5QrcodeScanner.stop().then(() => {
             fetch('verif_qr.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
-                })
-                .then(r => r.text())
-                .then (data => {
-                    if (data.includes("Présence enregistrée")) showSuccessModal();
-                    else showErrorModal(data);
-                })
-                .catch(err => showErrorModal("Erreur : " + err));
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
+            })
+            .then(r => r.json()) // ← on renvoie JSON maintenant
+            .then(data => {
+                if (data.success) {
+                    showSuccessModal();
+                    // afficher la photo
+                    if (data.photo_path) {
+                        const img = document.getElementById('participant-img');
+                        img.src = data.photo_path;
+                        img.style.display = 'block';
+                    }
+                } else {
+                    showErrorModal(data.message || "Erreur lors de l'enregistrement");
+                }
+            })
+            .catch(err => showErrorModal("Erreur : " + err));
         });
     }
 
