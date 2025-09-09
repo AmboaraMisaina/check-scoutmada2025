@@ -25,26 +25,27 @@ function getParticipantById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function addParticipant($pdo, $nom, $prenom, $email, $type)
+function addParticipant($pdo, $nom, $prenom, $email, $type, $pays_id)
 {
-    // if (!$email || !in_array($type, ['delegate', 'observer', 'organizing_committee', 'wosm_team', 'volunteer', 'staff', 'partner', 'guest'])) {
-    //     return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
-    // }
+    // Vérifier les champs obligatoires
+    if (!$nom || !$prenom || !$email || !$type || !$pays_id) {
+        return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
+    }
 
-    // Vérifier si l'email existe
+    // Vérifier si l'email existe déjà
     $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->rowCount() > 0) {
         return ['success' => false, 'message' => 'Un participant avec cet email existe déjà.'];
     }
 
-    // Insertion
-    $stmt = $pdo->prepare("INSERT INTO participants (nom, prenom, email, type) VALUES (?, ?, ?, ?)");
-    if ($stmt->execute([$nom, $prenom, $email, $type])) {
+    // Insertion avec pays
+    $stmt = $pdo->prepare("INSERT INTO participants (nom, email, type, pays) VALUES (?, ?, ?, ?, ?)");
+    if ($stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays_id])) {
         // Récupérer l'ID du participant inséré
         $participantId = $pdo->lastInsertId();
 
-        // Générer le contenu du QR code (nom_participant_id)
+        // Générer le contenu du QR code (nom_prenom_id)
         $qr_code = $nom . '_' . $prenom . '_' . $participantId;
 
         // Mettre à jour le participant avec le QR code
@@ -68,7 +69,7 @@ function getQrCodeUrl($qrText, $size = 300)
 function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type)
 {
     $stmt = $pdo->prepare("UPDATE participants SET nom=?, prenom=?, email=?, type=? WHERE id=?");
-    return $stmt->execute([$nom, $prenom, $email, $type, $id]);
+    return $stmt->execute([$nom . ' ' . $prenom, "", $email, $type, $id]);
 }
 
 // Supprime un participant
@@ -113,6 +114,8 @@ function deleteEvenement(PDO $pdo, $id)
     $stmt = $pdo->prepare("DELETE FROM evenements WHERE id=?");
     return $stmt->execute([$id]);
 }
+
+
 
 
 // ---------------- STATISTIQUES ----------------
@@ -200,4 +203,9 @@ function updateAdmin($pdo, $id, $username, $role, $password = null) {
 function deleteAdmin($pdo, $id) {
     $stmt = $pdo->prepare("DELETE FROM admins WHERE id = ?");
     return $stmt->execute([$id]);
+}
+
+function getAllPays($pdo) {
+    $stmt = $pdo->query("SELECT * FROM pays ORDER BY nom ASC");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
