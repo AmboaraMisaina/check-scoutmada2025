@@ -5,7 +5,7 @@ require_once 'functions/db.php';
 
 // Si déjà connecté, rediriger
 if (isset($_SESSION['admin_id'])) {
-    header('Location: dashboard.php');
+    header('Location: checkin.php');
     exit;
 }
 
@@ -18,13 +18,13 @@ if ($_POST) {
     if ($username && $password) {
         $stmt = $pdo->prepare("SELECT id, username, password, role FROM admins WHERE username = ?");
         $stmt->execute([$username]);
-        $admin = $stmt->fetch();
-        
-        if ($admin && password_verify($password, $admin['password'])) {
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Vérification du hashage du mot de passe
+        if ($admin && !empty($admin['password']) && hash('sha256', $password) === $admin['password']) {
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_username'] = $admin['username'];
             $_SESSION['role'] = $admin['role'];
-            header('Location: dashboard.php');
+            header('Location: checkin.php');
             exit;
         } else {
             $error = 'Identifiants incorrects';

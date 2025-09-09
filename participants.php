@@ -2,118 +2,148 @@
 require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
-if ($_SESSION['role'] !== 'admin') {
-    renderHeader("Accès interdit");
-    ?>
+// Vérifier les droits
+if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') {
+    include 'includes/header.php';
+?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
         <div style="background:white; padding:2rem 3rem; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); text-align:center;">
-            <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Accès interdit</h2>
-            <p style="font-size:1.1rem; margin-bottom:1.5rem;">Vous n’avez pas les droits nécessaires pour accéder à cette page.</p>
-            <a href="dashboard.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
-                ⬅ Retour au tableau de bord
+            <h2 style="color:#e74c3c; margin-bottom:1rem;">🚫 Forbidden</h2>
+            <p style="font-size:1.1rem; margin-bottom:1.5rem;">You do not have the necessary rights to access this page.</p>
+            <a href="checkin.php" style="padding:0.7rem 1.2rem; background:#3498db; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
+                ⬅ Back
             </a>
         </div>
     </div>
-    <?php
+<?php
     renderFooter();
     exit;
 }
 
-// Supprimer si paramètre delete est présent
+// Supprimer un participant si demandé
 if (isset($_GET['delete'])) {
     deleteParticipant($pdo, intval($_GET['delete']));
     header("Location: participants.php");
     exit;
 }
 
-// Récupérer tous les participants
-$participants = getAllParticipants($pdo);
+// Récupérer les filtres
+$filter_name = trim($_GET['filter_name'] ?? '');
+$filter_printed = $_GET['filter_printed'] ?? '';
 
-renderHeader('Participants');
+// Récupérer les participants filtrés
+$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed);
+
+include 'includes/header.php';
 ?>
 
 <div class="container">
-    <div class="page-header">
-        <h2>Liste des participants</h2>
-        <p>Visualisez tous les participants enregistrés</p>
+
+    <!-- Header page -->
+    <div class="page-header" style="margin-bottom:1.5rem;">
+        <h2>Participants</h2>
+        <p>Manage all registered participants</p>
     </div>
 
-    <div class="card" style="margin-top: 2rem;">
-        <a href="add_participant.php" class="btn">➕ Add participant</a>
-        <a href="add_guest.php" class="btn">➕ Add guest</a>
-        <a href="import_participants.php" class="btn btn-primary">📥 Import participants</a>
-        <!-- <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Download all QR Codes</a> -->
-        <!-- <a href="dashboard.php" class="btn btn-secondary">📊 Retour</a> -->
+    <!-- Actions principales -->
+    <div class="card" style="display:flex; flex-wrap:wrap; gap:0.5rem; padding:1rem; margin-bottom:1rem;">
+        <a href="add_participant.php" class="btn">➕ Add Participant</a>
+        <a href="add_guest.php" class="btn">➕ Add Guest</a>
+        <a href="import_participants.php" class="btn btn-primary">📥 Import Participants</a>
+        <!-- <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Download All QR Codes</a> -->
     </div>
 
-    <div class="card">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background: #f1f1f1;">
-                    <th style="padding: 0.75rem;">ID</th>
-                    <th style="padding: 0.75rem;">Name</th>
-                    <th style="padding: 0.75rem;">Email</th>
-                    <th style="padding: 0.75rem;">Category</th>
-                    <th style="padding: 0.75rem;">QR Code</th>
-                    <th style="padding: 0.75rem;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($participants): ?>
-                    <?php foreach ($participants as $p): ?>
-                        <tr style="border-bottom: 1px solid #e1e5e9;">
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['id']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['nom']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['email']); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($p['type']); ?></td>
-                            <td style="padding: 0.75rem;">
-                                <?php if ($p['qr_code']): ?>
-                                    <button onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>')" style="padding:0.3rem 0.7rem; border-radius:5px; background:#38ef7d; color:white; border:none; font-weight:bold; cursor:pointer;">
-                                        Voir QR
-                                    </button>
-                                <?php else: ?>
-                                    -
-                                <?php endif; ?>
-                            </td>
-                            <td style="padding: 0.75rem;">
-                                <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
-                                <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="8" style="padding: 1rem; text-align: center;">Aucun participant trouvé.</td>
+    <!-- Filtre -->
+    <div class="card" style="padding:1rem; margin-bottom:1rem;">
+        <form method="GET" action="participants.php" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+            <input type="text" name="filter_name" placeholder="Search by name" value="<?= htmlspecialchars($filter_name) ?>" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc; flex:1;">
+            <select name="filter_printed" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                <option value="">All</option>
+                <option value="1" <?= ($filter_printed === '1') ? 'selected' : '' ?>>Printed</option>
+                <option value="0" <?= ($filter_printed === '0') ? 'selected' : '' ?>>Not Printed</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="participants.php" class="btn btn-secondary">Reset</a>
+        </form>
+    </div>
+
+    <!-- Table des participants -->
+    <form method="post" action="functions/print_badge.php" id="printForm">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
+            <button type="submit" class="btn btn-success">🖨️ Print Selected Badges</button>
+        </div>
+
+        <div class="card" style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; min-width:700px;">
+                <thead>
+                    <tr style="background:#f1f1f1;">
+                        <th style="padding:0.75rem;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
+                        <th style="padding:0.75rem;">Name</th>
+                        <th style="padding:0.75rem;">Email</th>
+                        <th style="padding:0.75rem;">Country</th>
+                        <th style="padding:0.75rem;">Category</th>
+                        <!-- <th style="padding:0.75rem;">QR Code</th> -->
+                        <th style="padding:0.75rem;">Printed</th>
+                        <th style="padding:0.75rem;">Actions</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php if ($participants): ?>
+                        <?php foreach ($participants as $p): ?>
+                            <tr style="border-bottom:1px solid #e1e5e9;">
+                                <td style="text-align:center;"><input type="checkbox" class="print-checkbox" name="print_ids[]" value="<?= $p['id'] ?>" <?= !empty($p['isPrinted']) ? 'disabled' : '' ?>></td>
+                                <td><?= htmlspecialchars($p['nom']); ?></td>
+                                <td><?= htmlspecialchars($p['email']); ?></td>
+                                <td><?= htmlspecialchars($p['pays']); ?></td>
+                                <td><?= htmlspecialchars($p['type']); ?></td>
+                                <!-- <td>
+                                    <?php if ($p['qr_code']): ?>
+                                        <button type="button" onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>', '<?= htmlspecialchars($p['nom']) ?>')" class="btn btn-success" style="padding:0.3rem 0.7rem;">Voir QR</button>
+                                    <?php else: ?> - <?php endif; ?>
+                                </td> -->
+                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
+                                <td>
+                                    <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
+                                    <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding:1rem;">No participants found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </form>
 </div>
 
 <!-- Fenêtre modale QR Code -->
 <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
     <div style="background:white; padding:2rem; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,0.2); min-width:300px; text-align:center; position:relative;">
         <span style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;" onclick="closeQrModal()">&times;</span>
-        <h3 style="margin-bottom:1rem;">QR Code du participant</h3>
+        <h3 id="qrParticipantName" style="margin-bottom:1rem;"></h3>
         <img id="qrImg" src="" alt="QR Code" style="margin-bottom:1rem; max-width:200px;">
         <br>
-        <a id="qrDownload" href="#" download style="padding:0.5rem 1rem; background:#38ef7d; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
-            Télécharger le QR Code
-        </a>
+        <a id="qrDownload" href="#" download class="btn btn-success" style="padding:0.5rem 1rem;">Download QR Code</a>
     </div>
 </div>
 
 <script>
-function showQrModal(id, qrText) {
+function showQrModal(id, qrText, nom) {
     var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(qrText) + "&size=200x200";
     document.getElementById('qrImg').src = qrUrl;
-    document.getElementById('qrDownload').href = "download_qr.php?id=" + id;
-    document.getElementById('qrDownload').removeAttribute('download'); // Le script force le téléchargement
+    document.getElementById('qrDownload').href = "functions/download_qr.php?id=" + id;
+    document.getElementById('qrDownload').removeAttribute('download');
+    document.getElementById('qrParticipantName').innerText = nom;
     document.getElementById('qrModal').style.display = "flex";
 }
-function closeQrModal() {
-    document.getElementById('qrModal').style.display = "none";
+
+function closeQrModal() { document.getElementById('qrModal').style.display = "none"; }
+
+function toggleAll(source) {
+    document.querySelectorAll('.print-checkbox').forEach(cb => { if (!cb.disabled) cb.checked = source.checked; });
 }
 </script>
 

@@ -26,26 +26,31 @@ if ($_POST) {
     $horaire_debut = $_POST['horaire_debut'] ?? '';
     $horaire_fin = $_POST['horaire_fin'] ?? '';
     $ouvert_a = $_POST['ouvert_a'] ?? [];
+    $date_evenement = $_POST['date'] ?? '';
+    $participation_unique = isset($_POST['unique_event']) ? 1 : 0;
 
-    if (!$titre || !$horaire_debut || !$horaire_fin) {
+     // Validation de base
+
+    if (!$titre || !$horaire_debut || !$horaire_fin || !$date_evenement) {
         $error = "Veuillez remplir tous les champs obligatoires.";
     } else {
-        $result = updateEvenement($pdo, $id, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a);
+
+        $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id, $participation_unique);
         if ($result) {
             $message = "Événement mis à jour avec succès.";
-            $evenement = getEvenementById($pdo, $id); // reload
+            $evenement = getEvenementById($pdo, $id);
         } else {
             $error = "Une erreur est survenue lors de la mise à jour.";
         }
     }
 }
 
-renderHeader('Modifier Événement');
+include 'includes/header.php';
 ?>
 
 <div class="container">
     <div class="page-header">
-        <h2>Modifier l'événement</h2>
+        <h2>Edit Event</h2>
     </div>
 
     <div class="card">
@@ -58,7 +63,7 @@ renderHeader('Modifier Événement');
 
         <form method="POST">
             <div class="form-group">
-                <label for="titre">Titre de l'événement</label>
+                <label for="titre">Event Title</label>
                 <input type="text" id="titre" name="titre" value="<?= htmlspecialchars($evenement['titre']) ?>" required>
             </div>
 
@@ -66,27 +71,31 @@ renderHeader('Modifier Événement');
                 <label for="description">Description</label>
                 <textarea id="description" name="description"><?= htmlspecialchars($evenement['description']) ?></textarea>
             </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="<?= htmlspecialchars($evenement['date_evenement']) ?>" required>
+            </div>
 
             <div class="form-group">
-                <label for="horaire_debut">Horaire de début</label>
+                <label for="horaire_debut">Start Time</label>
                 <input type="time" id="horaire_debut" name="horaire_debut" value="<?= $evenement['horaire_debut'] ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="horaire_fin">Horaire de fin</label>
+                <label for="horaire_fin">End Time</label>
                 <input type="time" id="horaire_fin" name="horaire_fin" value="<?= $evenement['horaire_fin'] ?>" required>
             </div>
 
             <div class="form-group">
-                <label style="margin-left: 1rem;">Ouvert à</label><br>
-                <label>
-                    <input type="checkbox" name="ouvert_a[]" value="delegate" <?= in_array('delegate', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Délégué
+                <label>Open to</label><br>
+                <label style="margin-left: 1rem;">
+                    <input type="checkbox" name="ouvert_a[]" value="delegate" <?= in_array('delegate', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Delegate
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="observer" <?= in_array('observer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observateur
+                    <input type="checkbox" name="ouvert_a[]" value="observer" <?= in_array('observer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observer
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="organizing_comittee" <?= in_array('organizing_comittee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Comité d'organisation
+                    <input type="checkbox" name="ouvert_a[]" value="organizing_committee" <?= in_array('organizing_committee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Organizing Committee
                 </label>
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="wosm_team" <?= in_array('wosm_team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
@@ -105,7 +114,14 @@ renderHeader('Modifier Événement');
                 </label>
             </div>
 
-            <button type="submit" class="btn">Mettre à jour</button>
+
+             <div class="form-group">
+                <label for="unique_event">
+                    <input type="checkbox" id="unique_event" name="unique_event" value="1" <?= $evenement['nb_participation'] ? 'checked' : '' ?>>
+                    Unique Participation Event
+                </label>
+            </div>
+            <button type="submit" class="btn">Update</button>
         </form>
     </div>
 </div>
