@@ -95,74 +95,7 @@ include 'includes/header.php';
         <p>Update participant information</p>
     </div>
 
-    <div class="card" style="padding:2rem; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
-        <?php if ($message): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
-        <?php endif; ?>
-        <?php if ($error): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-
-        <form method="POST" id="participantForm" autocomplete="off">
-
-
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="nom" style="display:block; margin-bottom:0.4rem;">Name</label>
-                <input type="text" id="nom" name="nom" required
-                    value="<?= htmlspecialchars($participant['nom']) ?>"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-            </div>
-
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="mail" style="display:block; margin-bottom:0.4rem;">Email</label>
-                <input type="email" id="mail" name="mail" required
-                    value="<?= htmlspecialchars($participant['email']) ?>"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-            </div>
-
-            <!-- Photo -->
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="photo" style="display:block; margin-bottom:0.4rem;">Photo</label>
-                <input type="file" id="photo" accept="image/*"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-                <div style="display:flex; justify-content:center; margin-top:1rem;">
-                    <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:180px; max-height:180px;"></canvas>
-                </div>
-                <input type="hidden" name="photoData" id="photoData">
-
-            </div>
-
-            <!-- NSO (Country) -->
-            <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label for="nso" style="display:block; margin-bottom:0.4rem; font-weight:500;">NSO (Country)</label>
-                <select id="nso" name="nso" required
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-                    <option value="">Country</option>
-                    <?php foreach ($countries as $country): ?>
-                        <option value="<?= htmlspecialchars($country) ?>" <?= $participant["pays"] === $country ? 'selected' : '' ?>><?= htmlspecialchars($country) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <!-- Category -->
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="type" style="display:block; margin-bottom:0.4rem;">Category</label>
-                <select id="type" name="type" required
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-                    <option value="">-- Select --</option>
-                    <option value="delegate" <?= $participant['type'] === 'delegate' ? 'selected' : '' ?>>Delegate</option>
-                    <option value="observer" <?= $participant['type'] === 'observer' ? 'selected' : '' ?>>Observer</option>
-                    <option value="organizing_committee" <?= $participant['type'] === 'organizing_committee' ? 'selected' : '' ?>>Organizing Committee</option>
-                    <option value="wosm_team" <?= $participant['type'] === 'wosm_team' ? 'selected' : '' ?>>WOSM Team</option>
-                    <option value="volunteer" <?= $participant['type'] === 'volunteer' ? 'selected' : '' ?>>Volunteer</option>
-                    <option value="staff" <?= $participant['type'] === 'staff' ? 'selected' : '' ?>>Staff</option>
-                    <option value="partner" <?= $participant['type'] === 'partner' ? 'selected' : '' ?>>Partner</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn" style="width:100%; padding:0.8rem; background:#38ef7d; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; margin-top:1rem;">Update</button>
-            <a href="participants.php" class="btn btn-secondary" style="margin-top:1rem;">Back</a>
-        </form>
-    </div>
+    
 </div>
 
 <?php renderFooter(); ?>
