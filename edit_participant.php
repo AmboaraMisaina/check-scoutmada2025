@@ -10,13 +10,13 @@ if (!$id) {
     header('Location: participants.php');
     exit;
 }
-
-// Récupérer le participant
-$participant = getParticipantById($pdo, (int)$id);
-if (!$participant) {
-    header('Location: participants.php');
-    exit;
-}
+$participant =null;
+// // Récupérer le participant
+// $participant = getParticipantById($pdo, (int)$id);
+// if (!$participant) {
+//     header('Location: participants.php');
+//     exit;
+// }
 
 $message = '';
 $error = '';

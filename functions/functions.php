@@ -126,10 +126,10 @@ function getQrCodeUrl($qrText, $size = 300)
 }
 
 // Met à jour un participant
-function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays_id, $photoPath = null)
+function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $photoPath = null)
 {
     // Vérifier les champs obligatoires
-    if (!$nom || !$prenom || !$email || !$type || !$pays_id) {
+    if (!$nom || !$prenom || !$email || !$type || !$pays) {
         return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
     }
 
@@ -142,13 +142,13 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays_id
 
     // Mettre à jour le participant
     $stmt = $pdo->prepare("UPDATE participants SET nom = ?, email = ?, type = ?, pays = ?, photo = ? WHERE id = ?");
-    $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays_id, $photoPath, $id]);
+    $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays, $photoPath, $id]);
 
     if ($result) {
         return ['success' => true, 'message' => 'Participant updated successfully!'];
     } else {
         return ['success' => false, 'message' => 'Error updating participant.'];
-    }
+    }   
 }
 
 // Supprime un participant
