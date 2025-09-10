@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'functions/functions.php';
 
 // // Récupérer le participant
 // $participant = getParticipantById($pdo, (int)$id);
@@ -53,7 +53,6 @@ if ($_POST) {
     }
 }
 
-include 'includes/header.php';
 ?>
 
 
@@ -114,27 +113,3 @@ img.onload = () => {
 };
 img.src = '<?= htmlspecialchars($participant['photo']) ?>';
 <?php endif; ?>
-
-photoInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const MAX_WIDTH = 600;
-            const scale = Math.min(1, MAX_WIDTH / img.width);
-            const canvas = photoPreview;
-            canvas.width = img.width * scale;
-            canvas.height = img.height * scale;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            canvas.style.display = 'block';
-            photoDataInput.value = canvas.toDataURL('image/png');
-        }
-        img.src = e.target.result;
-    }
-    reader.readAsDataURL(file);
-});
-</script>
