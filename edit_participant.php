@@ -85,31 +85,3 @@ if ($_POST) {
 
     
 </div>
-
-<?php renderFooter(); ?>
-
-<!-- JS Autocomplete -->
-<script>
-new TomSelect("#nso", {
-    create: false,
-    sortField: {field: "text", direction: "asc"}
-});
-</script>
-
-<!-- JS Photo Capture -->
-<script>
-const photoInput = document.getElementById('photo');
-const photoPreview = document.getElementById('photo-preview');
-const photoDataInput = document.getElementById('photoData');
-
-// Afficher photo existante dans canvas
-<?php if ($participant['photo']): ?>
-const img = new Image();
-img.onload = () => {
-    photoPreview.width = img.width;
-    photoPreview.height = img.height;
-    photoPreview.getContext('2d').drawImage(img, 0, 0);
-    photoPreview.style.display = 'block';
-};
-img.src = '<?= htmlspecialchars($participant['photo']) ?>';
-<?php endif; ?>
