@@ -22,12 +22,18 @@ $message = '';
 $error = '';
 
 if ($_POST) {
-    $nom = trim($_POST['nom'] ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $email = trim($_POST['mail'] ?? '');
-    $type = $_POST['type'] ?? '';
-    $nso = trim($_POST['nso'] ?? '');
     
+    $nom = trim($_POST['nom'] ?? '');
+    echo $nom;
+    $prenom = trim($_POST['prenom'] ?? '');
+    echo $prenom;
+    $email = trim($_POST['mail'] ?? '');
+    echo $email;
+    $type = $_POST['type'] ?? '';
+    echo $type;
+    $nso = trim($_POST['nso'] ?? '');
+    echo $nso;
+
     // Vérification que le pays est valide
     // $normalizedNso = strtolower($nso);
     // $normalizedCountries = array_map(fn($c) => strtolower($c), $countries);
