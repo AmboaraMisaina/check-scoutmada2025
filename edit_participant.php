@@ -31,7 +31,6 @@ if ($_POST) {
     $nso = trim($_POST['nso'] ?? '');
 
     // Vérification que le pays est valide
-    $normalizedNso = mb_strtolower($nso);
 
     
 }
