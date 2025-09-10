@@ -33,7 +33,7 @@ if ($_POST) {
     $normalizedCountries = array_map(fn($c) => mb_strtolower($c), $countries);
 
     if (!in_array($normalizedNso, $normalizedCountries)) {
-        $error = "Le pays sélectionné n'est pas valide.";
+        $error = "The selected country is not valid.";
     } else {
         // Gestion de la photo uploadée
         $photoPath = $participant['photo'] ?? null;

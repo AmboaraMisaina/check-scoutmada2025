@@ -56,11 +56,11 @@ function generateQrWithText($qrData, $text) {
 // =======================
 function downloadAllQRCodes($pdo) {
     $participants = getAllParticipants($pdo);
-    if (!$participants) exit('Aucun participant trouvé.');
+    if (!$participants) exit('No participants found.');
 
     $zip = new ZipArchive();
     $zipFile = tempnam(sys_get_temp_dir(), 'qrcodes_') . '.zip';
-    if ($zip->open($zipFile, ZipArchive::CREATE) !== TRUE) exit("Impossible de créer le fichier ZIP.");
+    if ($zip->open($zipFile, ZipArchive::CREATE) !== TRUE) exit("Unable to create ZIP file.");
 
     foreach ($participants as $participant) {
         $qrData = $participant['qr_code'];
@@ -98,20 +98,20 @@ if (isset($_GET['download_all'])) {
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$id) {
     http_response_code(400);
-    exit('ID manquant');
+    exit('Missing ID');
 }
 
 $participant = getParticipantById($pdo, $id);
 if (!$participant) {
     http_response_code(404);
-    exit('Participant introuvable');
+    exit('Participant not found');
 }
 
 $text = $participant['nom'] . ' ' . $participant['prenom'];
 $final_img = generateQrWithText($participant['qr_code'], $text);
 if (!$final_img) {
     http_response_code(500);
-    exit('Impossible de générer le QR code.');
+    exit('Error generating QR code.');
 }
 
 header('Content-Type: image/png');

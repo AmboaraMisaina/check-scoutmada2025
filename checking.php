@@ -17,8 +17,8 @@ include 'includes/header.php';
 
 <div class="container">
     <div class="page-header">
-        <h2>Checking des événements</h2>
-        <p>Événements programmés pour : <?= $aujourdhui ?></p>
+        <h2>Checking Events</h2>
+        <p>Events scheduled for: <?= $aujourdhui ?></p>
     </div>
 
     <!-- Filtre date -->
@@ -32,10 +32,10 @@ include 'includes/header.php';
     <div style="margin-bottom: 2rem; display:flex; gap:1rem;">
         <a href="checking.php?date=<?= $aujourdhui ?>&filter=current"
             class="btn <?= ($filter === 'current') ? 'btn-active' : 'btn-secondary' ?>"
-            style="flex:1; text-align:center;">Juste actuellement</a>
+            style="flex:1; text-align:center;"> Just Now</a>
         <a href="checking.php?date=<?= $aujourdhui ?>&filter=all"
             class="btn <?= ($filter === 'all') ? 'btn-active' : 'btn-secondary' ?>"
-            style="flex:1; text-align:center;">Voir tous les programmes</a>
+            style="flex:1; text-align:center;">View All Programs</a>
     </div>
 
     <div style="display:flex; flex-direction:column; gap:1rem;">
@@ -73,7 +73,7 @@ include 'includes/header.php';
                     <strong><?= $e['horaire_debut'] ?> - <?= $e['horaire_fin'] ?>:</strong> <?= htmlspecialchars($e['titre']) ?>
                 </div>
                 <?php if ($e['enCours']): ?>
-                    <span style="background:#38ef7d; color:white; padding:0.3rem 0.7rem; border-radius:5px; font-weight:bold;">EN COURS</span>
+                    <span style="background:#38ef7d; color:white; padding:0.3rem 0.7rem; border-radius:5px; font-weight:bold;">IN PROGRESS</span>
                 <?php endif; ?>
             </a>
 
@@ -82,7 +82,7 @@ include 'includes/header.php';
 
     <?php if (!$evenementAffiche): ?>
         <div class="card" style="padding:1rem; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-top:1rem;">
-            <p style="margin:0; text-align:center;">Aucun événement à afficher pour ce filtre.</p>
+            <p style="margin:0; text-align:center;">No events to display for this filter.</p>
         </div>
     <?php endif; ?>
 </div>

@@ -21,7 +21,7 @@ if ($_POST) {
     $unique_event = isset($_POST['unique_event']) ? 1 : 0;
 
     if (!$titre || !$horaire_debut || !$horaire_fin) {
-        $error = "Veuillez remplir tous les champs obligatoires.";
+        $error = "Please fill in all required fields.";
     } else {
         // Transformer le tableau en CSV
         $ouvert_a_csv = implode(',', $ouvert_a);

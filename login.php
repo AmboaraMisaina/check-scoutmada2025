@@ -27,10 +27,10 @@ if ($_POST) {
             header('Location: checkin.php');
             exit;
         } else {
-            $error = 'Identifiants incorrects';
+            $error = 'Invalid credentials';
         }
     } else {
-        $error = 'Veuillez remplir tous les champs';
+        $error = 'Please fill in all fields';
     }
 }
 ?>
@@ -40,7 +40,7 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Check-in</title>
+    <title>Login - Check-in</title>
     <style>
         * {
             box-sizing: border-box;
@@ -148,8 +148,8 @@ if ($_POST) {
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>Connexion</h1>
-            <p>Système de Checking</p>
+            <h1>Login</h1>
+            <p>Check-in App</p>
         </div>
         
         <?php if ($error): ?>
@@ -158,16 +158,16 @@ if ($_POST) {
         
         <form method="POST">
             <div class="form-group">
-                <label for="username">Nom d'utilisateur</label>
+                <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
             </div>
             
             <div class="form-group">
-                <label for="password">Mot de passe</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
-            <button type="submit" class="btn">Se connecter</button>
+
+            <button type="submit" class="btn">Login</button>
         </form>
     </div>
 </body>
