@@ -129,7 +129,7 @@ function getQrCodeUrl($qrText, $size = 300)
 function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $photoPath = null)
 {
     // Vérifier les champs obligatoires
-    if (!$nom || !$prenom || !$email || !$type || !$pays) {
+    if (!$nom || !$email || !$type || !$pays) {
         return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
     }
 
@@ -148,7 +148,7 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $
         return ['success' => true, 'message' => 'Participant updated successfully!'];
     } else {
         return ['success' => false, 'message' => 'Error updating participant.'];
-    }   
+    }
 }
 
 // Supprime un participant

@@ -23,20 +23,13 @@ $error = '';
 
 if ($_POST) {
     
+    
     $nom = trim($_POST['nom'] ?? '');
-    echo $nom;
     $prenom = trim($_POST['prenom'] ?? '');
-    echo $prenom;
     $email = trim($_POST['mail'] ?? '');
-    echo $email;
     $type = $_POST['type'] ?? '';
-    echo $type;
     $nso = trim($_POST['nso'] ?? '');
-    echo $nso;
 
-    // Vérification que le pays est valide
-    // $normalizedNso = strtolower($nso);
-    // $normalizedCountries = array_map(fn($c) => strtolower($c), $countries);
 
     if (!in_array($nso, $countries)) {
         $error = "The selected country is not valid.";
@@ -57,13 +50,12 @@ if ($_POST) {
             file_put_contents($photoPath, $decoded);
         }
 
-        if (!$error) {
-            if (updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath)) {
-                $message = "Participant updated successfully!";
-                $participant = getParticipantById($pdo, (int)$id);
-            } else {
-                $error = "Error updating participant.";
-            }
+        $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath);
+        if ($result['success']) {
+            $message = $result['message'];
+            $participant = getParticipantById($pdo, (int)$id);
+        } else {
+            $error = $result['message'];
         }
     }
 }
