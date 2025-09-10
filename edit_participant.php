@@ -28,9 +28,5 @@ if ($_POST) {
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
-    // Vérification que le pays est valide
-    $normalizedNso = mb_strtolower($nso);
-    if (!array_key_exists($normalizedNso, $countries)) {
-        $error = "Le pays sélectionné n'est pas valide.";
-    }
+
 }
