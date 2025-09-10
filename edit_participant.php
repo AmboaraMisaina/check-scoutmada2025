@@ -1,8 +1,5 @@
 <?php
-require_once 'functions/functions.php';
 
-
-$countries = require "country.php";
 
 
 // // Récupérer le participant
