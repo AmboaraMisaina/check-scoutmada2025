@@ -32,7 +32,7 @@ if ($_POST) {
      // Validation de base
 
     if (!$titre || !$horaire_debut || !$horaire_fin || !$date_evenement) {
-        $error = "Veuillez remplir tous les champs obligatoires.";
+        $error = "Please fill in all required fields.";
     } else {
 
         $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id, $participation_unique);
