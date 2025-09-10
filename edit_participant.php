@@ -1,12 +1,10 @@
 <?php
 require_once 'functions/functions.php';
-checkAuthOrRedirect();
 
 
 $countries = require "country.php";
 
 
-$participant =null;
 // // Récupérer le participant
 // $participant = getParticipantById($pdo, (int)$id);
 // if (!$participant) {
