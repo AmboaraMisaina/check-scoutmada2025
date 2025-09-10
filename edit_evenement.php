@@ -95,10 +95,10 @@ include 'includes/header.php';
                     <input type="checkbox" name="ouvert_a[]" value="observer" <?= in_array('observer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observer
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="organizing_committee" <?= in_array('organizing_committee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Organizing Committee
+                    <input type="checkbox" name="ouvert_a[]" value="organizing committee" <?= in_array('organizing committee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Organizing Committee
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="wosm_team" <?= in_array('wosm_team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
+                    <input type="checkbox" name="ouvert_a[]" value="wosm team" <?= in_array('wosm team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
                 </label>
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="volunteer" <?= in_array('volunteer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Volunteer

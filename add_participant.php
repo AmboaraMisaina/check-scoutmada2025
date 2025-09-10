@@ -140,8 +140,8 @@ include 'includes/header.php';
                     <option value="">Category</option>
                     <option value="delegate">Delegate</option>
                     <option value="observer">Observer</option>
-                    <option value="organizing_committee">Organizing Committee</option>
-                    <option value="wosm_team">WOSM Team</option>
+                    <option value="organizing committee">Organizing Committee</option>
+                    <option value="wosm team">WOSM Team</option>
                     <option value="volunteer">Volunteer</option>
                     <option value="staff">Staff</option>
                     <option value="partner">Partner</option>

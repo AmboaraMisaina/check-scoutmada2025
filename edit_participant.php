@@ -149,8 +149,8 @@ include 'includes/header.php';
                     <option value="">-- Select --</option>
                     <option value="delegate" <?= $participant['type'] === 'delegate' ? 'selected' : '' ?>>Delegate</option>
                     <option value="observer" <?= $participant['type'] === 'observer' ? 'selected' : '' ?>>Observer</option>
-                    <option value="organizing_committee" <?= $participant['type'] === 'organizing_committee' ? 'selected' : '' ?>>Organizing Committee</option>
-                    <option value="wosm_team" <?= $participant['type'] === 'wosm_team' ? 'selected' : '' ?>>WOSM Team</option>
+                    <option value="organizing committee" <?= $participant['type'] === 'organizing committee' ? 'selected' : '' ?>>Organizing Committee</option>
+                    <option value="wosm team" <?= $participant['type'] === 'wosm team' ? 'selected' : '' ?>>WOSM Team</option>
                     <option value="volunteer" <?= $participant['type'] === 'volunteer' ? 'selected' : '' ?>>Volunteer</option>
                     <option value="staff" <?= $participant['type'] === 'staff' ? 'selected' : '' ?>>Staff</option>
                     <option value="partner" <?= $participant['type'] === 'partner' ? 'selected' : '' ?>>Partner</option>
