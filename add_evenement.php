@@ -29,9 +29,9 @@ if ($_POST) {
         // Ajouter l'événement dans la table, en passant nb_participation
         $stmt = $pdo->prepare("INSERT INTO evenements (date_evenement, titre, description, horaire_debut, horaire_fin, ouvert_a, nb_participation) VALUES (?, ?, ?, ?, ?, ?, ?)");
         if ($stmt->execute([$date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a_csv, $unique_event])) {
-            $message = "Événement ajouté avec succès.";
+            $message =  "Event added successfully.";
         } else {
-            $error = "Une erreur est survenue lors de l'ajout.";
+            $error = "An error occurred while adding the event.";
         }
     }
 }
@@ -52,7 +52,7 @@ include 'includes/header.php';
 
         <form method="POST">
             <div class="form-group">
-                <label for="titre">Titre de l'événement</label>
+                <label for="titre">Event Title</label>
                 <input type="text" id="titre" name="titre" required>
             </div>
 
@@ -67,17 +67,17 @@ include 'includes/header.php';
             </div>
 
             <div class="form-group">
-                <label for="horaire_debut">Horaire de début</label>
+                <label for="horaire_debut">Start Time</label>
                 <input type="time" id="horaire_debut" name="horaire_debut" required>
             </div>
 
             <div class="form-group">
-                <label for="horaire_fin">Horaire de fin</label>
+                <label for="horaire_fin">End Time</label>
                 <input type="time" id="horaire_fin" name="horaire_fin" required>
             </div>
 
             <div class="form-group">
-                <label>Ouvert à</label>
+                <label>Open to</label>
                     <ul style="list-style-type: disc; margin-left: 2rem; font-family: sans-serif;">
                         <li>
                             <label>
@@ -126,10 +126,10 @@ include 'includes/header.php';
             <div class="form-group">
                 <label for="unique_event">
                     <input type="checkbox" id="unique_event" name="unique_event" value="1">
-                    Événement à participation unique
+                    Unique Participation Event
                 </label>
             </div>
-            <button type="submit" class="btn">Ajouter Événement</button>
+            <button type="submit" class="btn">Add Event</button>
         </form>
     </div>
 </div>

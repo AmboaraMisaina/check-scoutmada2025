@@ -89,14 +89,14 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays = null, $photo
 
     // Vérifier les champs obligatoires
     if (!$nom || !$email ) {
-        return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
+        return ['success' => false, 'message' => ' Please fill in all fields correctly.'];
     }
 
     // Vérifier si l'email existe déjà
     $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->rowCount() > 0) {
-        return ['success' => false, 'message' => 'Un participant avec cet email existe déjà.'];
+        return ['success' => false, 'message' => 'Another participant with this email already exists.'];
     }
 
     // Insertion avec pays
@@ -112,9 +112,9 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays = null, $photo
         $updateStmt = $pdo->prepare("UPDATE participants SET qr_code = ? WHERE id = ?");
         $updateStmt->execute([$qr_code, $participantId]);
 
-        return ['success' => true, 'message' => 'Participant ajouté avec succès !'];
+        return ['success' => true, 'message' => 'Participant added successfully!'];
     } else {
-        return ['success' => false, 'message' => 'Erreur lors de l\'ajout du participant.'];
+        return ['success' => false, 'message' => 'Error adding participant.'];
     }
 }
 
@@ -130,14 +130,14 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays_id
 {
     // Vérifier les champs obligatoires
     if (!$nom || !$prenom || !$email || !$type || !$pays_id) {
-        return ['success' => false, 'message' => 'Veuillez remplir tous les champs correctement.'];
+        return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
     }
 
     // Vérifier si l'email existe déjà pour un autre participant
     $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ? AND id != ?");
     $stmt->execute([$email, $id]);
     if ($stmt->rowCount() > 0) {
-        return ['success' => false, 'message' => 'Un autre participant avec cet email existe déjà.'];
+        return ['success' => false, 'message' => 'Another participant with this email already exists.'];
     }
 
     // Mettre à jour le participant
@@ -145,9 +145,9 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays_id
     $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays_id, $photoPath, $id]);
 
     if ($result) {
-        return ['success' => true, 'message' => 'Participant mis à jour avec succès !'];
+        return ['success' => true, 'message' => 'Participant updated successfully!'];
     } else {
-        return ['success' => false, 'message' => 'Erreur lors de la mise à jour du participant.'];
+        return ['success' => false, 'message' => 'Error updating participant.'];
     }
 }
 

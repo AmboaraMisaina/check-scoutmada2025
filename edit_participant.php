@@ -53,10 +53,10 @@ if ($_POST) {
 
         if (!$error) {
             if (updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath)) {
-                $message = "Participant mis à jour avec succès !";
+                $message = "Participant updated successfully!";
                 $participant = getParticipantById($pdo, (int)$id);
             } else {
-                $error = "Erreur lors de la mise à jour du participant.";
+                $error = "Error updating participant.";
             }
         }
     }

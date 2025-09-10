@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 
 // Si déjà connecté, rediriger
 if (isset($_SESSION['admin_id'])) {
-    echo "DEBUG: Déjà connecté, redirection vers checkin...<br>";
+    echo "DEBUG: Already connected, redirecting to checkin...<br>";
     header('Location: ../checkin.php');
     exit;
 }
@@ -22,56 +22,56 @@ if ($_POST) {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    $debug .= "DEBUG: Username reçu: '" . htmlspecialchars($username) . "'<br>";
-    $debug .= "DEBUG: Password reçu: '" . htmlspecialchars($password) . "'<br>";
-    
+    $debug .= "DEBUG: Username : '" . htmlspecialchars($username) . "'<br>";
+    $debug .= "DEBUG: Password : '" . htmlspecialchars($password) . "'<br>";
+
     if ($username && $password) {
         try {
             $stmt = $pdo->prepare("SELECT id, username, password FROM admins WHERE username = ?");
             $stmt->execute([$username]);
             $admin = $stmt->fetch();
             
-            $debug .= "DEBUG: Requête exécutée<br>";
+            $debug .= "DEBUG: Request executed <br>";
             
             if ($admin) {
-                $debug .= "DEBUG: Admin trouvé - ID: " . $admin['id'] . ", Username: " . $admin['username'] . "<br>";
-                $debug .= "DEBUG: Hash en base: " . $admin['password'] . "<br>";
-                
+                $debug .= "DEBUG: Admin found - ID: " . $admin['id'] . ", Username: " . $admin['username'] . "<br>";
+                $debug .= "DEBUG: Hash : " . $admin['password'] . "<br>";
+
                 if (password_verify($password, $admin['password'])) {
-                    $debug .= "DEBUG: Mot de passe vérifié avec succès !<br>";
+                    $debug .= "DEBUG: Password verified successfully!<br>";
                     $_SESSION['admin_id'] = $admin['id'];
                     $_SESSION['admin_username'] = $admin['username'];
-                    
-                    $debug .= "DEBUG: Session créée, redirection...<br>";
+
+                    $debug .= "DEBUG: Session created, redirecting...<br>";
                     // Attendre 2 secondes pour voir le debug
                     echo $debug;
                     echo "<script>setTimeout(function(){ window.location.href = 'checkin.php'; }, 2000);</script>";
                     exit;
                 } else {
-                    $debug .= "DEBUG: Échec de la vérification du mot de passe<br>";
-                    
+                    $debug .= "DEBUG: Password verification failed<br>";
+
                     // Test manuel du hash
                     $testHash = password_hash($password, PASSWORD_DEFAULT);
-                    $debug .= "DEBUG: Test - nouveau hash pour ce mot de passe: " . $testHash . "<br>";
-                    
+                    $debug .= "DEBUG:  Test - New Hash : " . $testHash . "<br>";
+
                     // Test avec le hash connu
                     $knownHash = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
                     $testResult = password_verify($password, $knownHash);
-                    $debug .= "DEBUG: Test avec hash connu: " . ($testResult ? 'SUCCÈS' : 'ÉCHEC') . "<br>";
-                    
-                    $error = 'Identifiants incorrects';
+                    $debug .= "DEBUG: Test with known hash: " . ($testResult ? 'SUCCESS' : 'FAILURE') . "<br>";
+
+                    $error = 'Invalid credentials';
                 }
             } else {
-                $debug .= "DEBUG: Aucun admin trouvé avec ce username<br>";
-                $error = 'Identifiants incorrects';
+                $debug .= "DEBUG: No admin found with this username<br>";
+                $error = 'Invalid credentials';
             }
         } catch (PDOException $e) {
-            $debug .= "DEBUG: Erreur PDO: " . $e->getMessage() . "<br>";
-            $error = 'Erreur de base de données';
+            $debug .= "DEBUG: PDO Error: " . $e->getMessage() . "<br>";
+            $error = 'Database error';
         }
     } else {
-        $debug .= "DEBUG: Champs manquants<br>";
-        $error = 'Veuillez remplir tous les champs';
+        $debug .= "DEBUG: Missing fields<br>";
+        $error = 'Please fill in all fields';
     }
 }
 ?>
@@ -80,7 +80,7 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Debug - Système de Checking</title>
+    <title>Login Debug - Checkin App</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
         .debug { background: #f0f0f0; padding: 15px; margin: 15px 0; border: 1px solid #ccc; }
@@ -96,7 +96,7 @@ if ($_POST) {
     
     <?php if ($debug): ?>
         <div class="debug">
-            <strong>Informations de debug :</strong><br>
+            <strong>Debug Information:</strong><br>
             <?php echo $debug; ?>
         </div>
     <?php endif; ?>
@@ -107,27 +107,27 @@ if ($_POST) {
     
     <form method="POST">
         <div class="form-group">
-            <label for="username">Nom d'utilisateur</label>
+            <label for="username">Username</label>
             <input type="text" id="username" name="username" value="admin" required>
-            <small>Prérempli avec 'admin'</small>
+            <!-- <small> Prérempli avec 'admin'</small> -->
         </div>
         
         <div class="form-group">
-            <label for="password">Mot de passe</label>
+            <label for="password">Password</label>
             <input type="text" id="password" name="password" value="admin123" required>
-            <small>Prérempli avec 'admin123' (en texte visible pour debug)</small>
+            <!-- <small>Prérempli avec 'admin123' (en texte visible pour debug)</small> -->
         </div>
         
-        <button type="submit" class="btn">Se connecter (DEBUG)</button>
+        <button type="submit" class="btn"> Login (DEBUG)</button>
     </form>
     
     <hr>
-    <p><strong>Pour tester :</strong></p>
+    <p><strong> For testing :</strong></p>
     <ul>
         <li>Username: <code>admin</code></li>
         <li>Password: <code>admin123</code></li>
     </ul>
-    
-    <p><a href="login.php">Retour au login normal</a></p>
+
+    <p><a href="login.php">Back to normal login</a></p>
 </body>
 </html>

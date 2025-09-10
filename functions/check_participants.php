@@ -66,7 +66,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     <!-- Résultat -->
     <div id="qr-result"></div>
-    <button id="quit-scan-btn" onclick="window.location.href='../checkin.php'">Quitter le scan</button>
+    <button id="quit-scan-btn" onclick="window.location.href='../checkin.php'">Quit scan</button>
 </div>
 
 <!-- Modals succès / erreur -->
@@ -336,10 +336,10 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     }
                     showSuccessModal();
                 } else {
-                    showErrorModal(data.message || "Erreur lors de l'enregistrement");
+                    showErrorModal(data.message || " Error");
                 }
             })
-            .catch(err => showErrorModal("Erreur : " + err));
+            .catch(err => showErrorModal("Error: " + err));
         });
     }
 
@@ -359,14 +359,14 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                 } // carré
             },
             onScanSuccess
-        ).catch(err => showErrorModal("Erreur caméra : " + err));
+        ).catch(err => showErrorModal("Camera error: " + err));
     }
 
     // Démarrage auto
     Html5Qrcode.getCameras().then(cameras => {
         if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
-        else showErrorModal("Aucune caméra détectée.");
-    }).catch(err => showErrorModal("Impossible d'accéder aux caméras : " + err));
+        else showErrorModal("No camera detected.");
+    }).catch(err => showErrorModal("Unable to access cameras: " + err));
 
     // Fermer modals en cliquant dessus
     document.getElementById('successModal').addEventListener('click', e => {

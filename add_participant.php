@@ -37,7 +37,7 @@ if ($_POST) {
     $normalizedCountries = array_map(function($c){ return mb_strtolower(trim($c)); }, $countries);
 
     if (!in_array($normalizedNso, $normalizedCountries)) {
-        $error = "Le pays sélectionné n'est pas valide.";
+        $error = "The selected country is not valid.";
 } else {
         // Gestion de la photo uploadée
         $photoPath = null;
@@ -55,7 +55,7 @@ if ($_POST) {
 
             file_put_contents($photoPath, $decoded);
         } else {
-            $error = "Photo obligatoire.";
+            $error = "Photo is required.";
         }
 
         if (!$error) {
@@ -149,7 +149,7 @@ include 'includes/header.php';
 
             <!-- NSO (Country) -->
             <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label for="nso" style="display:block; margin-bottom:0.4rem; font-weight:500;">NSO (Country)</label>
+                <label for="nso" style="display:block; margin-bottom:0.4rem; font-weight:500;">Country</label>
                 <select id="nso" name="nso" required
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
                     <option value="">Country</option>

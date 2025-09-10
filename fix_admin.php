@@ -28,8 +28,8 @@ try {
     $resultCheckin = $stmt->execute([$correctHashCheckin]);
 
     if ($resultAdmin && $resultCheckin) {
-        echo "<p style='color: green;'><strong>✅ Succès !</strong> Le mot de passe pour 'admin' a été mis à jour.</p>";
-        echo "<p style='color: green;'><strong>✅ Succès !</strong> Le mot de passe pour 'checkin' a été mis à jour.</p>";
+        echo "<p style='color: green;'><strong>✅ Succès !</strong> Admin password has been updated.</p>";
+        echo "<p style='color: green;'><strong>✅ Succès !</strong> Checkin password has been updated.</p>";
         // Vérifier que ça fonctionne
         $stmtAdmin = $pdo->prepare("SELECT password FROM admins WHERE username = 'admin'");
         $stmtAdmin->execute();
@@ -40,19 +40,19 @@ try {
         $checkin = $stmtCheckin->fetch();
 
         if ($admin && $admin['password'] === $correctHashAdmin) {
-            echo "<p style='color: green;'><strong>✅ Vérification :</strong> Le mot de passe fonctionne maintenant !</p>";
+            echo "<p style='color: green;'><strong>✅ Vérification :</strong> Admin password is now working!</p>";
         } else {
-            echo "<p style='color: red;'><strong>❌ Erreur :</strong> La vérification a échoué.</p>";
+            echo "<p style='color: red;'><strong>❌ Erreur :</strong> Verification failed.</p>";
         }
 
         if ($checkin && $checkin['password'] === $correctHashCheckin) {
-            echo "<p style='color: green;'><strong>✅ Vérification :</strong> Le mot de passe pour 'checkin' fonctionne maintenant !</p>";
+            echo "<p style='color: green;'><strong>✅ Vérification :</strong> Checkin password is now working!</p>";
         } else {
-            echo "<p style='color: red;'><strong>❌ Erreur :</strong> La vérification pour 'checkin' a échoué.</p>";
+            echo "<p style='color: red;'><strong>❌ Erreur :</strong> Verification failed for 'checkin'.</p>";
         }
 
     } else {
-        echo "<p style='color: red;'><strong>❌ Erreur :</strong> Impossible de mettre à jour les mots de passe.</p>";
+        echo "<p style='color: red;'><strong>❌ Erreur :</strong> Cannot update passwords.</p>";
     }
     
 } catch (PDOException $e) {
@@ -60,21 +60,21 @@ try {
 }
 
 echo "<hr>";
-echo "<p><strong>Tu peux maintenant te connecter avec :</strong></p>";
+echo "<p><strong> You can now log in with :</strong></p>";
 echo "<ul>";
 echo "<li><strong>Username :</strong> admin</li>";
 echo "<li><strong>Password :</strong> admin123</li>";
 echo "</ul>";
 
 echo "<hr>";
-echo "<p><strong>Tu peux maintenant te connecter avec :</strong></p>";
+echo "<p><strong>You can now log in with :</strong></p>";
 echo "<hr>";
 echo "<ul>";
 echo "<li><strong>Username :</strong> checkin</li>";
 echo "<li><strong>Password :</strong> checkin123</li>";
 echo "</ul>";
-echo "<p><a href='login.php'>🔐 Aller à la page de connexion</a></p>";
-echo "<p><a href='login_debug.php'>🔧 Tester avec login debug</a></p>";
+echo "<p><a href='login.php'>🔐 Go to login page</a></p>";
+echo "<p><a href='login_debug.php'>🔧 Test with login debug</a></p>";
 ?>
 
 <style>

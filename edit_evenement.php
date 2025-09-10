@@ -37,7 +37,7 @@ if ($_POST) {
 
         $result = updateEvenement($pdo, $date_evenement, $titre, $description, $horaire_debut, $horaire_fin, $ouvert_a, $id, $participation_unique);
         if ($result) {
-            $message = "Événement mis à jour avec succès.";
+            $message = "Event updated successfully.";
             $evenement = getEvenementById($pdo, $id);
         } else {
             $error = "Une erreur est survenue lors de la mise à jour.";
