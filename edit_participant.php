@@ -105,12 +105,7 @@ include 'includes/header.php';
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
             </div>
 
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="prenom">First Name</label>
-                <input type="text" id="prenom" name="prenom" required
-                    value="<?= htmlspecialchars($participant['prenom']) ?>"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-            </div>
+
 
             <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="mail">Email</label>
