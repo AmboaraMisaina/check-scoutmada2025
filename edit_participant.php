@@ -5,11 +5,7 @@ checkAuthOrRedirect();
 
 $countries = require "country.php";
 
-$id = $_GET['id'] ?? null;
-if (!$id) {
-    header('Location: participants.php');
-    exit;
-}
+
 $participant =null;
 // // Récupérer le participant
 // $participant = getParticipantById($pdo, (int)$id);
