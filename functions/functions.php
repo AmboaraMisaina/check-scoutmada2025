@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 require_once 'auth.php';
+require_once __DIR__ . '/../fpdf/fpdf.php';
 
 // Vérifie si l'utilisateur est connecté
 function checkAuthOrRedirect()
@@ -254,126 +255,88 @@ function getAllPays($pdo) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function genererBadge($name, $nso, $type, $qr_code, $side = 'recto') {
-    $template_recto = __DIR__ . '/../template/badge_recto.png';
-    $template_verso = __DIR__ . '/../template/badge_verso.png';
-    $font_bold = __DIR__ . '/../template/font/caliban-font/Caliban-m132.ttf';
 
-    if (!file_exists($font_bold)) {
-        die("Erreur : police introuvable ($font_bold)");
+function genererFeuilleBadges($pdf, $badge1, $badge2 = null) {
+    $pageWidth = 210;
+    $pageHeight = 297;
+    $halfHeight = $pageHeight / 2; 
+    $halfWidth  = $pageWidth / 2; 
+
+    $pdf->AddPage();
+
+    ajouterBadgeRectoVerso($pdf, $badge1, 0, 0, $halfWidth, $halfHeight);
+
+    if ($badge2) {
+        ajouterBadgeRectoVerso($pdf, $badge2, 0, $halfHeight, $halfWidth, $halfHeight);
     }
-
-    $name = mb_convert_encoding($name, 'UTF-8', mb_detect_encoding($name));
-    $nso  = mb_convert_encoding($nso,  'UTF-8', mb_detect_encoding($nso));
-    $type = mb_convert_encoding($type, 'UTF-8', mb_detect_encoding($type));
-
-    if ($side === 'recto') {
-        $im = imagecreatefrompng($template_recto);
-    } else {
-        $im = imagecreatefrompng($template_verso);
-    }
-
-    imagealphablending($im, true);
-    imagesavealpha($im, true);
-
-    if ($side === 'recto') {
-        /** -------- TYPE -------- */
-        $type_text = strtoupper($type);
-        $type_font_size = 75;
-        $type_color = imagecolorallocate($im, 255, 255, 255);
-
-        $bbox = imagettfbbox($type_font_size, 0, $font_bold, $type_text);
-        $text_width = $bbox[2] - $bbox[0];
-        $type_x = (imagesx($im) - $text_width) / 2;
-        $type_y = 1100;
-
-        imagettftext($im, $type_font_size, 0, $type_x, $type_y, $type_color, $font_bold, $type_text);
-
-        /** -------- NOM -------- */
-        $name_font_size = 55;
-        $name_color = imagecolorallocate($im, 106, 27, 154);
-        $max_width = imagesx($im) - 400;
-
-        // Découpage automatique
-        $lines = [];
-        $words = explode(" ", $name);
-        $current_line = "";
-
-        foreach ($words as $word) {
-            $test_line = trim($current_line . " " . $word);
-            $bbox = imagettfbbox($name_font_size, 0, $font_bold, $test_line);
-            $test_width = $bbox[2] - $bbox[0];
-            if ($test_width <= $max_width) {
-                $current_line = $test_line;
-            } else {
-                if ($current_line !== "") {
-                    $lines[] = $current_line;
-                }
-                $current_line = $word;
-            }
-        }
-        if ($current_line !== "") {
-            $lines[] = $current_line;
-        }
-
-        // Limite à 2 lignes max
-        if (count($lines) > 2) {
-            $lines = array_slice($lines, 0, 2);
-            $last = $lines[1];
-            while (true) {
-                $bbox = imagettfbbox($name_font_size, 0, $font_bold, $last . '…');
-                $test_width = $bbox[2] - $bbox[0];
-                if ($test_width <= $max_width || mb_strlen($last) <= 1) break;
-                $last = mb_substr($last, 0, -1);
-            }
-            $lines[1] = trim($last) . '…';
-        }
-
-        // Positionnement : si 1 ligne → on descend un peu, si 2 lignes → normal
-        if (count($lines) === 1) {
-            $start_y = 1560; // ligne unique (centrée un peu plus bas)
-        } else {
-            $start_y = 1540; // 2 lignes → on garde la position originale
-        }
-        $line_spacing = 100;
-
-        foreach ($lines as $i => $line) {
-            $bbox = imagettfbbox($name_font_size, 0, $font_bold, $line);
-            $text_width = $bbox[2] - $bbox[0];
-            $x = (imagesx($im) - $text_width) / 2;
-            $y = $start_y + ($i * $line_spacing);
-            imagettftext($im, $name_font_size, 0, $x, $y, $name_color, $font_bold, $line);
-        }
-
-        /** -------- NSO -------- */
-        if (!empty($nso)) {
-            $nso_font_size = 50;
-            $nso_color = $type_color;
-            $bbox = imagettfbbox($nso_font_size, 0, $font_bold, $nso);
-            $text_width = $bbox[2] - $bbox[0];
-            $nso_x = (imagesx($im) - $text_width) / 2;
-
-            // On place le NSO toujours en dessous du texte
-            $nso_y = $start_y + (count($lines) * $line_spacing) + 90;
-
-            imagettftext($im, $nso_font_size, 0, $nso_x, $nso_y, $nso_color, $font_bold, $nso);
-        }
-    } else {
-        /** -------- VERSO -------- */
-        $qr_url = "https://api.qrserver.com/v1/create-qr-code/?data=" . urlencode($qr_code) . "&size=300x300";
-        $qr_data = @file_get_contents($qr_url);
-        if ($qr_data !== false) {
-            $qr_img = imagecreatefromstring($qr_data);
-            if ($qr_img) {
-                $qr_size = 700;
-                $qr_x = (imagesx($im) - $qr_size) / 2;
-                $qr_y = 980;
-                imagecopyresampled($im, $qr_img, $qr_x, $qr_y, 0, 0, $qr_size, $qr_size, imagesx($qr_img), imagesy($qr_img));
-                imagedestroy($qr_img);
-            }
-        }
-    }
-
-    return $im;
 }
-    
+
+function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
+    $rectoTemplate = __DIR__ . '/../template/badge_recto.png';
+
+    $pdf->Image($rectoTemplate, $x, $y, $w, $h);
+
+    $maxWidth = $w - 26; // largeur max dispo pour le texte
+    $nom = utf8_decode($badgeData['nom']);
+
+    // Définir police
+    $pdf->AddFont('NotoSans','','NotoSans.php');
+    $pdf->AddFont('NotoSansBold','B','NotoSans-Bold.php');
+
+    $pdf->SetFont('NotoSans', '', 17);
+    $pdf->SetTextColor(106, 27, 154);
+
+    // Découper le nom en mots dynamiquement
+    $words = explode(" ", $nom);
+    $line1 = "";
+    $line2 = "";
+
+    foreach ($words as $word) {
+        $testLine = trim($line1 . " " . $word);
+        if ($pdf->GetStringWidth($testLine) <= $maxWidth) {
+            $line1 = $testLine;
+        } else {
+            $line2 .= " " . $word;
+        }
+    }
+
+    // --- Première ligne  ---
+    $pdf->SetXY($x + 12 , $y + $h - 60);
+    $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
+
+    // --- Deuxième ligne si nécessaire ---
+    if (!empty(trim($line2))) {
+        $pdf->SetXY($x + 11, $y + $h - 54);
+        $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+    }
+
+    // === Type  ===
+    $pdf->SetFont('NotoSansBold', 'B', 25);
+    $pdf->SetTextColor(255, 255, 255);
+    $type = utf8_decode($badgeData['type']);
+    $pdf->SetXY($x, $y + $h - 390);
+    $pdf->Cell($w, 6, $type, 0, 0, 'C');
+
+    // === Pays ===
+    $pdf->SetFont('NotoSans', '', 14);
+    $pdf->SetTextColor(255, 255, 255);
+    $pays = utf8_decode($badgeData['pays']);
+    $pdf->SetXY($x, $y + $h - 45);
+    $pdf->Cell($w, 6, $pays, 0, 0, 'C');
+
+    // --- Verso (QR Code) ---
+    if (!empty($badgeData['qr_code'])) {
+        $qr_url = "https://api.qrserver.com/v1/create-qr-code/?data=" . urlencode($badgeData['qr_code']) . "&size=200x200";
+
+        $tmpDir = __DIR__ . '/../tmp';
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+
+        $qr_tmp = $tmpDir . "/qr_" . md5($badgeData['qr_code']) . ".png";
+        file_put_contents($qr_tmp, file_get_contents($qr_url));
+
+        $pdf->Image($qr_tmp, $x + $w + ($w / 2 - 30), $y + ($h / 2 - 30), 60, 60);
+        unlink($qr_tmp);
+    }
+}

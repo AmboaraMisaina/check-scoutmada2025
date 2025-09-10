@@ -2,80 +2,53 @@
 require_once 'functions.php';
 checkAuthOrRedirect();
 
+// --- TRAITEMENT ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['print_ids'])) {
     $ids = array_map('intval', $_POST['print_ids']);
 
-    // Création d'un fichier temporaire ZIP
-    $zipFile = tempnam(sys_get_temp_dir(), 'badges_') . '.zip';
-    $zip = new ZipArchive();
-    if ($zip->open($zipFile, ZipArchive::CREATE) !== true) {
-        die("Impossible de créer l'archive ZIP.");
-    }
+    $pdf = new FPDF('P', 'mm', 'A4');
 
-    foreach ($ids as $id) {
-        $p = getParticipantById($pdo, $id);
-        if (!$p) continue;
+    for ($i = 0; $i < count($ids); $i += 2) {
+        $p1 = getParticipantById($pdo, $ids[$i]);
+        $p2 = isset($ids[$i+1]) ? getParticipantById($pdo, $ids[$i+1]) : null;
 
-        $nom = $p['nom'] ?? '';
-        $prenom = $p['prenom'] ?? '';
-        $pays = $p['pays'] ?? '';
-        $type = $p['type'] ?? '';
-        $qr = $p['qr_code'] ?? '';
+        if ($p1) {
+            $badge1 = [
+                'nom' => $p1['nom'] ?? '',
+                'prenom' => $p1['prenom'] ?? '',
+                'pays' => $p1['pays'] ?? '',
+                'type' => $p1['type'] ?? '',
+                'qr_code' => $p1['qr_code'] ?? ''
+            ];
 
-        // --- Générer le recto ---
-        $recto = genererBadge($nom, $pays, $type, $qr, 'recto');
-        if ($recto) {
-            ob_start();
-            imagepng($recto);
-            $imgData = ob_get_clean();
-            imagedestroy($recto);
-
-            if (!empty($imgData)) {
-                $fileName = preg_replace('/[^a-z0-9_\-]/i', '_', $nom . '_' . $prenom) . '_recto.png';
-                $zip->addFromString($fileName, $imgData);
-            }
+            // Marquer comme printed
+            $stmt = $pdo->prepare("UPDATE participants SET isPrinted = 1 WHERE id = ?");
+            $stmt->execute([$p1['id']]);
         }
 
-        // --- Générer le verso ---
-        $verso = genererBadge($nom, $pays, $type, $qr, 'verso');
-        if ($verso) {
-            ob_start();
-            imagepng($verso);
-            $imgData = ob_get_clean();
-            imagedestroy($verso);
+        $badge2 = null;
+        if ($p2) {
+            $badge2 = [
+                'nom' => $p2['nom'] ?? '',
+                'prenom' => $p2['prenom'] ?? '',
+                'pays' => $p2['pays'] ?? '',
+                'type' => $p2['type'] ?? '',
+                'qr_code' => $p2['qr_code'] ?? ''
+            ];
 
-            if (!empty($imgData)) {
-                $fileName = preg_replace('/[^a-z0-9_\-]/i', '_', $nom . '_' . $prenom) . '_verso.png';
-                $zip->addFromString($fileName, $imgData);
-            }
+            // Marquer comme printed
+            $stmt = $pdo->prepare("UPDATE participants SET isPrinted = 1 WHERE id = ?");
+            $stmt->execute([$p2['id']]);
         }
+
+        genererFeuilleBadges($pdf, $badge1, $badge2);
     }
 
-    $zip->close();
-
-    // Vérifier que le ZIP contient au moins un fichier
-    $zipCheck = new ZipArchive();
-    if ($zipCheck->open($zipFile) === true) {
-        if ($zipCheck->numFiles === 0) {
-            $zipCheck->close();
-            unlink($zipFile);
-            die("Aucun badge généré.");
-        }
-        $zipCheck->close();
-    }
-
-    // Envoyer le ZIP au navigateur
-    header('Content-Type: application/zip');
-    header('Content-Disposition: attachment; filename="badges.zip"');
-    header('Content-Length: ' . filesize($zipFile));
-    readfile($zipFile);
-
-    // Supprimer le fichier temporaire
-    unlink($zipFile);
+    // Sortie PDF
+    $pdf->Output('I', 'badges.pdf');
     exit;
 }
 
 // Si pas de POST → retour
 header('Location: ../participants.php');
 exit;
-    
