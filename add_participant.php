@@ -2,6 +2,7 @@
 require_once 'functions/auth.php';
 require_once 'functions/db.php';
 require_once 'functions/functions.php';
+
 $countries = require "country.php"; // <- ton fichier avec le tableau des pays
 checkAuth();
 
@@ -72,6 +73,9 @@ if ($_POST) {
 
 include 'includes/header.php';
 ?>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
 <style>
 .autocomplete-wrapper {
@@ -146,12 +150,13 @@ include 'includes/header.php';
             <!-- NSO (Country) -->
             <div class="form-group" style="margin-bottom: 1.2rem;">
                 <label for="nso" style="display:block; margin-bottom:0.4rem; font-weight:500;">NSO (Country)</label>
-                <div class="autocomplete-wrapper" style="width:100%;">
-                    <input type="text" id="nso" name="nso" autocomplete="off" required
-                        style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-                    <input type="text" id="nso-suggestion" tabindex="-1" disabled
-                        style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; position:absolute; top:0; left:0; color:#aaa; pointer-events:none; background:transparent;">
-                </div>
+                <select id="nso" name="nso" required
+                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+                    <option value="">Country</option>
+                    <?php foreach ($countries as $country): ?>
+                        <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <!-- Category -->
@@ -159,7 +164,7 @@ include 'includes/header.php';
                 <label for="type" style="display:block; margin-bottom:0.4rem; font-weight:500;">Category</label>
                 <select id="type" name="type" required
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-                    <option value="">-- Select --</option>
+                    <option value="">Category</option>
                     <option value="delegate">Delegate</option>
                     <option value="observer">Observer</option>
                     <option value="organizing_committee">Organizing Committee</option>
@@ -182,29 +187,11 @@ include 'includes/header.php';
 
 <!-- JS Autocomplete -->
 <script>
-const countries = <?= json_encode($countries, JSON_UNESCAPED_UNICODE) ?>;
-
-const input = document.getElementById("nso");
-const suggestion = document.getElementById("nso-suggestion");
-
-input.addEventListener("input", () => {
-  const value = input.value.toLowerCase();
-  if (!value) { suggestion.value = ""; return; }
-  const match = countries.find(c => c.toLowerCase().startsWith(value));
-  suggestion.value = match ? input.value + match.slice(value.length) : "";
-});
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Tab" || e.key === "ArrowRight") {
-    if (suggestion.value) {
-      e.preventDefault();
-      input.value = suggestion.value;
-      suggestion.value = "";
-    }
-  }
+new TomSelect("#nso", {
+    create: false,
+    sortField: {field: "text", direction: "asc"}
 });
 </script>
-
 <!-- JS Photo Capture -->
 <script>
 const photoInput = document.getElementById('photo');
