@@ -19,27 +19,61 @@ function getAllParticipants(PDO $pdo)
     ");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '') {
+
+function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '', $limit = 20, $offset = 0) {
     $sql = "SELECT * FROM participants WHERE 1=1";
     $params = [];
 
     // Filtre par nom ou prénom
-    if ($filter_name) {
+    if (!empty($filter_name)) {
         $sql .= " AND (nom LIKE :name OR prenom LIKE :name)";
-        $params[':name'] = "%$filter_name%";
+        $params[':name'] = '%' . $filter_name . '%';
     }
 
-    // Filtre printed directement si valeur fournie
-    if ($filter_printed !== '') {
-        $sql .= " AND isPrinted = :printed";
-        $params[':printed'] = $filter_printed;
+    // Filtre par imprimé
+    if ($filter_printed === '1') {
+        $sql .= " AND isPrinted = 1";
+    } elseif ($filter_printed === '0') {
+        $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
     }
 
-    $sql .= " ORDER BY nom ASC";
+    $sql .= " ORDER BY nom ASC, prenom ASC";
+    $sql .= " LIMIT :limit OFFSET :offset";
+
+    $stmt = $pdo->prepare($sql);
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '') {
+    $sql = "SELECT COUNT(*) as total FROM participants WHERE 1=1";
+    $params = [];
+
+    // Filtre par nom (nom ou prénom)
+    if (!empty($filter_name)) {
+        $sql .= " AND (nom LIKE :name OR prenom LIKE :name)";
+        $params[':name'] = '%' . $filter_name . '%';
+    }
+
+    // Filtre par colonne isPrinted
+    if ($filter_printed === '1') {
+        $sql .= " AND isPrinted = 1";
+    } elseif ($filter_printed === '0') {
+        $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
+    }
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return intval($result['total'] ?? 0);
 }
 
 // Récupère un participant par ID

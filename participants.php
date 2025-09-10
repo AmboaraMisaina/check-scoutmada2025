@@ -31,8 +31,14 @@ if (isset($_GET['delete'])) {
 $filter_name = trim($_GET['filter_name'] ?? '');
 $filter_printed = $_GET['filter_printed'] ?? '';
 
-// Récupérer les participants filtrés
-$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed);
+// Pagination
+$perPage = 10;
+$pages = max(1, intval($_GET['page'] ?? 1));
+$offset = ($pages - 1) * $perPage;
+
+$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed, $perPage, $offset);
+$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $filter_printed);
+$totalPages = ceil($totalParticipants / $perPage);
 
 include 'includes/header.php';
 ?>
@@ -50,7 +56,6 @@ include 'includes/header.php';
         <a href="add_participant.php" class="btn">➕ Add Participant</a>
         <a href="add_guest.php" class="btn">➕ Add Guest</a>
         <a href="import_participants.php" class="btn btn-primary">📥 Import Participants</a>
-        <!-- <a href="functions/download_qr.php?download_all=1" class="btn btn-success">📅 Download All QR Codes</a> -->
     </div>
 
     <!-- Filtre -->
@@ -82,7 +87,6 @@ include 'includes/header.php';
                         <th style="padding:0.75rem;">Email</th>
                         <th style="padding:0.75rem;">Country</th>
                         <th style="padding:0.75rem;">Category</th>
-                        <!-- <th style="padding:0.75rem;">QR Code</th> -->
                         <th style="padding:0.75rem;">Printed</th>
                         <th style="padding:0.75rem;">Actions</th>
                     </tr>
@@ -96,11 +100,6 @@ include 'includes/header.php';
                                 <td><?= htmlspecialchars($p['email']); ?></td>
                                 <td><?= htmlspecialchars($p['pays']); ?></td>
                                 <td><?= htmlspecialchars($p['type']); ?></td>
-                                <!-- <td>
-                                    <?php if ($p['qr_code']): ?>
-                                        <button type="button" onclick="showQrModal('<?= htmlspecialchars($p['id']) ?>', '<?= htmlspecialchars($p['qr_code']) ?>', '<?= htmlspecialchars($p['nom']) ?>')" class="btn btn-success" style="padding:0.3rem 0.7rem;">Voir QR</button>
-                                    <?php else: ?> - <?php endif; ?>
-                                </td> -->
                                 <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
                                 <td>
                                     <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
@@ -110,13 +109,39 @@ include 'includes/header.php';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" style="text-align:center; padding:1rem;">No participants found.</td>
+                            <td colspan="7" style="text-align:center; padding:1rem;">No participants found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
-    </form>
+    </form> <!-- FORM fermé ici -->
+
+    <!-- Pagination moderne avec Précédent / Suivant -->
+    <?php if ($totalPages > 1): ?>
+    <div style="display:flex; justify-content:center; align-items:center; margin-top:1rem; gap:0.3rem; flex-wrap:wrap;">
+        <!-- Bouton Précédent -->
+        <?php if ($pages > 1): ?>
+            <a href="?page=<?= $pages-1 ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+               style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">« Précédent</a>
+        <?php endif; ?>
+
+        <!-- Numéros de page -->
+        <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+            <a href="?page=<?= $p ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+               style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:<?= ($p === $pages) ? '#2ecc71' : '#f1f1f1' ?>; color:<?= ($p === $pages) ? 'white' : '#333' ?>; font-weight:<?= ($p === $pages) ? 'bold' : 'normal' ?>;">
+               <?= $p ?>
+            </a>
+        <?php endfor; ?>
+
+        <!-- Bouton Suivant -->
+        <?php if ($pages < $totalPages): ?>
+            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+               style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">Suivant »</a>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
 </div>
 
 <!-- Fenêtre modale QR Code -->
