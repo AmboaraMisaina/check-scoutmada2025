@@ -33,10 +33,10 @@ if ($_POST) {
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
     
-    $normalizedNso = mb_strtolower(trim($nso));
-    $normalizedCountries = array_map(fn($c) => mb_strtolower(trim($c)), $countries);
+    // $normalizedNso = mb_strtolower(trim($nso));
+    // $normalizedCountries = array_map(fn($c) => mb_strtolower(trim($c)), $countries);
 
-    if (!in_array($normalizedNso, $normalizedCountries)) {
+    if (!in_array($nso, $countries)) {
         $error = "The selected country is not valid.";
     } else {
         $photoPath = null;
