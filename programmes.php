@@ -20,6 +20,15 @@ if ($_SESSION['role'] !== 'admin') {
     exit;
 }
 
+
+// Vérifier si une suppression est demandée
+if (isset($_GET['delete'])) {
+    deleteEvenement($pdo, intval($_GET['delete']));
+    header("Location: programmes.php");
+    exit;
+}
+
+
 // Récupérer tous les événements
 $evenements = [];
 $stmt = $pdo->query("SELECT * FROM evenements ORDER BY id DESC");

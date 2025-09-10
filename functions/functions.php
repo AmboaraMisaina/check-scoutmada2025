@@ -374,3 +374,4 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
         unlink($qr_tmp);
     }
 }
+
