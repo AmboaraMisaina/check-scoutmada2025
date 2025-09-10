@@ -27,12 +27,12 @@ if ($_POST) {
     $email = trim($_POST['mail'] ?? '');
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
-
+    
     // Vérification que le pays est valide
-    $normalizedNso = strtolower($nso);
-    $normalizedCountries = array_map(fn($c) => strtolower($c), $countries);
+    // $normalizedNso = strtolower($nso);
+    // $normalizedCountries = array_map(fn($c) => strtolower($c), $countries);
 
-    if (!in_array($normalizedNso, $normalizedCountries)) {
+    if (!in_array($nso, $countries)) {
         $error = "The selected country is not valid.";
     } else {
         // Gestion de la photo uploadée
