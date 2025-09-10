@@ -32,7 +32,6 @@ if ($_POST) {
 
     // Vérification que le pays est valide
     $normalizedNso = mb_strtolower($nso);
-    $normalizedCountries = array_map(fn($c) => mb_strtolower($c), $countries);
 
     
 }
