@@ -30,7 +30,9 @@ if ($_POST) {
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
+    var_dump(extension_loaded('mbstring'));
     // Vérification que le pays est valide
+    // $normalizedNso = mb_strtolower($nso);
 
     
 }
