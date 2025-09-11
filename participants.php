@@ -74,9 +74,14 @@ include 'includes/header.php';
 
     <!-- Table des participants -->
     <form method="post" action="functions/print_badge.php" id="printForm">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
-            <button type="submit" class="btn btn-success">🖨️ Print Selected Badges</button>
-        </div>
+        <?php
+        if ($_SESSION['role'] == 'admin' ) {
+            ?>
+            <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
+                <button type="submit" class="btn btn-success">🖨️ Print Selected Badges</button>
+            </div>
+        <?php
+        } ?>
 
         <div class="card" style="overflow-x:auto;">
             <table style="width:100%; border-collapse:collapse; min-width:700px;">
