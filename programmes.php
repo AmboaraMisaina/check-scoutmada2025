@@ -57,7 +57,9 @@ include 'includes/header.php';
                     <th style="padding: 0.75rem;">Date</th>
                     <th style="padding: 0.75rem;">Start</th>
                     <th style="padding: 0.75rem;">End</th>
+                    <?php if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') { ?>
                     <th style="padding: 0.75rem;">Actions</th>
+                    <?php } ?>
                 </tr>
             </thead>
             <tbody>
@@ -79,10 +81,12 @@ include 'includes/header.php';
                             </td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_debut'] ?? '-'); ?></td>
                             <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_fin'] ?? '-'); ?></td>
+                            <?php if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') { ?>
                             <td style="padding: 0.75rem;">
                                 <a href="edit_evenement.php?id=<?= $e['id']; ?>" class="btn btn-secondary">🔍</a>
                                 <a href="programmes.php?delete=<?= $e['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️</a>
                             </td>
+                            <?php } ?>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

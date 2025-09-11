@@ -93,7 +93,9 @@ include 'includes/header.php';
                         <!-- <th style="padding:0.75rem;">Country</th> -->
                         <th style="padding:0.75rem;">Category</th>
                         <th style="padding:0.75rem;">Printed</th>
+                        <?php if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') { ?>
                         <th style="padding:0.75rem;">Actions</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,10 +108,12 @@ include 'includes/header.php';
                                 <!-- <td><?= htmlspecialchars($p['pays']); ?></td> -->
                                 <td><?= htmlspecialchars($p['type']); ?></td>
                                 <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
+                                <?php if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') { ?>
                                 <td>
                                     <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
                                     <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
                                 </td>
+                                <?php } else ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
