@@ -4,8 +4,8 @@
     // $username = "root";    
     // $password = "";      
 
-// $host = "localhost";
-$host = "178.159.5.244";   
+$host = "localhost";
+// $host = "178.159.5.244";   
 $dbname = "mahaymg1_checkscoutmada2025";  
 $username = "mahaymg1_checkscoutmada2025";    
 $password = "yfJ4CtmnnexBLYCuLt4Y";     
