@@ -19,6 +19,7 @@ if ($_SESSION['role'] !== 'admin') {
     renderFooter();
     exit;
 }
+
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
     $file = $_FILES['csv']['tmp_name'];
@@ -28,10 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv'])) {
     while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
         $row++;
         if ($row == 1) continue; // Ignore header
+        $email = NULL;
+        $photoPath = NULL;
+        $prenom = NULL;
+        list($nom,$type, $pays) = $data;
 
-        list($nom, $prenom, $email, $type) = $data;
-
-        $result = addParticipant($pdo, $nom, $prenom, $email, $type);
+        $result = addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath);
         if ($result['success']) $imported++;
     }
     fclose($handle);
