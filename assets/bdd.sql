@@ -17,7 +17,7 @@ CREATE TABLE participants (
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    type ENUM('delegate', 'observer', 'organizing committee', 'wosm team', 'volunteer', 'staff', 'partner', 'guest') NOT NULL,
+    type ENUM('delegate', 'observer', 'organizing team', 'wosm team', 'youth advisor', 'international service team', 'partner', 'guest') NOT NULL,
     qr_code VARCHAR(255) NULL,
     pays VARCHAR(100) NULL,
     photo VARCHAR(255) NULL,

@@ -95,16 +95,16 @@ include 'includes/header.php';
                     <input type="checkbox" name="ouvert_a[]" value="observer" <?= in_array('observer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Observer
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="organizing committee" <?= in_array('organizing committee', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Organizing Committee
+                    <input type="checkbox" name="ouvert_a[]" value="organizing team" <?= in_array('organizing team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> organizing team
                 </label>
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="wosm team" <?= in_array('wosm team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="volunteer" <?= in_array('volunteer', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Volunteer
+                    <input type="checkbox" name="ouvert_a[]" value="youth advisor" <?= in_array('youth advisor', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Youth Advisor
                 </label>
                 <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="staff" <?= in_array('staff', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Staff
+                    <input type="checkbox" name="ouvert_a[]" value="international service team" <?= in_array('international service team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> International Service Team
                 </label>
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="partner" <?= in_array('partner', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Partner

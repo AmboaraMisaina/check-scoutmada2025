@@ -84,8 +84,8 @@ include 'includes/header.php';
                     <tr style="background:#f1f1f1;">
                         <th style="padding:0.75rem;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
                         <th style="padding:0.75rem;">Name</th>
-                        <th style="padding:0.75rem;">Email</th>
-                        <th style="padding:0.75rem;">Country</th>
+                        <!-- <th style="padding:0.75rem;">Email</th> -->
+                        <!-- <th style="padding:0.75rem;">Country</th> -->
                         <th style="padding:0.75rem;">Category</th>
                         <th style="padding:0.75rem;">Printed</th>
                         <th style="padding:0.75rem;">Actions</th>
@@ -97,8 +97,8 @@ include 'includes/header.php';
                             <tr style="border-bottom:1px solid #e1e5e9;">
                                 <td style="text-align:center;"><input type="checkbox" class="print-checkbox" name="print_ids[]" value="<?= $p['id'] ?>" <?= !empty($p['isPrinted']) ? 'disabled' : '' ?>></td>
                                 <td><?= htmlspecialchars($p['nom']); ?></td>
-                                <td><?= htmlspecialchars($p['email']); ?></td>
-                                <td><?= htmlspecialchars($p['pays']); ?></td>
+                                <!-- <td><?= htmlspecialchars($p['email']); ?></td> -->
+                                <!-- <td><?= htmlspecialchars($p['pays']); ?></td> -->
                                 <td><?= htmlspecialchars($p['type']); ?></td>
                                 <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
                                 <td>

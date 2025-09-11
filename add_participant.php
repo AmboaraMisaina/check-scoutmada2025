@@ -29,40 +29,38 @@ $error = '';
 if ($_POST) {
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
-    $email = trim($_POST['mail'] ?? '');
+    $email = NULL;
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
-    if (!in_array($nso, $countries)) {
-        $error = "The selected country is not valid.";
+
+    $photoPath = null;
+    if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
+        $data = $_POST['photoData'];
+        $data = preg_replace('#^data:image/[^;]+;base64,#', '', $data);
+        $decoded = base64_decode($data);
+
+        $uploadDir = 'uploads/photos/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $photoName = uniqid('participant_') . '.jpg';
+        $photoPath = $uploadDir . $photoName;
+
+        file_put_contents($photoPath, $decoded);
     } else {
-        $photoPath = null;
-        if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
-            $data = $_POST['photoData'];
-            $data = preg_replace('#^data:image/[^;]+;base64,#', '', $data);
-            $decoded = base64_decode($data);
+        $error = "Photo is required.";
+    }
 
-            $uploadDir = 'uploads/photos/';
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-            $photoName = uniqid('participant_') . '.jpg';
-            $photoPath = $uploadDir . $photoName;
+    if (!$error) {
+        $nso = ucfirst($nso);
+        $result = addParticipant($pdo, $nom, $prenom, $email, $type, $nso, $photoPath);
 
-            file_put_contents($photoPath, $decoded);
+        if ($result['success']) {
+            $message = $result['message'];
         } else {
-            $error = "Photo is required.";
-        }
-
-        if (!$error) {
-            $nso = ucfirst($nso);
-            $result = addParticipant($pdo, $nom, $prenom, $email, $type, $nso, $photoPath);
-
-            if ($result['success']) {
-                $message = $result['message'];
-            } else {
-                $error = $result['message'];
-            }
+            $error = $result['message'];
         }
     }
+    
 }
 
 include 'includes/header.php';
@@ -107,28 +105,18 @@ include 'includes/header.php';
                 <input type="text" id="nom" name="nom" required>
             </div>
 
-            <div class="form-group" style="margin-bottom:1.2rem;">
+            <!-- <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="mail">Email</label>
                 <input type="email" id="mail" name="mail" required>
-            </div>
+            </div> -->
 
             <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="photo">Photo</label>
                 <input type="file" id="photo" accept="image/*" capture="environment">
-                <div style="display:flex; justify-content:center; margin-top:1rem;">
-                    <canvas id="photo-preview"></canvas>
+                <div id="photo-preview-box" style="display:none; justify-content:center; margin-top:1rem;">
+                    <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa;" data-existing="<?= $participant['photo'] ?? '' ?>"></canvas>
                 </div>
                 <input type="hidden" name="photoData" id="photoData">
-            </div>
-
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="nso">Country</label>
-                <select id="nso" name="nso" required>
-                    <option value="">Country</option>
-                    <?php foreach ($countries as $country): ?>
-                        <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
-                    <?php endforeach; ?>
-                </select>
             </div>
 
             <div class="form-group" style="margin-bottom:1.2rem;">
@@ -137,13 +125,25 @@ include 'includes/header.php';
                     <option value="">Category</option>
                     <option value="delegate">Delegate</option>
                     <option value="observer">Observer</option>
-                    <option value="organizing committee">Organizing Committee</option>
+                    <option value="organizing team">organizing team</option>
                     <option value="wosm team">WOSM Team</option>
-                    <option value="volunteer">Volunteer</option>
-                    <option value="staff">Staff</option>
+                    <option value="youth advisor">Youth Advisor</option>
+                    <option value="international service team">International Service Team</option>
                     <option value="partner">Partner</option>
                 </select>
             </div>
+
+            <div class="form-group" style="margin-bottom:1.2rem;" id="nso-group">
+                <label for="nso" id="nso-label">Country</label>
+                <select id="nso" name="nso" required>
+                    <option value="">Country</option>
+                    <?php foreach ($countries as $country): ?>
+                        <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            
 
             <button type="submit" class="btn">Add Participant</button>
         </form>
@@ -158,11 +158,15 @@ new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"
 // Compression et redimension image
 const photoInput = document.getElementById('photo');
 const photoPreview = document.getElementById('photo-preview');
+const photoPreviewBox = document.getElementById('photo-preview-box');
 const photoDataInput = document.getElementById('photoData');
 
 photoInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+        photoPreviewBox.style.display = 'none';
+        return;
+    }
 
     const reader = new FileReader();
     reader.onload = function(ev) {
@@ -204,6 +208,7 @@ photoInput.addEventListener('change', function(e) {
             previewImg.onload = function() {
                 ctxPreview.drawImage(previewImg,0,0,width,height);
                 photoPreview.style.display = 'block';
+                photoPreviewBox.style.display = 'flex'; // Affiche la boîte d'aperçu
             }
             previewImg.src = dataUrl;
 
@@ -214,4 +219,53 @@ photoInput.addEventListener('change', function(e) {
     }
     reader.readAsDataURL(file);
 });
+
+function updateNsoField() {
+    const type = document.getElementById('type').value;
+    const nsoGroup = document.getElementById('nso-group');
+    let html = '';
+    if (type === 'delegate' || type === 'observer' || type === 'youth advisor') {
+        html = `
+            <label for="nso" id="nso-label">Country</label>
+            <select id="nso" name="nso" required>
+                <option value="">Country</option>
+                <?php foreach ($countries as $country): ?>
+                    <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
+                <?php endforeach; ?>
+            </select>
+        `;
+    } else if (type === 'partner') {
+        html = `
+            <label for="nso" id="nso-label">Institution / Organization</label>
+            <input type="text" id="nso" name="nso" required
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'organizing team') {
+        html = `
+            <label for="nso" id="nso-label">Responsibility</label>
+            <input type="text" id="nso" name="nso" required
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'wosm team') {
+        html = `
+            <label for="nso" id="nso-label">Role / Resonsibility</label>
+            <input type="text" id="nso" name="nso" required
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'international service team') {
+        html = `
+            <label for="nso" id="nso-label">Role / Task</label>
+            <input type="text" id="nso" name="nso" required
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    } 
+    nsoGroup.innerHTML = html;
+    // Réinitialise TomSelect si c'est un select
+    if (type == 'delegate' || type == 'observer' || type == 'youth advisor') {
+        new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
+    }
+}
+
+document.getElementById('type').addEventListener('change', updateNsoField);
+window.addEventListener('DOMContentLoaded', updateNsoField);
 </script>

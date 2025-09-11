@@ -91,7 +91,7 @@ include 'includes/header.php';
                         </li>
                         <li>
                             <label>
-                                <input type="checkbox" name="ouvert_a[]" value="organizing committee"> Organizing Committee
+                                <input type="checkbox" name="ouvert_a[]" value="organizing team"> organizing team
                             </label>
                         </li>
                         <li>
@@ -99,21 +99,24 @@ include 'includes/header.php';
                                 <input type="checkbox" name="ouvert_a[]" value="wosm team"> WOSM Team
                             </label>
                         </li>
-                        <li>
-                            <label>
-                                <input type="checkbox" name="ouvert_a[]" value="volunteer"> Volunteer
-                            </label>
-                        </li>
-                        <li>
-                            <label>
-                                <input type="checkbox" name="ouvert_a[]" value="staff"> Staff
-                            </label>
-                        </li>
+
                         <li>
                             <label>
                                 <input type="checkbox" name="ouvert_a[]" value="partner"> Partner
                             </label>
                         </li>
+
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="youth advisor"> Youth Advisor
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox" name="ouvert_a[]" value="international service team"> International Service Team
+                            </label>
+                        </li>
+
                         <li>
                             <label>
                                 <input type="checkbox" name="ouvert_a[]" value="guest"> Guest

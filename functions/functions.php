@@ -84,19 +84,22 @@ function getParticipantById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function addParticipant($pdo, $nom, $prenom, $email, $type, $pays = null, $photoPath = null)
+function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
 {
 
     // Vérifier les champs obligatoires
-    if (!$nom || !$email ) {
+    if (!$nom ) {
         return ['success' => false, 'message' => ' Please fill in all fields correctly.'];
     }
 
     // Vérifier si l'email existe déjà
-    $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
-    $stmt->execute([$email]);
-    if ($stmt->rowCount() > 0) {
-        return ['success' => false, 'message' => 'Another participant with this email already exists.'];
+    if ( !empty($email) ) {
+        $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->rowCount() > 0) {
+            return ['success' => false, 'message' => 'Another participant with this email already exists.'];
+        }
+
     }
 
     // Insertion avec pays
@@ -111,6 +114,9 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays = null, $photo
         // Mettre à jour le participant avec le QR code
         $updateStmt = $pdo->prepare("UPDATE participants SET qr_code = ? WHERE id = ?");
         $updateStmt->execute([$qr_code, $participantId]);
+        if ($type  == 'guest') {
+            return ['success' => true, 'message' => 'Guest added successfully!'];
+        }
 
         return ['success' => true, 'message' => 'Participant added successfully!'];
     } else {
@@ -306,8 +312,35 @@ function genererFeuilleBadges($pdf, $badge1, $badge2 = null) {
 }
 
 function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
-    $rectoTemplate = __DIR__ . '/../template/badge_recto.png';
+    switch ($badgeData['type']) {
+        case 'organizing team':
+            $type = '1';
+            break;
+        case 'delegate':
+            $type = '2';
+            break;
+        case 'observer':
+            $type = '3';
+            break;
+        case 'wosm team':
+            $type = '4';
+            break;  
+        case 'partner':
+            $type = '5';
+            break;
+        case 'international service team':
+            $type = '6';
+            break;
+        case 'youth advisor':
+            $type = '7';
+            break;
+        default:
+            $type = '-1';
+            break;
+    }
 
+    $rectoTemplate = __DIR__ . '/../template/BADGE_' . $type . '.png';
+    $versoTemplate = __DIR__ . '/../template/BADGE_0.png';
     $pdf->Image($rectoTemplate, $x, $y, $w, $h);
 
     $maxWidth = $w - 26; // largeur max dispo pour le texte
@@ -317,8 +350,8 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
     $pdf->AddFont('NotoSans','','NotoSans.php');
     $pdf->AddFont('NotoSansBold','B','NotoSans-Bold.php');
 
-    $pdf->SetFont('NotoSans', '', 17);
-    $pdf->SetTextColor(106, 27, 154);
+    $pdf->SetFont('NotoSans', '', 13);
+    $pdf->SetTextColor(0, 0, 0, 0);
 
     // Découper le nom en mots dynamiquement
     $words = explode(" ", $nom);
@@ -335,31 +368,26 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
     }
 
     // --- Première ligne  ---
-    $pdf->SetXY($x + 12 , $y + $h - 60);
+    $pdf->SetXY($x + 12 , $y + $h - 66);
     $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
 
     // --- Deuxième ligne si nécessaire ---
     if (!empty(trim($line2))) {
-        $pdf->SetXY($x + 11, $y + $h - 54);
+        $pdf->SetXY($x + 11, $y + $h - 62);
         $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
     }
 
-    // === Type  ===
-    $pdf->SetFont('NotoSansBold', 'B', 25);
-    $pdf->SetTextColor(255, 255, 255);
-    $type = utf8_decode($badgeData['type']);
-    $pdf->SetXY($x, $y + $h - 390);
-    $pdf->Cell($w, 6, $type, 0, 0, 'C');
-
+    
     // === Pays ===
-    $pdf->SetFont('NotoSans', '', 14);
-    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('NotoSans', '', 13);
+    $pdf->SetTextColor(0,0,0,0);
     $pays = utf8_decode($badgeData['pays']);
     $pdf->SetXY($x, $y + $h - 45);
     $pdf->Cell($w, 6, $pays, 0, 0, 'C');
 
     // --- Verso (QR Code) ---
     if (!empty($badgeData['qr_code'])) {
+        $pdf->Image($versoTemplate, $x + $w, $y, $w, $h);
         $qr_url = "https://api.qrserver.com/v1/create-qr-code/?data=" . urlencode($badgeData['qr_code']) . "&size=200x200";
 
         $tmpDir = __DIR__ . '/../tmp';
@@ -370,8 +398,8 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
         $qr_tmp = $tmpDir . "/qr_" . md5($badgeData['qr_code']) . ".png";
         file_put_contents($qr_tmp, file_get_contents($qr_url));
 
-        $pdf->Image($qr_tmp, $x + $w + ($w / 2 - 30), $y + ($h / 2 - 30), 60, 60);
+        $qrCodeSize = 50; // Modifier cette valeur pour ajuster la taille du QR code
+        $pdf->Image($qr_tmp, $x + $w + ($w / 2 - $qrCodeSize / 2), $y + ($h / 2 - $qrCodeSize / 2), $qrCodeSize, $qrCodeSize);
         unlink($qr_tmp);
     }
 }
-

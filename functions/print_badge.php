@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['print_ids'])) {
                 'type' => $p1['type'] ?? '',
                 'qr_code' => $p1['qr_code'] ?? ''
             ];
-
+                
             // Marquer comme printed
             $stmt = $pdo->prepare("UPDATE participants SET isPrinted = 1 WHERE id = ?");
             $stmt->execute([$p1['id']]);

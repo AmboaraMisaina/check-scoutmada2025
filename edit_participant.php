@@ -61,34 +61,24 @@ include 'includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
 <style>
-.autocomplete-wrapper {
-  position: relative;
-  width: 100%;
-}
-#nso, #nso-suggestion {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  font-size: inherit;
-}
-#nso-suggestion {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #aaa;
-  pointer-events: none;
-}
+#nso { width: 100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem; }
+#photo-preview { display:none; border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa; }
+.form-group label { display:block; margin-bottom:0.4rem; font-weight:500; }
+.form-group input, .form-group select { width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem; }
+.btn { width:100%; padding:0.8rem; background:#38ef7d; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; margin-top:1rem; cursor:pointer; }
+.btn-secondary { background:#e1e1e1; color:#333; }
+.card { padding:2rem; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.08); background:white; }
+.alert-success { background:#eafaf1; color:#27ae60; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem; }
+.alert-error { background:#fdeaea; color:#e74c3c; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem; }
 </style>
 
 <div class="container" style="max-width:500px; margin:2rem auto;">
     <div class="page-header" style="margin-bottom:2rem;">
-        <h2>Edit Participant</h2>
-        <p>Update participant information</p>
+        <h2 style="margin-bottom:0.5rem;">Edit Participant</h2>
+        <p style="color:#555;">Update participant information</p>
     </div>
 
-    <div class="card" style="padding:2rem; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+    <div class="card">
         <?php if ($message): ?>
             <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -101,58 +91,45 @@ include 'includes/header.php';
             <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="nom">Name</label>
                 <input type="text" id="nom" name="nom" required
-                    value="<?= htmlspecialchars($participant['nom']) ?>"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-            </div>
-
-
-
-            <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="mail">Email</label>
-                <input type="email" id="mail" name="mail" required
-                    value="<?= htmlspecialchars($participant['email']) ?>"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
+                    value="<?= htmlspecialchars($participant['nom']) ?>">
             </div>
 
             <!-- Photo -->
             <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="photo">Photo</label>
-                <input type="file" id="photo" accept="image/*" capture="environment"
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc;">
-                <div style="display:flex; justify-content:center; margin-top:1rem;">
-                    <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:180px; max-height:180px;"
-                        data-existing="<?= $participant['photo'] ?? '' ?>"></canvas>
+                <input type="file" id="photo" accept="image/*" capture="environment">
+                <div id="photo-preview-box" style="display:none; justify-content:center; margin-top:1rem;">
+                    <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa;" data-existing="<?= $participant['photo'] ?? '' ?>"></canvas>
                 </div>
                 <input type="hidden" name="photoData" id="photoData">
-            </div>
-
-            <!-- NSO (Country) -->
-            <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label for="nso">NSO (Country)</label>
-                <select id="nso" name="nso" required style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-                    <option value="">Country</option>
-                    <?php foreach ($countries as $country): ?>
-                        <option value="<?= htmlspecialchars($country) ?>" <?= $participant["pays"] === $country ? 'selected' : '' ?>><?= htmlspecialchars($country) ?></option>
-                    <?php endforeach; ?>
-                </select>
             </div>
 
             <!-- Category -->
             <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="type">Category</label>
-                <select id="type" name="type" required style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+                <select id="type" name="type" required>
                     <option value="">-- Select --</option>
                     <option value="delegate" <?= $participant['type'] === 'delegate' ? 'selected' : '' ?>>Delegate</option>
                     <option value="observer" <?= $participant['type'] === 'observer' ? 'selected' : '' ?>>Observer</option>
-                    <option value="organizing committee" <?= $participant['type'] === 'organizing committee' ? 'selected' : '' ?>>Organizing Committee</option>
+                    <option value="organizing team" <?= $participant['type'] === 'organizing team' ? 'selected' : '' ?>>Organizing Team</option>
                     <option value="wosm team" <?= $participant['type'] === 'wosm team' ? 'selected' : '' ?>>WOSM Team</option>
-                    <option value="volunteer" <?= $participant['type'] === 'volunteer' ? 'selected' : '' ?>>Volunteer</option>
-                    <option value="staff" <?= $participant['type'] === 'staff' ? 'selected' : '' ?>>Staff</option>
+                    <option value="youth advisor" <?= $participant['type'] === 'youth advisor' ? 'selected' : '' ?>>Youth Advisor</option>
+                    <option value="international service team" <?= $participant['type'] === 'international service team' ? 'selected' : '' ?>>International Service Team</option>
                     <option value="partner" <?= $participant['type'] === 'partner' ? 'selected' : '' ?>>Partner</option>
                 </select>
             </div>
 
-            <button type="submit" class="btn" style="width:100%; padding:0.8rem; background:#38ef7d; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; margin-top:1rem;">Update</button>
+            <!-- NSO/Organization/Region (champ dynamique) -->
+            <div class="form-group" style="margin-bottom:1.2rem;" id="nso-group">
+                <select id="nso" name="nso" required>
+                    <option value="">Country</option>
+                    <?php foreach ($countries as $country): ?>
+                    <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Update</button>
             <a href="participants.php" class="btn btn-secondary" style="margin-top:1rem;">Back</a>
         </form>
     </div>
@@ -161,15 +138,14 @@ include 'includes/header.php';
 <?php renderFooter(); ?>
 
 <script>
-new TomSelect("#nso", {
-    create: false,
-    sortField: {field: "text", direction: "asc"}
-});
+new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
+
 
 // Photo preview + compression
-const photoInput = document.getElementById('photo');
-const photoPreview = document.getElementById('photo-preview');
-const photoDataInput = document.getElementById('photoData');
+        const photoInput = document.getElementById('photo');
+        const photoPreview = document.getElementById('photo-preview');
+        const photoPreviewBox = document.getElementById('photo-preview-box');
+        const photoDataInput = document.getElementById('photoData');
 
 // Affichage photo existante
 const existingPhoto = photoPreview.getAttribute('data-existing');
@@ -189,7 +165,10 @@ if (existingPhoto) {
 // Compression et redimension
 photoInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (!file) return;
+   if (!file) {
+        photoPreviewBox.style.display = 'none';
+        return;
+    }
 
     const reader = new FileReader();
     reader.onload = function(ev) {
@@ -228,9 +207,10 @@ photoInput.addEventListener('change', function(e) {
             const ctxPreview = photoPreview.getContext('2d');
             ctxPreview.clearRect(0,0,width,height);
             const previewImg = new Image();
-            previewImg.onload = function() {
+                       previewImg.onload = function() {
                 ctxPreview.drawImage(previewImg,0,0,width,height);
                 photoPreview.style.display = 'block';
+                photoPreviewBox.style.display = 'flex'; // Affiche la boîte d'aperçu
             }
             previewImg.src = dataUrl;
 
@@ -241,4 +221,57 @@ photoInput.addEventListener('change', function(e) {
     }
     reader.readAsDataURL(file);
 });
+
+
+function updateNsoField() {
+    const type = document.getElementById('type').value;
+    const nsoGroup = document.getElementById('nso-group');
+    let html = '';
+    if (type === 'delegate' || type === 'observer' || type === 'youth advisor') {
+        html = `
+            <label for="nso" id="nso-label">Country</label>
+            <select id="nso" name="nso" required>
+                <option value="">Country</option>
+                <?php foreach ($countries as $country): ?>
+                    <option value="<?= htmlspecialchars($country) ?>"><?= htmlspecialchars($country) ?></option>
+                <?php endforeach; ?>
+            </select>
+        `;
+    } else if (type === 'partner') {
+        html = `
+            <label for="nso" id="nso-label">Institution / Organization</label>
+            <input type="text" id="nso" name="nso" required value="<?= htmlspecialchars($participant['pays']) ?>"
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'organizing team') {
+        html = `
+            <label for="nso" id="nso-label">Resonsibility</label>
+            <input type="text" id="nso" name="nso" required value="<?= htmlspecialchars($participant['pays']) ?>"
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'wosm team') {
+        html = `
+            <label for="nso" id="nso-label">Role / Resonsibility</label>
+            <input type="text" id="nso" name="nso" required value="<?= htmlspecialchars($participant['pays']) ?>"
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    }else if (type === 'international service team') {
+        html = `
+            <label for="nso" id="nso-label">Role / Task</label>
+            <input type="text" id="nso" name="nso" required value="<?= htmlspecialchars($participant['pays']) ?>"
+                style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
+        `;
+    } 
+    nsoGroup.innerHTML = html;
+    // Réinitialise TomSelect si c'est un select
+    if (type == 'delegate' || type == 'observer' || type == 'youth advisor') {
+        new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
+    }
+}
+
+document.getElementById('type').addEventListener('change', updateNsoField);
+document.getElementById('type').addEventListener('change', function() {
+    document.getElementById('nso').value = '';
+});
+window.addEventListener('DOMContentLoaded', updateNsoField);
 </script>
