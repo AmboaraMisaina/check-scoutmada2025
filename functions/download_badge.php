@@ -54,17 +54,21 @@ if (!file_exists($pdfPath)) {
             font-size: 0.98rem;
         }
     </style>
+    <script>
+        function trackDownload(fileName) {
+            // Redirect to participant.php after a short delay
+            setTimeout(function() {
+                window.location.href = '../participant.php';
+            }, 1000); // 1-second delay to ensure the download starts
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <div class="icon">🎫</div>
         <h2>Your badges are ready!</h2>
         <p>You can now download and print the generated badges PDF.</p>
-        <a class="btn-download" href="<?= '../temp_badges/' . htmlspecialchars($file) ?>" download>⬇️ Download Badges PDF</a>
-        <div class="info">
-            If the PDF does not open on your device, try with a computer.<br>
-            <span style="font-size:0.9em;">(File: <?= htmlspecialchars($file) ?>)</span>
-        </div>
+        <a class="btn-download" onclick="trackDownload('<?= htmlspecialchars($file) ?>')" href="<?= '../temp_badges/' . htmlspecialchars($file) ?>" download>⬇️ Download Badges PDF</a>
     </div>
 </body>
 </html>
