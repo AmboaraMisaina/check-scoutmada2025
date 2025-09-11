@@ -331,9 +331,6 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
         case 'international service team':
             $type = '6';
             break;
-        case 'youth advisor':
-            $type = '7';
-            break;
         default:
             $type = '-1';
             break;
@@ -350,7 +347,7 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
     $pdf->AddFont('NotoSans','','NotoSans.php');
     $pdf->AddFont('NotoSansBold','B','NotoSans-Bold.php');
 
-    $pdf->SetFont('NotoSans', '', 13);
+    $pdf->SetFont('NotoSansBold', 'B', 14);
     $pdf->SetTextColor(0, 0, 0, 0);
 
     // Découper le nom en mots dynamiquement
@@ -366,6 +363,9 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
             $line2 .= " " . $word;
         }
     }
+    if (!empty(trim($line2))) {
+        $pdf->SetFont('NotoSansBold', 'B', 12);
+    }
 
     // --- Première ligne  ---
     $pdf->SetXY($x + 12 , $y + $h - 66);
@@ -379,7 +379,7 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
 
     
     // === Pays ===
-    $pdf->SetFont('NotoSans', '', 13);
+    $pdf->SetFont('NotoSansBold', 'B', 14);
     $pdf->SetTextColor(0,0,0,0);
     $pays = utf8_decode($badgeData['pays']);
     $pdf->SetXY($x, $y + $h - 45);
