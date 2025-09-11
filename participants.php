@@ -54,7 +54,9 @@ include 'includes/header.php';
     <!-- Actions principales -->
     <div class="card" style="display:flex; flex-wrap:wrap; gap:0.5rem; padding:1rem; margin-bottom:1rem;">
         <a href="add_participant.php" class="btn">➕ Add Participant</a>
+        <?php if ($_SESSION['role'] == 'admin') {  ?>
         <a href="add_guest.php" class="btn">➕ Add Guest</a>
+        <?php } ?> 
         <a href="import_participants.php" class="btn btn-primary">📥 Import Participants</a>
     </div>
 
