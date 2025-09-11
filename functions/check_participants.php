@@ -72,8 +72,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 <!-- Modals succès / erreur -->
 <div id="successModal" class="modal">
     <div class="modal-content success">
-        <span class="close-modal" onclick="closeModal('successModal')">&times;</span>
-        <div class="modal-photo-bg" id="success-photo-bg"></div>
         <div class="success-icon">✓</div>
         <div class="status-text success-text">OK</div>
     </div>
@@ -81,8 +79,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
 <div id="errorModal" class="modal">
     <div class="modal-content error">
-        <span class="close-modal" onclick="closeModal('errorModal')">&times;</span>
-        <div class="modal-photo-bg" id="error-photo-bg"></div>
         <div class="error-icon">✗</div>
         <div class="status-text error-text">KO</div>
     </div>
@@ -199,7 +195,6 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         align-items: center;
         justify-content: center;
         animation: popIn 0.5s ease forwards;
-        position: relative;
     }
 
     @keyframes popIn {
@@ -290,70 +285,24 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         transform: translateY(-3px);
         box-shadow: 0 10px 25px rgba(231, 76, 60, 0.6);
     }
-
-    .close-modal {
-        position: absolute;
-        top: 18px;
-        right: 24px;
-        font-size: 2.2rem;
-        color: #fff;
-        background: rgba(0,0,0,0.25);
-        border-radius: 50%;
-        width: 38px;
-        height: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 10001;
-        transition: background 0.2s;
-    }
-
-    .close-modal:hover {
-        background: rgba(0,0,0,0.45);
-    }
-
-    .modal-photo-bg {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        z-index: 0;
-        opacity: 0.25;
-        background: center center/cover no-repeat;
-        border-radius: 24px;
-        filter: blur(2px) grayscale(0.2);
-    }
-
-    .modal-content > .success-icon,
-    .modal-content > .error-icon,
-    .modal-content > .status-text {
-        position: relative;
-        z-index: 1;
-    }
 </style>
 
 <script>
     const evenementId = <?= $evenement_id ?>;
     let html5QrcodeScanner;
-    let lastPhotoPath = null;
 
-    function showSuccessModal(photoPath) {
-        if (photoPath) {
-            document.getElementById('success-photo-bg').style.backgroundImage = `url('${photoPath}')`;
-        } else {
-            document.getElementById('success-photo-bg').style.backgroundImage = '';
-        }
+    function showSuccessModal() {
         document.getElementById('successModal').style.display = "flex";
-        // Pas d'auto-close, l'utilisateur ferme avec la croix
+        setTimeout(() => {
+            closeModal('successModal');
+        }, 3000);
     }
 
-    function showErrorModal(msg, photoPath) {
-        if (photoPath) {
-            document.getElementById('error-photo-bg').style.backgroundImage = `url('${photoPath}')`;
-        } else {
-            document.getElementById('error-photo-bg').style.backgroundImage = '';
-        }
+    function showErrorModal(msg) {
         document.getElementById('errorModal').style.display = "flex";
-        // Pas d'auto-close, l'utilisateur ferme avec la croix
+        setTimeout(() => {
+            closeModal('errorModal');
+        }, 3000);
     }
 
     function closeModal(modalId) {
@@ -362,11 +311,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             Html5Qrcode.getCameras().then(cameras => {
                 if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
             });
-        }, 500);
+        }, 1000);
         document.getElementById('qr-result').innerText = "";
-        // Cache la photo du participant
-        document.getElementById('participant-img').style.display = 'none';
-        document.getElementById('photo-wrapper').style.display = 'none';
     }
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -377,24 +323,23 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'qr_code=' + encodeURIComponent(decodedText) + '&evenement_id=' + encodeURIComponent(evenementId)
             })
-            .then(r => r.json())
+            .then(r => r.json()) // ← on renvoie JSON maintenant
             .then(data => {
-                let photoPath = data.photo_path ? "../" + data.photo_path : "";
-                lastPhotoPath = photoPath;
-                if (photoPath) {
-                    const img = document.getElementById('participant-img');
-                    const bloc = document.getElementById('photo-wrapper');
-                    img.src = photoPath;
-                    img.style.display = 'block';
-                    bloc.style.display = 'flex';
-                }
                 if (data.success) {
-                    showSuccessModal(photoPath);
+                    // afficher la photo
+                    if (data.photo_path) {
+                        const img = document.getElementById('participant-img');
+                        const bloc = document.getElementById('photo-wrapper');
+                        img.src = "../" + data.photo_path;
+                        img.style.display = 'block';
+                        bloc.style.display = 'flex';
+                    }
+                    showSuccessModal();
                 } else {
-                    showErrorModal(data.message || " Error", photoPath);
+                    showErrorModal(data.message || " Error");
                 }
             })
-            .catch(err => showErrorModal("Error: " + err, lastPhotoPath));
+            .catch(err => showErrorModal("Error: " + err));
         });
     }
 
