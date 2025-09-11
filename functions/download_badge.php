@@ -56,9 +56,8 @@ if (!file_exists($pdfPath)) {
     </style>
     <script>
         function trackDownload(fileName) {
-            // Redirect to participant.php after a short delay
             setTimeout(function() {
-                window.location.href = '../participant.php';
+                window.location.href = '../participants.php';
             }, 1000); // 1-second delay to ensure the download starts
         }
     </script>

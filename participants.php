@@ -114,6 +114,8 @@ include 'includes/header.php';
                                 <td>
                                     <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
                                     <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
+                                    <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
+                                    <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
                                 </td>
                                 <?php } else ?>
                             </tr>
@@ -184,3 +186,67 @@ function toggleAll(source) {
 </script>
 
 <?php renderFooter(); ?>
+
+
+<script>
+document.querySelectorAll('input[type=file][id^="photoInput-"]').forEach(input => {
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const participantId = e.target.dataset.id;
+        const reader = new FileReader();
+
+        reader.onload = function(ev) {
+            const img = new Image();
+            img.onload = function() {
+                let width = img.width;
+                let height = img.height;
+                const MAX_WIDTH = 600, MAX_HEIGHT = 600;
+
+                if (width > height && width > MAX_WIDTH) {
+                    height = Math.round(height * MAX_WIDTH / width);
+                    width = MAX_WIDTH;
+                } else if (height > MAX_HEIGHT) {
+                    width = Math.round(width * MAX_HEIGHT / height);
+                    height = MAX_HEIGHT;
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                let quality = 0.9;
+                let dataUrl = canvas.toDataURL('image/jpeg', quality);
+                const maxSizeKB = 100;
+
+                while ((dataUrl.length/1024) > maxSizeKB && quality > 0.1) {
+                    quality -= 0.05;
+                    dataUrl = canvas.toDataURL('image/jpeg', quality);
+                }
+
+                // Envoi AJAX au serveur
+                fetch('functions/update_photo.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: participantId, photoData: dataUrl })
+                })
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        alert("✅ Photo mise à jour avec succès !");
+                        location.reload();
+                    } else {
+                        alert("❌ Erreur : " + resp.message);
+                    }
+                })
+                .catch(err => alert("Erreur réseau : " + err));
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>

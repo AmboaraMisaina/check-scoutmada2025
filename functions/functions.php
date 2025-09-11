@@ -156,7 +156,11 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $
         return ['success' => false, 'message' => 'Error updating participant.'];
     }
 }
-
+function updatePhotoParticipant(PDO $pdo, $id, $photoPath)
+{
+    $stmt = $pdo->prepare("UPDATE participants SET photo = ? WHERE id = ?");
+    return $stmt->execute([$photoPath, $id]);
+}
 // Supprime un participant
 function deleteParticipant(PDO $pdo, $id)
 {
