@@ -32,5 +32,6 @@ if (isset($photoData) && !empty($photoData)) {
 }
 
 $ok = updatePhotoParticipant($pdo, $id, $photoPath);
+$ok = $ok && updateWithPhoto($pdo, $id, true);
 
 echo json_encode(['success' => $ok]);

@@ -123,14 +123,6 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
         return ['success' => false, 'message' => 'Error adding participant.'];
     }
 }
-
-
-function getQrCodeUrl($qrText, $size = 300)
-{
-    $encodedText = urlencode($qrText);
-    return "https://api.qrserver.com/v1/create-qr-code/?data={$encodedText}&size={$size}x{$size}";
-}
-
 // Met à jour un participant
 function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $photoPath = null)
 {
@@ -166,6 +158,12 @@ function deleteParticipant(PDO $pdo, $id)
 {
     $stmt = $pdo->prepare("DELETE FROM participants WHERE id=?");
     return $stmt->execute([$id]);
+}
+
+function updateWithPhoto(PDO $pdo, $id, $withPhoto)
+{
+    $stmt = $pdo->prepare("UPDATE participants SET withPhoto = ? WHERE id = ?");
+    return $stmt->execute([$withPhoto, $id]);
 }
 
 
@@ -300,6 +298,14 @@ function getAllPays($pdo) {
 }
 
 
+function getQrCodeUrl($qrText, $size = 300)
+{
+    $encodedText = urlencode($qrText);
+    return "https://api.qrserver.com/v1/create-qr-code/?data={$encodedText}&size={$size}x{$size}";
+}
+
+
+
 function genererFeuilleBadges($pdf, $badge1, $badge2 = null) {
     $pageWidth = 210;
     $pageHeight = 297;
@@ -419,3 +425,4 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
         unlink($qr_tmp);
     }
 }
+

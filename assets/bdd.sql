@@ -22,10 +22,12 @@ CREATE TABLE participants (
     pays VARCHAR(100) NULL,
     photo VARCHAR(255) NULL,
     isPrinted BOOLEAN DEFAULT FALSE,
+    withPhoto BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+alter table participants add column withPhoto BOOLEAN DEFAULT FALSE;
 alter table participants add column isPrinted BOOLEAN DEFAULT FALSE;
 alter table participants add column pays VARCHAR(100) NULL;
 
