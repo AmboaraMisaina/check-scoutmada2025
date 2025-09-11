@@ -43,6 +43,51 @@ $totalPages = ceil($totalParticipants / $perPage);
 include 'includes/header.php';
 ?>
 
+<style>
+/* Container */
+.container {
+  padding: 0.5rem;
+}
+
+/* Actions principales */
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card a.btn {
+  flex: 1;
+  text-align: center;
+  min-width: 120px;
+}
+
+/* Filtre */
+.card form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.card form input,
+.card form select,
+.card form button,
+.card form a {
+  flex: 1;
+  min-width: 140px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+</style>
+
+
 <div class="container">
 
     <!-- Header page -->
@@ -98,6 +143,7 @@ include 'includes/header.php';
                         <th style="padding:0.75rem;">with photo</th>
                         <?php if ($_SESSION['role'] == 'admin') { ?>
                         <th style="padding:0.75rem;">Actions</th>
+                        <th style="padding:0.75rem;">   </th>
                         <?php } ?>
                     </tr>
                 </thead>
@@ -113,12 +159,16 @@ include 'includes/header.php';
                                 <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
                                 <td style="text-align:center;"><?= !empty($p['withPhoto']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
-                                <td>
-                                    <a href="edit_participant.php?id=<?= $p['id']; ?>" class="btn btn-secondary">✏️</a>
-                                    <a href="participants.php?delete=<?= $p['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer ce participant ?')">🗑️</a>
-                                    <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
-                                    <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
-                                </td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
+                                        <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
+                                        
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
+                                        <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
+                                    </td>
+                                    
                                 <?php } else ?>
                             </tr>
                         <?php endforeach; ?>
