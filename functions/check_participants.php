@@ -336,15 +336,22 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
             .then(data => {
                 if (data.success) {
                     // afficher la photo
-                    if (data.photo_path) {
+                    // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
                         const bloc = document.getElementById('photo-wrapper');
                         img.src = "../" + data.photo_path;
                         img.style.display = 'block';
                         bloc.style.display = 'flex';
-                    }
+                    // }
                     showSuccessModal();
                 } else {
+                    // if (data.photo_path) {
+                        const img = document.getElementById('participant-img');
+                        const bloc = document.getElementById('photo-wrapper');
+                        img.src = "../" + data.photo_path;
+                        img.style.display = 'block';
+                        bloc.style.display = 'flex';
+                    // }
                     showErrorModal(data.message || " Error");
                 }
             })
