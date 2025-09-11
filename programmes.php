@@ -49,27 +49,26 @@ include 'includes/header.php';
         <a href="add_evenement.php" class="btn">➕ Add Event</a>
     </div>
 
-    <div class="card">
-        <table style="width: 100%; border-collapse: collapse;">
+    <div class="card" style="overflow-x:auto; padding:1rem;">
+        <table style="width:100%; border-collapse:collapse; min-width:600px;">
             <thead>
-                <tr style="background: #f1f1f1;">
-                    <th style="padding: 0.75rem;">Title</th>
-                    <th style="padding: 0.75rem;">Date</th>
-                    <th style="padding: 0.75rem;">Start</th>
-                    <th style="padding: 0.75rem;">End</th>
+                <tr style="background:#f1f1f1;">
+                    <th style="padding:0.75rem;">Title</th>
+                    <th style="padding:0.75rem;">Date</th>
+                    <th style="padding:0.75rem;">Start</th>
+                    <th style="padding:0.75rem;">End</th>
                     <?php if ($_SESSION['role'] == 'admin') { ?>
-                    <th style="padding: 0.75rem;">Actions</th>
+                    <th style="padding:0.75rem;">Actions</th>
                     <?php } ?>
                 </tr>
             </thead>
             <tbody>
                 <?php if ($evenements): ?>
                     <?php foreach ($evenements as $e): ?>
-                        <tr style="border-bottom: 1px solid #e1e5e9;">
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($e['titre']); ?></td>
-                            <td style="padding: 0.75rem;">
+                        <tr style="border-bottom:1px solid #e1e5e9;">
+                            <td style="padding:0.75rem;"><?= htmlspecialchars($e['titre']); ?></td>
+                            <td style="padding:0.75rem;">
                                 <?php
-                                // Affiche la date si disponible
                                 if (!empty($e['date_evenement'])) {
                                     $timestamp = strtotime($e['date_evenement']);
                                     setlocale(LC_TIME, 'fr_FR.UTF-8', 'fra');
@@ -79,24 +78,25 @@ include 'includes/header.php';
                                 }
                                 ?>
                             </td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_debut'] ?? '-'); ?></td>
-                            <td style="padding: 0.75rem;"><?= htmlspecialchars($e['horaire_fin'] ?? '-'); ?></td>
+                            <td style="padding:0.75rem;"><?= htmlspecialchars($e['horaire_debut'] ?? '-'); ?></td>
+                            <td style="padding:0.75rem;"><?= htmlspecialchars($e['horaire_fin'] ?? '-'); ?></td>
                             <?php if ($_SESSION['role'] == 'admin') { ?>
-                            <td style="padding: 0.75rem;">
-                                <a href="edit_evenement.php?id=<?= $e['id']; ?>" class="btn btn-secondary">🔍</a>
-                                <a href="programmes.php?delete=<?= $e['id']; ?>" class="btn btn-danger" onclick="return confirm('Supprimer cet événement ?')">🗑️</a>
+                            <td style="padding:0.75rem;">
+                                <button type="button" class="btn btn-info" onclick="window.location.href='edit_evenement.php?id=<?= $e['id']; ?>'">🔍</button>
+                                <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer cet événement ?')) window.location.href='programmes.php?delete=<?= $e['id']; ?>'">🗑️</button>
                             </td>
                             <?php } ?>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" style="padding: 1rem; text-align: center;">No events found.</td>
+                        <td colspan="6" style="padding:1rem; text-align:center;">No events found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+
 </div>
 
 <?php renderFooter(); ?>
