@@ -106,11 +106,7 @@ include 'includes/header.php';
                             </label>
                         </li>
 
-                        <li>
-                            <label>
-                                <input type="checkbox" name="ouvert_a[]" value="youth advisor"> Youth Advisor
-                            </label>
-                        </li>
+                        
                         <li>
                             <label>
                                 <input type="checkbox" name="ouvert_a[]" value="international service team"> International Service Team

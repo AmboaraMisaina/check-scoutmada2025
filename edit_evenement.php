@@ -100,9 +100,7 @@ include 'includes/header.php';
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="wosm team" <?= in_array('wosm team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> WOSM Team
                 </label>
-                <label style="margin-left: 1rem;">
-                    <input type="checkbox" name="ouvert_a[]" value="youth advisor" <?= in_array('youth advisor', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> Youth Advisor
-                </label>
+                
                 <label style="margin-left: 1rem;">
                     <input type="checkbox" name="ouvert_a[]" value="international service team" <?= in_array('international service team', explode(',', $evenement['ouvert_a'])) ? 'checked' : '' ?>> International Service Team
                 </label>

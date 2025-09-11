@@ -113,7 +113,6 @@ include 'includes/header.php';
                     <option value="observer" <?= $participant['type'] === 'observer' ? 'selected' : '' ?>>Observer</option>
                     <option value="organizing team" <?= $participant['type'] === 'organizing team' ? 'selected' : '' ?>>Organizing Team</option>
                     <option value="wosm team" <?= $participant['type'] === 'wosm team' ? 'selected' : '' ?>>WOSM Team</option>
-                    <option value="youth advisor" <?= $participant['type'] === 'youth advisor' ? 'selected' : '' ?>>Youth Advisor</option>
                     <option value="international service team" <?= $participant['type'] === 'international service team' ? 'selected' : '' ?>>International Service Team</option>
                     <option value="partner" <?= $participant['type'] === 'partner' ? 'selected' : '' ?>>Partner</option>
                 </select>
@@ -227,7 +226,7 @@ function updateNsoField() {
     const type = document.getElementById('type').value;
     const nsoGroup = document.getElementById('nso-group');
     let html = '';
-    if (type === 'delegate' || type === 'observer' || type === 'youth advisor') {
+    if (type === 'delegate' || type === 'observer') {
         html = `
             <label for="nso" id="nso-label">Country</label>
             <select id="nso" name="nso" required>
@@ -264,7 +263,7 @@ function updateNsoField() {
     } 
     nsoGroup.innerHTML = html;
     // Réinitialise TomSelect si c'est un select
-    if (type == 'delegate' || type == 'observer' || type == 'youth advisor') {
+    if (type == 'delegate' || type == 'observer') {
         new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
     }
 }

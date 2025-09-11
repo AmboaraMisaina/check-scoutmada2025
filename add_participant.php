@@ -127,7 +127,6 @@ include 'includes/header.php';
                     <option value="observer">Observer</option>
                     <option value="organizing team">organizing team</option>
                     <option value="wosm team">WOSM Team</option>
-                    <option value="youth advisor">Youth Advisor</option>
                     <option value="international service team">International Service Team</option>
                     <option value="partner">Partner</option>
                 </select>
@@ -224,7 +223,7 @@ function updateNsoField() {
     const type = document.getElementById('type').value;
     const nsoGroup = document.getElementById('nso-group');
     let html = '';
-    if (type === 'delegate' || type === 'observer' || type === 'youth advisor') {
+    if (type === 'delegate' || type === 'observer') {
         html = `
             <label for="nso" id="nso-label">Country</label>
             <select id="nso" name="nso" required>
@@ -261,7 +260,7 @@ function updateNsoField() {
     } 
     nsoGroup.innerHTML = html;
     // Réinitialise TomSelect si c'est un select
-    if (type == 'delegate' || type == 'observer' || type == 'youth advisor') {
+    if (type == 'delegate' || type == 'observer' ) {
         new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
     }
 }
