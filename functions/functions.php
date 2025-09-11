@@ -350,8 +350,9 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
     // Définir police
     $pdf->AddFont('NotoSans','','NotoSans.php');
     $pdf->AddFont('NotoSansBold','B','NotoSans-Bold.php');
+    $pdf->AddFont('ScoutsGTPlanarBold', 'B', 'Scouts-GT-Planar-Bold.php');
 
-    $pdf->SetFont('NotoSansBold', 'B', 14);
+    $pdf->SetFont('ScoutsGTPlanarBold', 'B', 14);
     $pdf->SetTextColor(0, 0, 0, 0);
 
     // Découper le nom en mots dynamiquement
@@ -368,26 +369,37 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
         }
     }
     if (!empty(trim($line2))) {
-        $pdf->SetFont('NotoSansBold', 'B', 12);
+        $pdf->SetFont('ScoutsGTPlanarBold', 'B', 12);
     }
 
-    // --- Première ligne  ---
-    $pdf->SetXY($x + 12 , $y + $h - 66);
-    $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
+    if ($type != "-1") {
+        // --- Première ligne  ---
+        $pdf->SetXY($x + 12 , $y + $h - 66);
+        $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
 
-    // --- Deuxième ligne si nécessaire ---
-    if (!empty(trim($line2))) {
-        $pdf->SetXY($x + 11, $y + $h - 62);
-        $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+        // --- Deuxième ligne si nécessaire ---
+        if (!empty(trim($line2))) {
+            $pdf->SetXY($x + 11, $y + $h - 62);
+            $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+        }
+
+        
+        // === Pays ===
+        $pdf->SetFont('ScoutsGTPlanarBold', 'B', 14);
+        $pdf->SetTextColor(0,0,0,0);
+        $pays = utf8_decode($badgeData['pays']);
+        $pdf->SetXY($x, $y + $h - 45);
+        $pdf->Cell($w, 6, $pays, 0, 0, 'C');
+    }else{
+        $pdf->SetXY($x + 12 , $y + $h - 62);
+        $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
+
+        // --- Deuxième ligne si nécessaire ---
+        if (!empty(trim($line2))) {
+            $pdf->SetXY($x + 11, $y + $h - 60);
+            $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+        }
     }
-
-    
-    // === Pays ===
-    $pdf->SetFont('NotoSansBold', 'B', 14);
-    $pdf->SetTextColor(0,0,0,0);
-    $pays = utf8_decode($badgeData['pays']);
-    $pdf->SetXY($x, $y + $h - 45);
-    $pdf->Cell($w, 6, $pays, 0, 0, 'C');
 
     // --- Verso (QR Code) ---
     if (!empty($badgeData['qr_code'])) {
