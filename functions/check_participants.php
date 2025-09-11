@@ -53,7 +53,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     <div id="photo-wrapper" style="width:97vw; max-width:750px; aspect-ratio:0.97/1; display:none; align-items:center; justify-content:center; position:relative;">
         <img id="participant-img" src="" alt="Photo participant"
             style="width:100%; height:100%; object-fit:cover; border-radius:24px; border:4px solid #fff; display:none; background:#eee;">
-        <button onclick="closePhoto()" style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
+        <button onclick="closePhoto()" style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; border:none; border-radius:50%; width:80px; height:80px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
             ✕
         </button>
     </div>
