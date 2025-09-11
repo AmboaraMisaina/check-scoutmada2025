@@ -44,15 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['print_ids'])) {
         genererFeuilleBadges($pdf, $badge1, $badge2);
     }
 
-    // Sauvegarde le PDF dans un dossier temporaire
+    // Après génération du fichier PDF
     $pdfDir = __DIR__ . '/../temp_badges/';
     if (!is_dir($pdfDir)) mkdir($pdfDir, 0777, true);
     $pdfName = 'badges_' . date('Ymd_His') . '_' . uniqid() . '.pdf';
     $pdfPath = $pdfDir . $pdfName;
     $pdf->Output('F', $pdfPath);
 
-    // Redirige vers la page de téléchargement
-    header('Location: download_badge.php?file=' . urlencode($pdfName));
+    // Plutôt que download_badge.php, redirige vers print_badge.php
+    header('Location: preview_badge.php?file=' . urlencode($pdfName));
     exit;
 }
 
