@@ -319,11 +319,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         img.src = "";
         img.style.display = 'none';
         bloc.style.display = 'none';
-        setTimeout(() => {
-            Html5Qrcode.getCameras().then(cameras => {
-                if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
-            });
-        }, 1000);
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
+        });
     }
 
     function onScanSuccess(decodedText, decodedResult) {
