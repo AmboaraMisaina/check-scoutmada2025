@@ -59,7 +59,7 @@ $pdfUrl = '../temp_badges/' . rawurlencode($file);
             The badges are ready. The print dialog will open automatically.<br>
             If not, use the button below.
         </div>
-        <iframe id="badgeFrame" src="<?= htmlspecialchars($pdfUrl) ?>"></iframe>
+        <iframe id="badgeFrame" style="display: none;" src="<?= htmlspecialchars($pdfUrl) ?>"></iframe>
         <br>
         <button class="btn" onclick="printIframe()">Print badges</button>
     </div>
@@ -71,10 +71,11 @@ $pdfUrl = '../temp_badges/' . rawurlencode($file);
             iframe.contentWindow.print();
         }
     }
-    // Lancer l'impression automatiquement après chargement du PDF
-    document.getElementById('badgeFrame').addEventListener('load', function() {
-        setTimeout(printIframe, 500);
-    });
+    // Lancer l'impression automatiquement sans attendre le chargement de l'iframe
+    window.onload = function() {
+      printIframe();
+    };
+
     </script>
 </body>
 </html>
