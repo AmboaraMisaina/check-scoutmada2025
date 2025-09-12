@@ -46,8 +46,6 @@ if ($_POST) {
         $photoPath = $uploadDir . $photoName;
 
         file_put_contents($photoPath, $decoded);
-    } else {
-        $error = "Photo is required.";
     }
 
     if (!$error) {
