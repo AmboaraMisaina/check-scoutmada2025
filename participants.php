@@ -30,14 +30,15 @@ if (isset($_GET['delete'])) {
 // Récupérer les filtres
 $filter_name = trim($_GET['filter_name'] ?? '');
 $filter_printed = $_GET['filter_printed'] ?? '';
+$filter_type = $_GET['filter_type'] ?? '';
 
 // Pagination
 $perPage = 10;
 $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
-$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed, $perPage, $offset);
-$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $filter_printed);
+$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed, $filter_type, $perPage, $offset);
+$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $filter_printed, $filter_type);
 $totalPages = ceil($totalParticipants / $perPage);
 
 include 'includes/header.php';
@@ -113,6 +114,16 @@ table {
                 <option value="">All</option>
                 <option value="1" <?= ($filter_printed === '1') ? 'selected' : '' ?>>Printed</option>
                 <option value="0" <?= ($filter_printed === '0') ? 'selected' : '' ?>>Not Printed</option>
+            </select>
+            <select name="filter_type" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+                <option value="">All</option>
+                <option value="delegate" <?= ($filter_type === 'delegate') ? 'selected' : '' ?>>Delegate</option>
+                <option value="observer" <?= ($filter_type === 'observer') ? 'selected' : '' ?>>Observer</option>
+                <option value="organizing team" <?= ($filter_type === 'organizing team') ? 'selected' : '' ?>>Organizing Team</option>
+                <option value="wosm team" <?= ($filter_type === 'wosm team') ? 'selected' : '' ?>>WOSM Team</option>
+                <option value="International service team" <?= ($filter_type === 'International service team') ? 'selected' : '' ?>>International Service Team</option>
+                <option value="Partner" <?= ($filter_type === 'Partner') ? 'selected' : '' ?>>Partner</option>
+                <option value="guest" <?= ($filter_type === 'guest') ? 'selected' : '' ?>>Guest</option>
             </select>
             <button type="submit" class="btn btn-primary">Filter</button>
             <a href="participants.php" class="btn btn-secondary">Reset</a>

@@ -20,13 +20,13 @@ function getAllParticipants(PDO $pdo)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '', $limit = 20, $offset = 0) {
+function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '', $filter_type = '', $limit = 20, $offset = 0) {
     $sql = "SELECT * FROM participants WHERE 1=1";
     $params = [];
 
     // Filtre par nom ou prénom
     if (!empty($filter_name)) {
-        $sql .= " AND (nom LIKE :name OR prenom LIKE :name)";
+        $sql .= " AND (nom LIKE :name OR prenom LIKE :name OR pays LIKE :name)";
         $params[':name'] = '%' . $filter_name . '%';
     }
 
@@ -35,6 +35,11 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_print
         $sql .= " AND isPrinted = 1";
     } elseif ($filter_printed === '0') {
         $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
+    }
+    // Filtre par type
+    if (!empty($filter_type)) {
+        $sql .= " AND type = :type";
+        $params[':type'] = $filter_type;
     }
 
     $sql .= " ORDER BY nom ASC, prenom ASC";
@@ -52,13 +57,13 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_print
 }
 
 
-function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '') {
+function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '' , $filter_type = '') {
     $sql = "SELECT COUNT(*) as total FROM participants WHERE 1=1";
     $params = [];
 
     // Filtre par nom (nom ou prénom)
     if (!empty($filter_name)) {
-        $sql .= " AND (nom LIKE :name OR prenom LIKE :name)";
+        $sql .= " AND (nom LIKE :name OR prenom LIKE :name OR pays LIKE :name)";
         $params[':name'] = '%' . $filter_name . '%';
     }
 
@@ -67,6 +72,11 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_pri
         $sql .= " AND isPrinted = 1";
     } elseif ($filter_printed === '0') {
         $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
+    }
+    // Filtre par type
+    if (!empty($filter_type)) {
+        $sql .= " AND type = :type";
+        $params[':type'] = $filter_type;
     }
 
     $stmt = $pdo->prepare($sql);
