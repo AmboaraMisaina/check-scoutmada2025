@@ -178,7 +178,14 @@ table {
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
                                     </td>
                                     
-                                <?php } else ?>
+                                <?php } if ($_SESSION['role'] == 'registration') {
+                                    ?>
+                                    <td>
+                                        <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
+                                        <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
+                                    </td>
+                                    <?php
+                                } ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
