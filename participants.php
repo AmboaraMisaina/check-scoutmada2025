@@ -148,10 +148,9 @@ table {
                         <th style="padding:0.75rem;"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
                         <th style="padding:0.75rem;">Name</th>
                         <!-- <th style="padding:0.75rem;">Email</th> -->
-                        <!-- <th style="padding:0.75rem;">Country</th> -->
+                        <th style="padding:0.75rem;">Country</th>
                         <th style="padding:0.75rem;">Category</th>
-                        <th style="padding:0.75rem;">Printed</th>
-                        <th style="padding:0.75rem;">with photo</th>
+                        <th style="padding:0.75rem;">Process</th>
                         <?php if ($_SESSION['role'] == 'admin') { ?>
                         <th style="padding:0.75rem;">Actions</th>
                         <th style="padding:0.75rem;">   </th>
@@ -165,22 +164,22 @@ table {
                                 <td style="text-align:center;"><input type="checkbox" class="print-checkbox" name="print_ids[]" value="<?= $p['id'] ?>" <?= !empty($p['isPrinted']) ? 'disabled' : '' ?>></td>
                                 <td><?= htmlspecialchars($p['nom']); ?></td>
                                 <!-- <td><?= htmlspecialchars($p['email']); ?></td> -->
-                                <!-- <td><?= htmlspecialchars($p['pays']); ?></td> -->
+                                <td><?= htmlspecialchars($p['pays']); ?></td>
                                 <td><?= htmlspecialchars($p['type']); ?></td>
-                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
-                                <td style="text-align:center;"><?= !empty($p['withPhoto']) ? '<span style="color:green; font-weight:bold;">✔</span>' : '<span style="color:#aaa;">✗</span>' ?></td>
+                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '🖨️' : '' ?><?= !empty($p['withPhoto']) ? '📸' : '' ?></td>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
                                     <td>
                                         <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                         <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
                                         
                                     </td>
+                                    
+                                <?php } else if ($_SESSION['role'] == 'registration') { ?>
                                     <td>
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
                                     </td>
-                                    
-                                <?php } else ?>
+                                <?php } ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
