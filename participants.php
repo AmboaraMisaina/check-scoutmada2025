@@ -174,7 +174,7 @@ table {
                                         
                                     </td>
                                     
-                                <?php } else if ($_SESSION['role'] == 'registration') { ?>
+                                <?php } if ($_SESSION['role'] == 'registration' || $_SESSION['role'] == 'admin') { ?>
                                     <td>
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
