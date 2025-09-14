@@ -29,7 +29,7 @@ if (isset($_GET['delete'])) {
 
 if (isset($_GET['kit'])) {
     updateKit($pdo, intval($_GET['kit']));
-    header("Refresh:0");
+    header("Refresh:0, url=participants.php");
     exit;
 }
 
