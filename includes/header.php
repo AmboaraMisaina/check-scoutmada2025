@@ -1,6 +1,8 @@
 
 <?php
-    $nav = getNavigation();
+    
+    $role = $_SESSION['role'];
+    $nav = getNavigation($role);
     $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 

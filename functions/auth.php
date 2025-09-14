@@ -11,14 +11,29 @@ function checkAuth()
     }
 }
 
-function getNavigation()
+function getNavigation($role)
 {
-    return [
-        'checkin.php' => '✅ Check-in',
-        'programmes.php' => '📅 Programs',
-        'participants.php' => '👥 Participants',
-        'add_user.php' => '➕ Add User',
-    ];
+    switch ($role) {
+        case 'admin':
+            return [
+                'checkin.php' => '✅ Check-in',
+                'programmes.php' => '📅 Programs',
+                'participants.php' => '👥 Participants',
+                'add_user.php' => '➕ Add User',
+            ];        
+        case 'registration':
+            return [
+                'checkin.php' => '✅ Check-in',
+                'participants.php' => '👥 Participants',
+            ];
+        case 'checkin':
+            return [
+                'checkin.php' => '✅ Check-in',
+                
+            ];
+        default:
+            return [];
+    }   
 }
 
 function renderFooter()
