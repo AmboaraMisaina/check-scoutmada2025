@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? 'admin';
 
-    if (!$username || !$password || !in_array($role, ['admin', 'checkin','registration'])) {
+    if (!$username || !$password || !in_array($role, ['admin', 'checkin','registration', 'kit'])) {
         $message = '<div class="alert alert-error" style="background:#fdeaea; color:#e74c3c; padding:0.8rem 1rem; border-radius:6px; margin-bottom:1rem;">Please fill all fields correctly.</div>';
     } else {
         if (createAdmin($pdo, $username, $password, $role)) {
