@@ -259,6 +259,7 @@ function getEvenementsDuJour(PDO $pdo, string $date, string $timezone = 'Indian/
     // Ajouter un indicateur 'enCours' pour chaque événement
     foreach ($evenements as &$e) {
         $timestampDebut = strtotime("$date {$e['horaire_debut']}");
+        $timestampDebut = strtotime("-30 minutes", $timestampDebut); // Décalage de 15 min
         $timestampFin = strtotime("$date {$e['horaire_fin']}");
         $e['enCours'] = ($maintenant >= $timestampDebut && $maintenant <= $timestampFin);
     }
