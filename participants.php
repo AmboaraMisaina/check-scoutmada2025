@@ -27,8 +27,8 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-if (udpateKit($_GET['kit'])) {
-    updateK($pdo, intval($_GET['delete']));
+if (isset($_GET['kit'])) {
+    updateKit($pdo, intval($_GET['delete']));
     header("Refresh:0");
     exit;
 }
