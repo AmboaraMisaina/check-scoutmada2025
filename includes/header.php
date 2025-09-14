@@ -162,6 +162,14 @@
             background: #6c757d;
         }
 
+        .btn-info {
+            background: #35bbdcff;
+        }
+
+        .btn-warning {
+            background: #d9dc35ff;
+        }
+
         .btn-danger {
             background: #dc3545;
         }
