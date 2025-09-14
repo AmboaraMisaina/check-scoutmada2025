@@ -170,7 +170,7 @@ function deleteParticipant(PDO $pdo, $id)
     return $stmt->execute([$id]);
 }
 
-function udpateKit(PDO $pdo, $id)
+function updateKit(PDO $pdo, $id)
 {
     $stmt = $pdo->prepare("UPDATE participants SET kit=true WHERE id = ?");
     return $stmt->execute([$id]);
