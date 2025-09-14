@@ -3,7 +3,7 @@ require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 // Vérifier les droits
-if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') {
+if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration' && $_SESSION['role'] !== 'kit') {
     include 'includes/header.php';
 ?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
@@ -24,6 +24,12 @@ if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration') {
 if (isset($_GET['delete'])) {
     deleteParticipant($pdo, intval($_GET['delete']));
     header("Location: participants.php");
+    exit;
+}
+
+if (udpateKit($_GET['kit'])) {
+    updateK($pdo, intval($_GET['delete']));
+    header("Refresh:0");
     exit;
 }
 
