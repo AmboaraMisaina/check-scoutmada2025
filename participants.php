@@ -166,7 +166,7 @@ table {
                                 <!-- <td><?= htmlspecialchars($p['email']); ?></td> -->
                                 <td><?= htmlspecialchars($p['pays']); ?></td>
                                 <td><?= htmlspecialchars($p['type']); ?></td>
-                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '🖨️' : '' ?> <?= !empty($p['withPhoto']) ? '📸' : '' ?></td>
+                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '🖨️' : '' ?> <?= !empty($p['withPhoto']) ? '📸' : '' ?> <?= !empty($p['kit']) ? '👕' : '' ?></td>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
                                     <td>
                                         <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
@@ -183,6 +183,11 @@ table {
                                     <td>
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
+                                    </td>
+                                <?php } if ($_SESSION['role'] == 'kit') {
+                                    ?>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?kit=<?= $p['id']; ?>'">🗑️</button>
                                     </td>
                                     <?php
                                 } ?>

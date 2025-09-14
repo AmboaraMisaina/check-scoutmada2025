@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="admin">Admin</option>
                     <option value="checkin">Checkin</option>
                     <option value="registration">Registration</option>
+                    <option value="kit">Kit</option>
                 </select>
             </div>
             <button type="submit" class="btn"
