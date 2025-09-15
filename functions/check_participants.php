@@ -56,6 +56,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         <button onclick="closePhoto()" style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; border:none; border-radius:50%; width:80px; height:80px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
             ✕
         </button>
+        <p id="participant-name"></p>
     </div>
 </div>
 <div class="scanner-container">
@@ -153,6 +154,10 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
         animation: pulse 2s infinite;
         z-index: 2;
+    }
+
+    #participant-name {
+        color: #000;
     }
 
     @keyframes pulse {
@@ -346,7 +351,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     // afficher la photo
                     // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
+                        const participantName = document.getElementById('participant-name');
                         const bloc = document.getElementById('photo-wrapper');
+                        participantName.innerText = data.message || "";
                         img.src = "../" + data.photo_path;
                         img.style.display = 'block';
                         bloc.style.display = 'flex';
