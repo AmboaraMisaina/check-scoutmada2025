@@ -20,6 +20,8 @@ $stmt = $pdo->prepare("SELECT * FROM participants WHERE qr_code = ?");
 $stmt->execute([$qr_code]);
 $participant = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$response['name'] = htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
+
 if (!$participant) {
     $response['message'] = "No matching participant found.";
     echo json_encode($response);
@@ -75,7 +77,6 @@ if ($alreadyChecked) {
     $insertStmt = $pdo->prepare("INSERT INTO enregistrement (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
     if ($insertStmt->execute([$participant['id'], $evenement_id])) {
         $response['success'] = true;
-        $response['message'] = htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
         $response['photo_path'] = $participant['photo']; // path to the photo
     } else {
         $response['message'] = "Error recording attendance.";
