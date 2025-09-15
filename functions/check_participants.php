@@ -56,8 +56,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         <button onclick="closePhoto()" style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; border:none; border-radius:50%; width:80px; height:80px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
             ✕
         </button>
+        <p id="participant-name"></p>
     </div>
-    <p id="participant-name"></p>
 </div>
 <div class="scanner-container">
     <!-- Scanner -->
@@ -330,9 +330,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     function closePhoto() {
         const bloc = document.getElementById('photo-wrapper');
         const img = document.getElementById('participant-img');
-        const imgCtn = document.getElementById('participant-photo');
         img.src = "";
-        imgCtn.style.display = 'none';
+        img.style.display = 'none';
         bloc.style.display = 'none';
         Html5Qrcode.getCameras().then(cameras => {
             if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
@@ -353,22 +352,20 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     // afficher la photo
                     // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
-                        const imgCtn = document.getElementById('participant-photo');
                         const participantName = document.getElementById('participant-name');
                         const bloc = document.getElementById('photo-wrapper');
                         participantName.innerText = data.message || "";
                         img.src = "../" + data.photo_path;
-                        imgCtn.style.display = 'block';
+                        img.style.display = 'block';
                         bloc.style.display = 'flex';
                     // }
                     showSuccessModal();
                 } else {
                     // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
-                        const imgCtn = document.getElementById('participant-photo');
                         const bloc = document.getElementById('photo-wrapper');
                         img.src = "../" + data.photo_path;
-                        imgCtn.style.display = 'block';
+                        img.style.display = 'block';
                         bloc.style.display = 'flex';
                     // }
                     showErrorModal(data.message || " Error");
