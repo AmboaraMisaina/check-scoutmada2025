@@ -56,8 +56,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         <button onclick="closePhoto()" style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; border:none; border-radius:50%; width:80px; height:80px; display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; box-shadow:0 4px 8px rgba(0,0,0,0.2);">
             ✕
         </button>
-        <p id="participant-name"></p>
     </div>
+    <p id="participant-name"></p>
 </div>
 <div class="scanner-container">
     <!-- Scanner -->

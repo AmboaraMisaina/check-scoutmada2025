@@ -54,7 +54,7 @@ if (!in_array($participant['type'], $typesAutorises)) {
 }
 
 if (($participant['type'] === 'delegate' || $participant['type'] === 'observer') && !$participant['paid']) {
-    $response['message'] = "Delegates must complete payment to access this event.";
+    $response['message'] = "Participant must complete payment to access this event.";
     echo json_encode($response);
     exit;
 }
@@ -75,7 +75,7 @@ if ($alreadyChecked) {
     $insertStmt = $pdo->prepare("INSERT INTO enregistrement (participant_id, evenement_id, created_at) VALUES (?, ?, NOW())");
     if ($insertStmt->execute([$participant['id'], $evenement_id])) {
         $response['success'] = true;
-        $response['message'] = "Attendance recorded for " . htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
+        $response['message'] = htmlspecialchars($participant['nom']) . " " . htmlspecialchars($participant['prenom']);
         $response['photo_path'] = $participant['photo']; // path to the photo
     } else {
         $response['message'] = "Error recording attendance.";
