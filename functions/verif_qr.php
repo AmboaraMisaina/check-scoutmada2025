@@ -53,6 +53,12 @@ if (!in_array($participant['type'], $typesAutorises)) {
     exit;
 }
 
+if (($participant['type'] === 'delegate' || $participant['type'] === 'observer') && !$participant['paid']) {
+    $response['message'] = "Delegates must complete payment to access this event.";
+    echo json_encode($response);
+    exit;
+}
+
 // Vérifie la règle de participation
 $alreadyChecked = false;
 if ($evenement['nb_participation'] == 1) {
