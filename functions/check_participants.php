@@ -84,6 +84,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     <div class="modal-content error">
         <div class="error-icon">✗</div>
         <div class="status-text error-text">KO</div>
+        <div class="status-text message-text" id="message-text"></div>
     </div>
 </div>
 
@@ -266,6 +267,12 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         letter-spacing: 3px;
     }
 
+    .message-text {
+        font-weight: bold;
+        color: #ff4757;
+        letter-spacing: 3px;
+    }
+
     /* 🔘 Bouton premium */
     #quit-scan-btn {
         background: linear-gradient(135deg, #ff6b6b, #c0392b);
@@ -303,6 +310,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
 
     function showErrorModal(msg) {
         document.getElementById('errorModal').style.display = "flex";
+        document.getElementById('message-text').innerText = msg;
         setTimeout(() => {
             closeModal('errorModal');
         }, 3000);
