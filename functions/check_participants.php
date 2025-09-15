@@ -363,12 +363,12 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                 } else {
                     // if (data.photo_path) {
                         // const img = document.getElementById('participant-img');
-                        // const bloc = document.getElementById('photo-wrapper');
+                        const bloc = document.getElementById('photo-wrapper');
                         const participantName = document.getElementById('participant-name');
                         participantName.innerText = data.name || "";
                         // img.src = "../" + data.photo_path;
                         // img.style.display = 'block';
-                        // bloc.style.display = 'flex';
+                        bloc.style.display = 'flex';
                     // }
                     showErrorModal(data.message || " Error");
                 }
