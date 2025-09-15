@@ -367,7 +367,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                         const participantName = document.getElementById('participant-name');
                         participantName.innerText = data.message || "";
                         // img.src = "../" + data.photo_path;
-                        img.style.display = 'block';
+                        // img.style.display = 'block';
                         bloc.style.display = 'flex';
                     // }
                     showErrorModal(data.message || " Error");
