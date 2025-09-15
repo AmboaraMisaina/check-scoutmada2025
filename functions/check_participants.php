@@ -49,7 +49,7 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
         </div>
     </div>
 <?php endif; ?>
-<div id="participant-photo" style="margin: 1.5rem auto 0 auto; display: flex; justify-content: center;">
+<div id="participant-photo" style="margin: 1.5rem auto 0 auto; display: flex; justify-content: center; flex-direction: column; align-items: center;">
     <div id="photo-wrapper" style="width:97vw; max-width:750px; aspect-ratio:0.97/1; display:none; align-items:center; justify-content:center; position:relative;">
         <img id="participant-img" src="" alt="Photo participant"
             style="width:100%; height:100%; object-fit:cover; border-radius:24px; border:4px solid #fff; display:none; background:#eee;">
@@ -157,7 +157,8 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     }
 
     #participant-name {
-        color: #000;
+        color: #FFF;
+        font-size: 1.5rem;
     }
 
     @keyframes pulse {
@@ -329,8 +330,9 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
     function closePhoto() {
         const bloc = document.getElementById('photo-wrapper');
         const img = document.getElementById('participant-img');
+        const imgCtn = document.getElementById('participant-photo');
         img.src = "";
-        img.style.display = 'none';
+        imgCtn.style.display = 'none';
         bloc.style.display = 'none';
         Html5Qrcode.getCameras().then(cameras => {
             if (cameras.length > 0) startScanner(cameras[cameras.length - 1].id);
@@ -351,20 +353,22 @@ $evenement_id = isset($_GET['evenement_id']) ? intval($_GET['evenement_id']) : 0
                     // afficher la photo
                     // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
+                        const imgCtn = document.getElementById('participant-photo');
                         const participantName = document.getElementById('participant-name');
                         const bloc = document.getElementById('photo-wrapper');
                         participantName.innerText = data.message || "";
                         img.src = "../" + data.photo_path;
-                        img.style.display = 'block';
+                        imgCtn.style.display = 'block';
                         bloc.style.display = 'flex';
                     // }
                     showSuccessModal();
                 } else {
                     // if (data.photo_path) {
                         const img = document.getElementById('participant-img');
+                        const imgCtn = document.getElementById('participant-photo');
                         const bloc = document.getElementById('photo-wrapper');
                         img.src = "../" + data.photo_path;
-                        img.style.display = 'block';
+                        imgCtn.style.display = 'block';
                         bloc.style.display = 'flex';
                     // }
                     showErrorModal(data.message || " Error");
