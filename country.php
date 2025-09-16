@@ -64,6 +64,7 @@ return [
   "Estonia",
   "United States",
   "Ethiopia",
+  'Eswatini',
   "Fiji",
   "Finland",
   "France",
