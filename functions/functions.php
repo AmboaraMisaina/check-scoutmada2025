@@ -94,6 +94,13 @@ function getParticipantById(PDO $pdo, int $id)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function normalizeName($name) {
+    $name = mb_strtolower($name, 'UTF-8');            // minuscules
+    $name = str_replace(['-', ' '], '', $name);       // supprimer tirets et espaces
+    $name = iconv('UTF-8', 'ASCII//TRANSLIT', $name); // enlever accents
+    return $name;
+}
+
 function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
 {
 
@@ -106,7 +113,9 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
     $stmt = $pdo->prepare("
         SELECT id, nom 
         FROM participants 
-        WHERE SOUNDEX(nom) = SOUNDEX(?)
+        WHERE 
+            SOUNDEX(REPLACE(REPLACE(LOWER(nom), ' ', ''), '-', ''))
+            = SOUNDEX(REPLACE(REPLACE(LOWER(?), ' ', ''), '-', ''))
     ");
     $stmt->execute([$nom]);
     if ($stmt->rowCount() > 0) {
