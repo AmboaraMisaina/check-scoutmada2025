@@ -26,6 +26,10 @@ function getNavigation($role)
                 'checkin.php' => '✅ Check-in',
                 'participants.php' => '👥 Participants',
             ];
+        case 'kit':
+            return [
+                'participants.php' => '👥 Participants',
+            ];
         case 'checkin':
             return [
                 'checkin.php' => '✅ Check-in',
