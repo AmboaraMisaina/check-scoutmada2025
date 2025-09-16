@@ -342,6 +342,7 @@ function toggleKit(id, btn) {
     console.log("Toggle kit for ID:", encodeURIComponent(id));
     fetch('functions/updateKit.php', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
     })
     .then(async res => {
