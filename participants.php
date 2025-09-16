@@ -347,14 +347,7 @@ function toggleKit(id, btn) {
     .then(res => res.json())
     .then(resp => {
         if (resp.success) {
-            // Ajoute ou enlève l’icône dans la colonne "Process"
-            const row = btn.closest('tr');
-            const processCell = row.querySelector('td:nth-child(5)');
-            if (processCell.innerHTML.includes('👕')) {
-                processCell.innerHTML = processCell.innerHTML.replace('👕', '');
-            } else {
-                processCell.innerHTML += ' 👕';
-            }
+            location.reload();
         } else {
             alert("❌ Erreur : " + resp.message);
         }
