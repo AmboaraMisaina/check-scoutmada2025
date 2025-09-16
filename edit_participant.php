@@ -27,30 +27,27 @@ if ($_POST) {
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
-    if (!in_array($nso, $countries)) {
-        $error = "The selected country is not valid.";
+
+    // Gestion de la photo uploadée
+    $photoPath = $participant['photo'] ?? null;
+    if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
+        $data = preg_replace('#^data:image/[^;]+;base64,#', '', $_POST['photoData']);
+        $decoded = base64_decode($data);
+
+        $uploadDir = 'uploads/photos/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        $photoName = uniqid('participant_') . '.jpg';
+        $photoPath = $uploadDir . $photoName;
+
+        file_put_contents($photoPath, $decoded);
+    }
+
+    $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath);
+    if ($result['success']) {
+        $message = $result['message'];
+        $participant = getParticipantById($pdo, (int)$id);
     } else {
-        // Gestion de la photo uploadée
-        $photoPath = $participant['photo'] ?? null;
-        if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
-            $data = preg_replace('#^data:image/[^;]+;base64,#', '', $_POST['photoData']);
-            $decoded = base64_decode($data);
-
-            $uploadDir = 'uploads/photos/';
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-            $photoName = uniqid('participant_') . '.jpg';
-            $photoPath = $uploadDir . $photoName;
-
-            file_put_contents($photoPath, $decoded);
-        }
-
-        $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath);
-        if ($result['success']) {
-            $message = $result['message'];
-            $participant = getParticipantById($pdo, (int)$id);
-        } else {
-            $error = $result['message'];
-        }
+        $error = $result['message'];
     }
 }
 
