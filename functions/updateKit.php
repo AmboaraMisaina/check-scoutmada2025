@@ -1,6 +1,4 @@
 <?php
-require_once 'functions/functions.php';
-
 header('Content-Type: application/json');
 
 if (!isset($_POST['id'])) {

@@ -343,7 +343,11 @@ function toggleKit(id, btn) {
         method: 'POST',
         body: 'id=' + encodeURIComponent(id)
     })
-    .then(res => (res.json()))
+    .then(async res => {
+        const txt = await res.text();
+        console.log("Réponse brute du serveur:", txt);
+        return JSON.parse(txt); // essaie de parser
+    })
     .then(resp => {
         console.log(resp)
         // if (resp.success) {
