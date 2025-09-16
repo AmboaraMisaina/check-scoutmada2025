@@ -32,8 +32,9 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '
 
     // Filtre to Print
     if ($to_print == '1') {
-        $sql .= " AND isPrinted = 0  AND withPhoto = 1 AND paid = 1";
+        $sql .= " AND isPrinted = 0 ";
     }
+
     // Filtre par type
     if (!empty($filter_type)) {
         $sql .= " AND type = :type";
@@ -67,7 +68,7 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print =
 
     // Filtre par colonne isPrinted
     if ($to_print == '1') {
-        $sql .= " AND isPrinted = 0  AND withPhoto = 1 AND paid = 1";
+        $sql .= " AND isPrinted = 0";
     }
     // Filtre par type
     if (!empty($filter_type)) {
