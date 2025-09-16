@@ -344,8 +344,8 @@ function toggleKit(id, btn) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
     })
-    .then(res => res)
-        console.log(res)
+    .then(resp => {
+        console.log(resp)
         // if (resp.success) {
         //     location.reload();
         // } else {
