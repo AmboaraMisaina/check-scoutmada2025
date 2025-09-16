@@ -164,7 +164,7 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
 function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $photoPath = null)
 {
     // Vérifier les champs obligatoires
-    if (!$nom || !$email || !$type || !$pays) {
+    if (!$nom  || !$type || !$pays) {
         return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
     }
 
@@ -366,106 +366,102 @@ function genererFeuilleBadges($pdf, $badge1, $badge2 = null) {
 }
 
 function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
-    switch ($badgeData['type']) {
-        case 'organizing team':
-            $type = '1';
-            break;
-        case 'delegate':
-            $type = '2';
-            break;
-        case 'observer':
-            $type = '3';
-            break;
-        case 'wosm team':
-            $type = '4';
-            break;  
-        case 'partner':
-            $type = '5';
-            break;
-        case 'international service team':
-            $type = '6';
-            break;
-        default:
-            $type = '-1';
-            break;
+    // --- Déterminer le type ---
+    switch (strtolower($badgeData['type'])) {
+        case 'organizing team':  $type = '1'; break;
+        case 'delegate':         $type = '2'; break;
+        case 'observer':         $type = '3'; break;
+        case 'wosm team':        $type = '4'; break;
+        case 'partner':          $type = '5'; break;
+        case 'international service team': $type = '6'; break;
+        default:                 $type = '-1'; break;
     }
 
+    // --- Templates ---
     $rectoTemplate = __DIR__ . '/../template/BADGE_' . $type . '.png';
     $versoTemplate = __DIR__ . '/../template/BADGE_0.png';
     $pdf->Image($rectoTemplate, $x, $y, $w, $h);
 
-    $maxWidth = $w - 26; // largeur max dispo pour le texte
-    $nom = utf8_decode($badgeData['nom']);
+    // --- Données ---
+    $maxWidth = $w - 26;
+    $nom  = utf8_decode(trim($badgeData['nom']));
+    $pays = utf8_decode(trim($badgeData['pays']));
 
-    // Définir police
+    // --- Polices ---
     $pdf->AddFont('NotoSans','','NotoSans.php');
     $pdf->AddFont('NotoSansBold','B','NotoSans-Bold.php');
     $pdf->AddFont('ScoutsGTPlanarBold', 'B', 'Scouts-GT-Planar-Bold.php');
-
     $pdf->SetFont('ScoutsGTPlanarBold', 'B', 14);
     $pdf->SetTextColor(0, 0, 0, 0);
 
-    // Découper le nom en mots dynamiquement
-    $words = explode(" ", $nom);
-    $line1 = "";
-    $line2 = "";
-
-    foreach ($words as $word) {
-        $testLine = trim($line1 . " " . $word);
-        if ($pdf->GetStringWidth($testLine) <= $maxWidth) {
-            $line1 = $testLine;
-        } else {
-            $line2 .= " " . $word;
+    // --- Fonction utilitaire pour couper en 2 lignes ---
+    $splitTwoLines = function($text) use ($pdf, $maxWidth) {
+        $words = explode(" ", $text);
+        $line1 = "";
+        $line2 = "";
+        foreach ($words as $word) {
+            $testLine = trim($line1 . " " . $word);
+            if ($pdf->GetStringWidth($testLine) <= $maxWidth) {
+                $line1 = $testLine;
+            } else {
+                $line2 .= " " . $word;
+            }
         }
-    }
-    if (!empty(trim($line2))) {
+        return [trim($line1), trim($line2)];
+    };
+
+    // --- Appliquer sur nom et pays ---
+    list($ligne1Nom, $ligne2Nom)   = $splitTwoLines($nom);
+    list($ligne1Pays, $ligne2Pays) = $splitTwoLines($pays);
+
+    // --- Nom ---
+    if (!empty($ligne2Nom)) {
         $pdf->SetFont('ScoutsGTPlanarBold', 'B', 12);
     }
-
     if ($type != "-1") {
-        // --- Première ligne  ---
-        $pdf->SetXY($x + 12 , $y + $h - 66);
-        $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
+        $pdf->SetXY($x + 12, $y + $h - 66);
+        $pdf->Cell($maxWidth, 6, $ligne1Nom, 0, 0, 'C');
 
-        // --- Deuxième ligne si nécessaire ---
-        if (!empty(trim($line2))) {
-            $pdf->SetXY($x + 11, $y + $h - 62);
-            $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+        if (!empty($ligne2Nom)) {
+            $pdf->SetXY($x + 12, $y + $h - 61);
+            $pdf->Cell($maxWidth, 6, $ligne2Nom, 0, 0, 'C');
         }
 
-        
-        // === Pays ===
+        // --- Pays ---
         $pdf->SetFont('ScoutsGTPlanarBold', 'B', 14);
-        $pdf->SetTextColor(0,0,0,0);
-        $pays = utf8_decode($badgeData['pays']);
-        $pdf->SetXY($x, $y + $h - 45);
-        $pdf->Cell($w, 6, $pays, 0, 0, 'C');
-    }else{
-        $pdf->SetXY($x + 12 , $y + $h - 62);
-        $pdf->Cell($maxWidth, 6, trim($line1), 0, 0, 'C');
+        if (!empty($ligne2Pays)) {
+            $pdf->SetFont('ScoutsGTPlanarBold', 'B', 12);
+        }
+        $pdf->SetXY($x, $y + $h - 47);
+        $pdf->Cell($w, 6, $ligne1Pays, 0, 0, 'C');
 
-        // --- Deuxième ligne si nécessaire ---
-        if (!empty(trim($line2))) {
-            $pdf->SetXY($x + 11, $y + $h - 60);
-            $pdf->Cell($maxWidth, 6, trim($line2), 0, 0, 'C');
+        if (!empty($ligne2Pays)) {
+            $pdf->SetXY($x, $y + $h - 41);
+            $pdf->Cell($w, 6, $ligne2Pays, 0, 0, 'C');
+        }
+    } else {
+        $pdf->SetXY($x + 12, $y + $h - 62);
+        $pdf->Cell($maxWidth, 6, $ligne1Nom, 0, 0, 'C');
+
+        if (!empty($ligne2Nom)) {
+            $pdf->SetXY($x + 12, $y + $h - 56);
+            $pdf->Cell($maxWidth, 6, $ligne2Nom, 0, 0, 'C');
         }
     }
 
-    // --- Verso (QR Code) ---
+    // --- Verso avec QR ---
     if (!empty($badgeData['qr_code'])) {
         $pdf->Image($versoTemplate, $x + $w, $y, $w, $h);
-        $qr_url = "https://api.qrserver.com/v1/create-qr-code/?data=" . urlencode($badgeData['qr_code']) . "&size=200x200";
 
+        $qr_url = "https://api.qrserver.com/v1/create-qr-code/?data=" . urlencode($badgeData['qr_code']) . "&size=200x200";
         $tmpDir = __DIR__ . '/../tmp';
-        if (!is_dir($tmpDir)) {
-            mkdir($tmpDir, 0777, true);
-        }
+        if (!is_dir($tmpDir)) mkdir($tmpDir, 0777, true);
 
         $qr_tmp = $tmpDir . "/qr_" . md5($badgeData['qr_code']) . ".png";
         file_put_contents($qr_tmp, file_get_contents($qr_url));
 
-        $qrCodeSize = 50; // Modifier cette valeur pour ajuster la taille du QR code
-        $pdf->Image($qr_tmp, $x + $w + ($w / 2 - $qrCodeSize / 2), $y + ($h / 2 - $qrCodeSize / 2), $qrCodeSize, $qrCodeSize);
+        $qrCodeSize = 50;
+        $pdf->Image($qr_tmp, $x + $w + ($w/2 - $qrCodeSize/2), $y + ($h/2 - $qrCodeSize/2), $qrCodeSize, $qrCodeSize);
         unlink($qr_tmp);
     }
 }
