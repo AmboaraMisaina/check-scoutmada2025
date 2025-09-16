@@ -1,32 +1,34 @@
 <?php
 require_once 'functions/functions.php';
 
-header('Content-Type: application/json');
+echo 1;
 
-$response = [];
+// header('Content-Type: application/json');
 
-try {
-    // Vérifie que l'id est envoyé
-    if (!isset($_GET['id'])) {
-        throw new Exception('Missing ID');
-    }
+// $response = [];
 
-    $id = intval($_GET['id']);
+// try {
+//     // Vérifie que l'id est envoyé
+//     if (!isset($_GET['id'])) {
+//         throw new Exception('Missing ID');
+//     }
 
-    // Vérifie que $pdo existe
-    global $pdo;
-    if (!$pdo) {
-        throw new Exception('PDO not initialized');
-    }
+//     $id = intval($_GET['id']);
 
-    // Appel de ta fonction existante
-    updateKit($pdo, $id);
+//     // Vérifie que $pdo existe
+//     global $pdo;
+//     if (!$pdo) {
+//         throw new Exception('PDO not initialized');
+//     }
 
-    $response = ['success' => true];
+//     // Appel de ta fonction existante
+//     updateKit($pdo, $id);
 
-} catch (Exception $e) {
-    $response = ['success' => false, 'message' => $e->getMessage()];
-}
+//     $response = ['success' => true];
 
-echo json_encode($response);
-exit;
+// } catch (Exception $e) {
+//     $response = ['success' => false, 'message' => $e->getMessage()];
+// }
+
+// echo json_encode($response);
+// exit;
