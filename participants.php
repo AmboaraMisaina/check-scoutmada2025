@@ -346,6 +346,7 @@ function toggleKit(id, btn) {
     })
     // .then(res => res.json()) 
     .then(async res => {
+        console.log("Raw response :", res);
         const txt = await res.text();
         console.log("Raw response text:", txt);
         return JSON.parse(txt); // essaie de parser
