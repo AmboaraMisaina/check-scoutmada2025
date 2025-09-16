@@ -31,7 +31,7 @@ if (isset($_GET['delete'])) {
 
 // Récupérer tous les événements
 $evenements = [];
-$stmt = $pdo->query("SELECT * FROM evenements ORDER BY id DESC");
+$stmt = $pdo->query("SELECT * FROM evenements ORDER BY date_evenement DESC");
 if ($stmt) {
     $evenements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
