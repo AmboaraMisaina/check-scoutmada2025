@@ -102,14 +102,19 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
         return ['success' => false, 'message' => ' Please fill in all fields correctly.'];
     }
 
-    // Vérifier si l'email existe déjà
-    if ( !empty($email) ) {
-        $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ?");
-        $stmt->execute([$email]);
-        if ($stmt->rowCount() > 0) {
-            return ['success' => false, 'message' => 'Another participant with this email already exists.'];
-        }
-
+    // Vérifier si un nom similaire existe avec SOUNDEX
+    $stmt = $pdo->prepare("
+        SELECT id, nom 
+        FROM participants 
+        WHERE SOUNDEX(nom) = SOUNDEX(?)
+    ");
+    $stmt->execute([$nom]);
+    if ($stmt->rowCount() > 0) {
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+        return [
+            'success' => false, 
+            'message' => "A participant with a similar sounding name already exists: ID = {$existing['id']}, Name = {$existing['nom']}"
+        ];
     }
 
     // Insertion avec pays
