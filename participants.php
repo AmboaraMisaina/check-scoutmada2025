@@ -339,7 +339,7 @@ document.querySelectorAll('input[type=file][id^="photoInput-"]').forEach(input =
 });
 
 function toggleKit(id, btn) {
-    console.log("Toggle kit for ID:", id);
+    console.log("Toggle kit for ID:", encodeURIComponent(id));
     fetch('functions/updateKit.php', {
         method: 'POST',
         body: 'id=' + encodeURIComponent(id)
