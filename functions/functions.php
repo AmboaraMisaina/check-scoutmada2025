@@ -132,8 +132,8 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
         WHERE 
             SOUNDEX(REPLACE(REPLACE(LOWER(nom), ' ', ''), '-', ''))
             = SOUNDEX(REPLACE(REPLACE(LOWER(?), ' ', ''), '-', ''))
-            AND $likeSql
     ");
+
     $stmt->execute([$nom]);
     if ($stmt->rowCount() > 0) {
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
