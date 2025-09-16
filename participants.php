@@ -344,13 +344,17 @@ function toggleKit(id, btn) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
     })
-    .then(async res => res.json())
+    .then(async res => {
+        const txt = await res.text();
+        return JSON.parse(txt); // essaie de parser
+    })
     .then(resp => {
-        if (resp.success) {
-            location.reload();
-        } else {
-            alert("❌ Erreur : " + resp.message);
-        }
+        console.log(resp)
+        // if (resp.success) {
+        //     location.reload();
+        // } else {
+        //     alert("❌ Erreur : " + resp.message);
+        // }
     })
     .catch(err => alert("Erreur réseau : " + err));
 }
