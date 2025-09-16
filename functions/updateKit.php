@@ -1,4 +1,6 @@
 <?php
+require_once 'functions/functions.php';
+
 header('Content-Type: application/json');
 
 if (!isset($_POST['id'])) {
@@ -9,9 +11,7 @@ if (!isset($_POST['id'])) {
 $id = intval($_POST['id']);
 
 try {
-    
-    $stmt = $pdo->prepare("UPDATE participants SET kit=true WHERE id = ?");
-    $stmt->execute([$id]);
+    updateKit($pdo, $id); // ta fonction déjà existante
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

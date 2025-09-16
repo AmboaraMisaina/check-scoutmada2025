@@ -339,24 +339,18 @@ document.querySelectorAll('input[type=file][id^="photoInput-"]').forEach(input =
 });
 
 function toggleKit(id, btn) {
-    console.log("Toggle kit for ID:", encodeURIComponent(id));
     fetch('functions/updateKit.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
     })
-    .then(async res => {
-        const txt = await res.text();
-        console.log("Réponse brute du serveur:", txt);
-        return JSON.parse(txt); // essaie de parser
-    })
+    .then(async res => res.json())
     .then(resp => {
-        console.log(resp)
-        // if (resp.success) {
-        //     location.reload();
-        // } else {
-        //     alert("❌ Erreur : " + resp.message);
-        // }
+        if (resp.success) {
+            location.reload();
+        } else {
+            alert("❌ Erreur : " + resp.message);
+        }
     })
     .catch(err => alert("Erreur réseau : " + err));
 }
