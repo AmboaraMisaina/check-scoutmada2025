@@ -109,6 +109,22 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
         return ['success' => false, 'message' => ' Please fill in all fields correctly.'];
     }
 
+    // Normaliser le nom : retirer espaces multiples et tirets, mettre en majuscules
+    $normalizedNom = normalizeName($nom);
+
+    // Séparer les mots du nom
+    $words = explode(' ', $normalizedNom);
+
+    // Construire les conditions LIKE pour chaque mot
+    $likeConditions = [];
+    $params = [];
+    foreach ($words as $word) {
+        $likeConditions[] = "nom LIKE ?";
+        $params[] = "%$word%";
+    }
+    $likeSql = implode(' AND ', $likeConditions);
+
+
     // Vérifier si un nom similaire existe avec SOUNDEX
     $stmt = $pdo->prepare("
         SELECT id, nom 
@@ -116,6 +132,7 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
         WHERE 
             SOUNDEX(REPLACE(REPLACE(LOWER(nom), ' ', ''), '-', ''))
             = SOUNDEX(REPLACE(REPLACE(LOWER(?), ' ', ''), '-', ''))
+            AND $likeSql
     ");
     $stmt->execute([$nom]);
     if ($stmt->rowCount() > 0) {
