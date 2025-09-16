@@ -194,6 +194,10 @@ table {
 
                                         <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
                                     </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
+                                    </td>
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
                                     <td>
