@@ -29,16 +29,16 @@ if (isset($_GET['delete'])) {
 
 // Récupérer les filtres
 $filter_name = trim($_GET['filter_name'] ?? '');
-$filter_printed = $_GET['filter_printed'] ?? '';
 $filter_type = $_GET['filter_type'] ?? '';
+$to_print = $_GET['to_print'] ?? 0;
 
 // Pagination
 $perPage = 20;
 $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
-$participants = getAllParticipantsWithFilter($pdo, $filter_name, $filter_printed, $filter_type, $perPage, $offset);
-$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $filter_printed, $filter_type);
+$participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $perPage, $offset);
+$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type);
 $totalPages = ceil($totalParticipants / $perPage);
 
 include 'includes/header.php';
@@ -110,11 +110,13 @@ table {
     <div class="card" style="padding:1rem; margin-bottom:1rem;">
         <form method="GET" action="participants.php" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
             <input type="text" name="filter_name" placeholder="Search by name" value="<?= htmlspecialchars($filter_name) ?>" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc; flex:1;">
-            <select name="filter_printed" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+            <!-- <select name="to_print" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                 <option value=""></option>
-                <option value="1" <?= ($filter_printed === '1') ? 'selected' : '' ?>>Printed</option>
-                <option value="0" <?= ($filter_printed === '0') ? 'selected' : '' ?>>Not Printed</option>
-            </select>
+                <option value="1" <?= ($to_print === '1') ? 'selected' : '' ?>>Printed</option>
+                <option value="0" <?= ($to_print === '0') ? 'selected' : '' ?>>Not Printed</option>
+            </select> -->
+
+
             <select name="filter_type" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                 <option value="">Category</option>
                 <option value="delegate" <?= ($filter_type === 'delegate') ? 'selected' : '' ?>>Delegate</option>
@@ -125,6 +127,9 @@ table {
                 <option value="Partner" <?= ($filter_type === 'Partner') ? 'selected' : '' ?>>Partner</option>
                 <option value="guest" <?= ($filter_type === 'guest') ? 'selected' : '' ?>>Guest</option>
             </select>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="to_print" value="1" <?= ($to_print === '1') ? 'checked' : '' ?>> To Print
+            </label>
             <button type="submit" class="btn btn-primary">Filter</button>
             <a href="participants.php" class="btn btn-secondary">Reset</a>
         </form>
@@ -185,6 +190,10 @@ table {
                                         <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
                                     </td>
                                     
+                                    <td>
+                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
+                                    </td>
+                                    
                                 <?php } if ($_SESSION['role'] == 'registration') {
                                     ?>
                                     <td>
@@ -192,10 +201,6 @@ table {
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
 
                                         <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
-                                    </td>
-
-                                    <td>
-                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                     </td>
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
@@ -221,13 +226,13 @@ table {
     <div style="display:flex; justify-content:center; align-items:center; margin-top:1rem; gap:0.3rem; flex-wrap:wrap;">
         <!-- Bouton Précédent -->
         <?php if ($pages > 1): ?>
-            <a href="?page=<?= $pages-1 ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+            <a href="?page=<?= $pages-1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">« Précédent</a>
         <?php endif; ?>
 
         <!-- Numéros de page -->
         <?php for ($p = 1; $p <= $totalPages; $p++): ?>
-            <a href="?page=<?= $p ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+            <a href="?page=<?= $p ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:<?= ($p === $pages) ? '#2ecc71' : '#f1f1f1' ?>; color:<?= ($p === $pages) ? 'white' : '#333' ?>; font-weight:<?= ($p === $pages) ? 'bold' : 'normal' ?>;">
                <?= $p ?>
             </a>
@@ -235,7 +240,7 @@ table {
 
         <!-- Bouton Suivant -->
         <?php if ($pages < $totalPages): ?>
-            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&filter_printed=<?= $filter_printed ?>"
+            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">Suivant »</a>
         <?php endif; ?>
     </div>
