@@ -344,13 +344,13 @@ function toggleKit(id, btn) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
     })
-    .then(res => res.json()) 
-    // .then(async res => {
-    //     const txt = await res.text();
-    //     return JSON.parse(txt); // essaie de parser
-    // })
+    // .then(res => res.json()) 
+    .then(async res => {
+        const txt = await res.text();
+        return JSON.parse(txt); // essaie de parser
+    })
     .then(resp => {
-        // console.log(resp)
+        console.log(resp)
         if (resp.success) {
             location.reload();
         } else {

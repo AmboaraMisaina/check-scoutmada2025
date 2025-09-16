@@ -1,8 +1,6 @@
 <?php
 require_once 'functions/functions.php';
 
-// Capture toute sortie avant le JSON
-ob_start();
 header('Content-Type: application/json');
 
 $response = [];
@@ -30,7 +28,5 @@ try {
     $response = ['success' => false, 'message' => $e->getMessage()];
 }
 
-// Supprime toute sortie non désirée
-ob_end_clean();
 echo json_encode($response);
 exit;
