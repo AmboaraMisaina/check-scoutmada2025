@@ -1,18 +1,32 @@
 <?php
 require_once 'functions/functions.php';
 
+// Pour éviter tout texte avant le JSON
+ob_start();
 header('Content-Type: application/json');
 
-if (!isset($_POST['id'])) {
-    echo json_encode(['success' => false, 'message' => 'Missing ID']);
-    exit;
-}
-
-$id = intval($_POST['id']);
+$response = [];
 
 try {
-    updateKit($pdo, $id); // ta fonction déjà existante
-    echo json_encode(['success' => true]);
+    if (!isset($_POST['id'])) {
+        throw new Exception('Missing ID');
+    }
+
+    $id = intval($_POST['id']);
+
+    // Assurez-vous que $pdo est défini
+    global $pdo;
+    if (!$pdo) {
+        throw new Exception('PDO not initialized');
+    }
+
+    updateKit($pdo, $id);
+
+    $response = ['success' => true];
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    $response = ['success' => false, 'message' => $e->getMessage()];
 }
+
+// Nettoie toute sortie accidentelle
+ob_end_clean();
+echo json_encode($response);
