@@ -27,12 +27,6 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-if (isset($_GET['kit'])) {
-    updateKit($pdo, intval($_GET['kit']));
-    header("Refresh:0, url=participants.php");
-    exit;
-}
-
 // Récupérer les filtres
 $filter_name = trim($_GET['filter_name'] ?? '');
 $filter_printed = $_GET['filter_printed'] ?? '';
@@ -187,6 +181,7 @@ table {
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
                                         
                                         <button type="button" class="btn btn-warning" onclick="toggleKit(<?= $p['id']; ?>, this)">👕</button>
+                                        <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
                                     </td>
                                     
                                 <?php } if ($_SESSION['role'] == 'registration') {
@@ -195,14 +190,12 @@ table {
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
 
-                                        <!-- <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">💰</button> -->
+                                        <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
                                     </td>
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
                                     <td>
                                         <button type="button" class="btn btn-warning" onclick="toggleKit(<?= $p['id']; ?>, this)">👕</button>
-                                        
-                                        <!-- <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">💰</button> -->
                                     </td>
                                     <?php
                                 } ?>
@@ -340,6 +333,30 @@ document.querySelectorAll('input[type=file][id^="photoInput-"]').forEach(input =
 
 function toggleKit(id, btn) {
     fetch('functions/updateKit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+    })
+    // .then(res => res.json()) 
+    .then(async res => {
+        console.log("Raw response :", res);
+        const txt = await res.text();
+        console.log("Raw response text:", txt);
+        return JSON.parse(txt); // essaie de parser
+    })
+    .then(resp => {
+        console.log(resp)
+        if (resp.success) {
+            location.reload();
+        } else {
+            alert("❌ Erreur : " + resp.message);
+        }
+    })
+    .catch(err => alert("Erreur réseau : " + err));
+}
+
+function togglePay(id, btn) {
+    fetch('functions/updatePay.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
