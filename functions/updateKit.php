@@ -18,10 +18,10 @@ try {
     $id = intval($_GET['id']);
 
     // Vérifie que $pdo existe
-    global $pdo;
-    if (!$pdo) {
-        throw new Exception('PDO not initialized');
-    }
+    // global $pdo;
+    // if (!$pdo) {
+    //     throw new Exception('PDO not initialized');
+    // }
 
     $stmt = $pdo->prepare("UPDATE participants SET kit=true WHERE id = ?");
     $stmt->execute([$id]);
