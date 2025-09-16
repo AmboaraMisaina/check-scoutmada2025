@@ -20,7 +20,7 @@ function getAllParticipants(PDO $pdo)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '', $filter_type = '', $limit = 20, $offset = 0) {
+function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '', $filter_type = '', $limit = 20, $offset = 0) {
     $sql = "SELECT * FROM participants WHERE 1=1";
     $params = [];
 
@@ -30,11 +30,9 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_print
         $params[':name'] = '%' . $filter_name . '%';
     }
 
-    // Filtre par imprimé
-    if ($filter_printed === '1') {
-        $sql .= " AND isPrinted = 1";
-    } elseif ($filter_printed === '0') {
-        $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
+    // Filtre to Print
+    if ($to_print == '1') {
+        $sql .= " AND isPrinted = 0  AND withPhoto = 1 AND paid = 1";
     }
     // Filtre par type
     if (!empty($filter_type)) {
@@ -57,7 +55,7 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_print
 }
 
 
-function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_printed = '' , $filter_type = '') {
+function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '' , $filter_type = '') {
     $sql = "SELECT COUNT(*) as total FROM participants WHERE 1=1";
     $params = [];
 
@@ -68,10 +66,8 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $filter_pri
     }
 
     // Filtre par colonne isPrinted
-    if ($filter_printed === '1') {
-        $sql .= " AND isPrinted = 1";
-    } elseif ($filter_printed === '0') {
-        $sql .= " AND (isPrinted = 0 OR isPrinted IS NULL)";
+    if ($to_print == '1') {
+        $sql .= " AND isPrinted = 0  AND withPhoto = 1 AND paid = 1";
     }
     // Filtre par type
     if (!empty($filter_type)) {
