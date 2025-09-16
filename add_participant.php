@@ -93,13 +93,13 @@ include 'includes/header.php';
         <?php endif; ?>
 
         <form method="POST" id="participantForm" autocomplete="off">
-            <div class="form-group" style="margin-bottom:1.2rem;">
+            <!-- <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="prenom">First name</label>
                 <input type="text" id="prenom" name="prenom" required>
-            </div>
+            </div> -->
 
             <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="nom">Last name</label>
+                <label for="nom">Name</label>
                 <input type="text" id="nom" name="nom" required>
             </div>
 
