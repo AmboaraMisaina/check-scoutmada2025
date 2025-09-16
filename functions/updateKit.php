@@ -7,11 +7,11 @@ $response = [];
 
 try {
     // Vérifie que l'id est envoyé
-    if (!isset($_POST['id'])) {
+    if (!isset($_GET['id'])) {
         throw new Exception('Missing ID');
     }
 
-    $id = intval($_POST['id']);
+    $id = intval($_GET['id']);
 
     // Vérifie que $pdo existe
     global $pdo;
