@@ -346,6 +346,7 @@ function toggleKit(id, btn) {
     })
     .then(res => res.text())
     .then(resp => {
+        console.log(resp)
         if (resp.success) {
             location.reload();
         } else {
