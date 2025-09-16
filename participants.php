@@ -41,6 +41,7 @@ $participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $fil
 $totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type);
 $totalPages = ceil($totalParticipants / $perPage);
 
+
 include 'includes/header.php';
 ?>
 
@@ -166,7 +167,25 @@ table {
                     <?php if ($participants): ?>
                         <?php foreach ($participants as $p): ?>
                             <tr style="border-bottom:1px solid #e1e5e9;">
-                                <td style="text-align:center;"><input type="checkbox" class="print-checkbox" name="print_ids[]" value="<?= $p['id'] ?>" <?= !empty($p['isPrinted']) ? 'disabled' : '' ?>></td>
+                                <td style="text-align:center;">
+                                    <?php
+                                        $disabled = true; // par défaut désactivé
+
+                                        // Si pas encore imprimé
+                                        if (empty($p['isPrinted'])) {
+                                            if (in_array(strtolower($p['type']), ['delegate', 'observer'])) {
+                                                // Pour délégué et observateur → payant et photo obligatoires
+                                                if (!empty($p['paid']) && !empty($p['withPhoto'])) {
+                                                    $disabled = false;
+                                                }
+                                            } else {
+                                                // Pour les autres types → pas de conditions
+                                                $disabled = false;
+                                            }
+                                        }
+                                    ?>
+                                    <input type="checkbox" class="print-checkbox" name="print_ids[]" value="<?= $p['id'] ?>" <?= $disabled ? 'disabled' : '' ?>>
+                                </td>
                                 <td><?= htmlspecialchars($p['nom']); ?></td>
                                 <!-- <td><?= htmlspecialchars($p['email']); ?></td> -->
                                 <td><?= htmlspecialchars($p['pays']); ?></td>
