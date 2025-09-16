@@ -170,12 +170,6 @@ function deleteParticipant(PDO $pdo, $id)
     return $stmt->execute([$id]);
 }
 
-function updateKit(PDO $pdo, $id)
-{
-    $stmt = $pdo->prepare("UPDATE participants SET kit=true WHERE id = ?");
-    return $stmt->execute([$id]);
-}
-
 function updateWithPhoto(PDO $pdo, $id, $withPhoto)
 {
     $stmt = $pdo->prepare("UPDATE participants SET withPhoto = ? WHERE id = ?");

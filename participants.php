@@ -172,7 +172,12 @@ table {
                                 <!-- <td><?= htmlspecialchars($p['email']); ?></td> -->
                                 <td><?= htmlspecialchars($p['pays']); ?></td>
                                 <td><?= htmlspecialchars($p['type']); ?></td>
-                                <td style="text-align:center;"><?= !empty($p['isPrinted']) ? '🖨️' : '' ?> <?= !empty($p['withPhoto']) ? '📸' : '' ?> <?= !empty($p['kit']) ? '👕' : '' ?></td>
+                                <td style="text-align:center;">
+                                    <?= !empty($p['isPrinted']) ? '🖨️' : '' ?> 
+                                    <?= !empty($p['withPhoto']) ? '📸' : '' ?> 
+                                    <?= !empty($p['kit']) ? '👕' : '' ?>
+                                    <?= !empty($p['paid']) ? '💰' : '' ?>
+                                </td>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
                                     <td>
                                         <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
@@ -181,7 +186,7 @@ table {
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
                                         
-                                        <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">👕</button>
+                                        <button type="button" class="btn btn-warning" onclick="toggleKit(<?= $p['id']; ?>, this)">👕</button>
                                     </td>
                                     
                                 <?php } if ($_SESSION['role'] == 'registration') {
@@ -189,11 +194,15 @@ table {
                                     <td>
                                         <button type="button" class="btn btn-info" onclick="document.getElementById('photoInput-<?= $p['id'] ?>').click()">📸</button>
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
+
+                                        <!-- <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">💰</button> -->
                                     </td>
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
                                     <td>
-                                        <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">👕</button>
+                                        <button type="button" class="btn btn-warning" onclick="toggleKit(<?= $p['id']; ?>, this)">👕</button>
+                                        
+                                        <!-- <button type="button" class="btn btn-warning" onclick="window.location.href='participants.php?kit=<?= $p['id']; ?>'">💰</button> -->
                                     </td>
                                     <?php
                                 } ?>
@@ -328,4 +337,28 @@ document.querySelectorAll('input[type=file][id^="photoInput-"]').forEach(input =
         reader.readAsDataURL(file);
     });
 });
+
+function toggleKit(id, btn) {
+    fetch('functions/update_kit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+    })
+    .then(res => res.json())
+    .then(resp => {
+        if (resp.success) {
+            // Ajoute ou enlève l’icône dans la colonne "Process"
+            const row = btn.closest('tr');
+            const processCell = row.querySelector('td:nth-child(5)');
+            if (processCell.innerHTML.includes('👕')) {
+                processCell.innerHTML = processCell.innerHTML.replace('👕', '');
+            } else {
+                processCell.innerHTML += ' 👕';
+            }
+        } else {
+            alert("❌ Erreur : " + resp.message);
+        }
+    })
+    .catch(err => alert("Erreur réseau : " + err));
+}
 </script>
