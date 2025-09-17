@@ -185,8 +185,9 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
     }
 }
 // Met à jour un participant
-function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays)
+function updateParticipant(PDO $pdo, $id, $nom, $prenom, $type, $pays)
 {
+
     // Vérifier les champs obligatoires
     if (!$nom  || !$type || !$pays) {
         return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
@@ -194,7 +195,7 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays)
 
     // Mettre à jour le participant
     $stmt = $pdo->prepare("UPDATE participants SET nom = ?, email = ?, type = ?, pays = ? WHERE id = ?");
-    $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays, $id]);
+    $result = $stmt->execute([$nom . ' ' . $prenom, NULL, $type, $pays, $id]);
 
     if ($result) {
         return ['success' => true, 'message' => 'Participant updated successfully!'];
@@ -490,14 +491,13 @@ function exportParticipantsToExcel($pdo, $participants, $filename = 'participant
 
     $output = fopen('php://output', 'w');
 
-    fputcsv($output, ['ID', 'Name', 'Type', 'QR Code', 'Created At', 'Country','isPrinted', 'With Photo', 'kit', 'paid']);
+    fputcsv($output, ['ID', 'Name', 'Type', 'Created At', 'Country','isPrinted', 'With Photo', 'kit', 'paid']);
 
     foreach ($participants as $p) {
         fputcsv($output, [
             $p['id'],
             $p['nom'],
             $p['type'],
-            $p['qr_code'],
             $p['created_at'],
             $p['pays'],
             $p['isPrinted'] ? 'Yes' : 'No',

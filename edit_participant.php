@@ -23,11 +23,12 @@ $error = '';
 if ($_POST) {
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
-    $email = trim($_POST['mail'] ?? '');
+    $email = trim($_POST['mail'] ?? NULL);
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
-    $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso);
+
+    $result = updateParticipant($pdo, $id, $nom, $prenom, $type, $nso);
     if ($result['success']) {
         $message = $result['message'];
         $participant = getParticipantById($pdo, (int)$id);
