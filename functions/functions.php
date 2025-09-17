@@ -483,3 +483,29 @@ function ajouterBadgeRectoVerso($pdf, $badgeData, $x, $y, $w, $h) {
     }
 }
 
+function exportParticipantsToExcel($pdo, $participants, $filename = 'participants.csv') {
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=' . $filename);
+
+    $output = fopen('php://output', 'w');
+
+    fputcsv($output, ['ID', 'Name', 'Type', 'QR Code', 'Created At', 'Country','isPrinted', 'With Photo', 'kit', 'paid']);
+
+    foreach ($participants as $p) {
+        fputcsv($output, [
+            $p['id'],
+            $p['nom'],
+            $p['type'],
+            $p['qr_code'],
+            $p['created_at'],
+            $p['pays'],
+            $p['isPrinted'] ? 'Yes' : 'No',
+            $p['withPhoto'] ? 'Yes' : 'No',
+            $p['kit'] ? 'Yes' : 'No',
+            $p['paid'] ? 'Yes' : 'No'
+        ]);
+    }
+
+    fclose($output);
+    exit;
+}
