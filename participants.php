@@ -148,6 +148,7 @@ table {
         } ?>
 
         <div class="card" style="overflow-x:auto;">
+            <p><?php echo $totalParticipants; ?></p>
             <table style="width:100%; border-collapse:collapse; min-width:700px;">
                 <thead>
                     <tr style="background:#f1f1f1;">
