@@ -27,21 +27,6 @@ if ($_POST) {
     $type = $_POST['type'] ?? '';
     $nso = trim($_POST['nso'] ?? '');
 
-
-    // Gestion de la photo uploadée
-    $photoPath = $participant['photo'] ?? null;
-    if (isset($_POST['photoData']) && !empty($_POST['photoData'])) {
-        $data = preg_replace('#^data:image/[^;]+;base64,#', '', $_POST['photoData']);
-        $decoded = base64_decode($data);
-
-        $uploadDir = 'uploads/photos/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-        $photoName = uniqid('participant_') . '.jpg';
-        $photoPath = $uploadDir . $photoName;
-
-        file_put_contents($photoPath, $decoded);
-    }
-
     $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso);
     if ($result['success']) {
         $message = $result['message'];
@@ -59,7 +44,6 @@ include 'includes/header.php';
 
 <style>
 #nso { width: 100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem; }
-#photo-preview { display:none; border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa; }
 .form-group label { display:block; margin-bottom:0.4rem; font-weight:500; }
 .form-group input, .form-group select { width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem; }
 .btn { width:100%; padding:0.8rem; background:#38ef7d; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; margin-top:1rem; cursor:pointer; }
@@ -90,16 +74,6 @@ include 'includes/header.php';
                 <input type="text" id="nom" name="nom" required
                     value="<?= htmlspecialchars($participant['nom']) ?>">
             </div>
-
-            <!-- Photo -->
-            <!-- <div class="form-group" style="margin-bottom:1.2rem;">
-                <label for="photo">Photo</label>
-                <input type="file" id="photo" accept="image/*" capture="environment">
-                <div id="photo-preview-box" style="display:none; justify-content:center; margin-top:1rem;">
-                    <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa;" data-existing="<?= $participant['photo'] ?? '' ?>"></canvas>
-                </div>
-                <input type="hidden" name="photoData" id="photoData">
-            </div> -->
 
             <!-- Category -->
             <div class="form-group" style="margin-bottom:1.2rem;">
@@ -135,89 +109,6 @@ include 'includes/header.php';
 
 <script>
 new TomSelect("#nso", { create: false, sortField: {field:"text", direction:"asc"} });
-
-
-// Photo preview + compression
-        const photoInput = document.getElementById('photo');
-        const photoPreview = document.getElementById('photo-preview');
-        const photoPreviewBox = document.getElementById('photo-preview-box');
-        const photoDataInput = document.getElementById('photoData');
-
-// Affichage photo existante
-const existingPhoto = photoPreview.getAttribute('data-existing');
-if (existingPhoto) {
-    const img = new Image();
-    img.onload = function() {
-        photoPreview.width = img.width;
-        photoPreview.height = img.height;
-        const ctx = photoPreview.getContext('2d');
-        ctx.clearRect(0,0,img.width,img.height);
-        ctx.drawImage(img,0,0,img.width,img.height);
-        photoPreview.style.display = 'block';
-    }
-    img.src = existingPhoto;
-}
-
-// Compression et redimension
-photoInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-   if (!file) {
-        photoPreviewBox.style.display = 'none';
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-        const img = new Image();
-        img.onload = function() {
-            let width = img.width;
-            let height = img.height;
-            const MAX_WIDTH = 600, MAX_HEIGHT = 600;
-
-            if (width > height && width > MAX_WIDTH) {
-                height = Math.round(height * MAX_WIDTH / width);
-                width = MAX_WIDTH;
-            } else if (height > MAX_HEIGHT) {
-                width = Math.round(width * MAX_HEIGHT / height);
-                height = MAX_HEIGHT;
-            }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img,0,0,width,height);
-
-            // Compression progressive
-            let quality = 0.9;
-            let dataUrl = canvas.toDataURL('image/jpeg', quality);
-            const maxSizeKB = 100;
-            while ((dataUrl.length/1024) > maxSizeKB && quality > 0.1) {
-                quality -= 0.05;
-                dataUrl = canvas.toDataURL('image/jpeg', quality);
-            }
-
-            // Affichage preview
-            photoPreview.width = width;
-            photoPreview.height = height;
-            const ctxPreview = photoPreview.getContext('2d');
-            ctxPreview.clearRect(0,0,width,height);
-            const previewImg = new Image();
-                       previewImg.onload = function() {
-                ctxPreview.drawImage(previewImg,0,0,width,height);
-                photoPreview.style.display = 'block';
-                photoPreviewBox.style.display = 'flex'; // Affiche la boîte d'aperçu
-            }
-            previewImg.src = dataUrl;
-
-            // Stockage base64 compressée pour POST
-            photoDataInput.value = dataUrl;
-        }
-        img.src = ev.target.result;
-    }
-    reader.readAsDataURL(file);
-});
-
 
 function updateNsoField() {
     const type = document.getElementById('type').value;
