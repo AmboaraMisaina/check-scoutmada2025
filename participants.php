@@ -143,6 +143,7 @@ table {
             </label>
             <button type="submit" class="btn btn-primary">Filter</button>
             <a href="participants.php" class="btn btn-secondary">Reset</a>
+            <a href="functions/export.php?filter_name=<?= urlencode($filter_name) ?>&filter_type=<?= urlencode($filter_type) ?>&filter_paid=<?= urlencode($filter_paid) ?>&to_print=<?= urlencode($to_print) ?>" class="btn btn-info">Export</a>
         </form>
     </div>
 
