@@ -217,7 +217,7 @@ table {
                                         <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
                                     </td>
 
-                                    <?php if(!empty($p['isPrinted'])) { ?>
+                                    <?php if(empty($p['isPrinted'])) { ?>
                                         <td>
                                             <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
                                             <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
@@ -234,7 +234,7 @@ table {
                                         <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
                                     </td>
 
-                                    <?php if(!empty($p['isPrinted'])) { ?>
+                                    <?php if(empty($p['isPrinted'])) { ?>
                                         <td>
                                             <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                         </td>
