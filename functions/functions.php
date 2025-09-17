@@ -68,7 +68,7 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '
 }
 
 
-function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '' , $filter_type = '') {
+function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '' , $filter_type = '', $filter_paid = '') {
     $sql = "SELECT COUNT(*) as total FROM participants WHERE 1=1";
     $params = [];
 
@@ -90,6 +90,13 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print =
     if (!empty($filter_type)) {
         $sql .= " AND type = :type";
         $params[':type'] = $filter_type;
+    }
+    
+    // Filtre par payé
+    if ($filter_paid === '1') {
+        $sql .= " AND paid = 1";
+    } elseif ($filter_paid === '0') {
+        $sql .= " AND (paid = 0 OR paid IS NULL)";
     }
 
     $stmt = $pdo->prepare($sql);

@@ -39,7 +39,7 @@ $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
 $participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid, $perPage, $offset);
-$totalParticipants = count($participants);
+$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid);
 $totalPages = ceil($totalParticipants / $perPage);
 
 // Récupération des pays dans un tableau
