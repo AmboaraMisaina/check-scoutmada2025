@@ -42,7 +42,7 @@ if ($_POST) {
         file_put_contents($photoPath, $decoded);
     }
 
-    $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso, $photoPath);
+    $result = updateParticipant($pdo, $id, $nom, $prenom, $email, $type, $nso);
     if ($result['success']) {
         $message = $result['message'];
         $participant = getParticipantById($pdo, (int)$id);
@@ -92,14 +92,14 @@ include 'includes/header.php';
             </div>
 
             <!-- Photo -->
-            <div class="form-group" style="margin-bottom:1.2rem;">
+            <!-- <div class="form-group" style="margin-bottom:1.2rem;">
                 <label for="photo">Photo</label>
                 <input type="file" id="photo" accept="image/*" capture="environment">
                 <div id="photo-preview-box" style="display:none; justify-content:center; margin-top:1rem;">
                     <canvas id="photo-preview" style="border-radius:16px; border:2px solid #eee; max-width:160px; max-height:160px; background:#fafafa;" data-existing="<?= $participant['photo'] ?? '' ?>"></canvas>
                 </div>
                 <input type="hidden" name="photoData" id="photoData">
-            </div>
+            </div> -->
 
             <!-- Category -->
             <div class="form-group" style="margin-bottom:1.2rem;">

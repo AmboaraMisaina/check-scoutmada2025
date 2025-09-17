@@ -185,23 +185,16 @@ function addParticipant($pdo, $nom, $prenom, $email, $type, $pays, $photoPath)
     }
 }
 // Met à jour un participant
-function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $photoPath = null)
+function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays)
 {
     // Vérifier les champs obligatoires
     if (!$nom  || !$type || !$pays) {
         return ['success' => false, 'message' => 'Please fill in all fields correctly.'];
     }
 
-    // Vérifier si l'email existe déjà pour un autre participant
-    // $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ? AND id != ?");
-    // $stmt->execute([$email, $id]);
-    // if ($stmt->rowCount() > 0) {
-    //     return ['success' => false, 'message' => 'Another participant with this email already exists.'];
-    // }
-
     // Mettre à jour le participant
-    $stmt = $pdo->prepare("UPDATE participants SET nom = ?, email = ?, type = ?, pays = ?, photo = ? WHERE id = ?");
-    $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays, $photoPath, $id]);
+    $stmt = $pdo->prepare("UPDATE participants SET nom = ?, email = ?, type = ?, pays = ? WHERE id = ?");
+    $result = $stmt->execute([$nom . ' ' . $prenom, $email, $type, $pays, $id]);
 
     if ($result) {
         return ['success' => true, 'message' => 'Participant updated successfully!'];
