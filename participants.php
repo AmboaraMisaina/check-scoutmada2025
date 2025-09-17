@@ -218,10 +218,10 @@ table {
                                     </td>
 
                                     <?php if(!empty($p['isPrinted'])) { ?>
-                                    <td>
-                                        <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
-                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
-                                    </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
+                                            <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
+                                        </td>
                                     <?php } ?>
                                     
                                     
@@ -239,7 +239,7 @@ table {
                                             <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                         </td>
                                     <?php } ?>
-                                    
+
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
                                     <td>
