@@ -42,6 +42,15 @@ $participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $fil
 $totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type);
 $totalPages = ceil($totalParticipants / $perPage);
 
+// Récupération des pays dans un tableau
+$paysList = array_column($participants, 'pays');
+
+// Suppression des doublons
+$distinctCountries = array_unique($paysList);
+
+// Nombre de pays distincts
+$totalCountries = count($distinctCountries);
+
 
 include 'includes/header.php';
 ?>
@@ -149,7 +158,7 @@ table {
         } ?>
 
         <div class="card" style="overflow-x:auto;">
-            <p><?php echo "Total: ". $totalParticipants; ?></p>
+            <p><?php echo "Total: ". $totalParticipants; ?> <?php "NSO: ".$totalCountries ?></p>
             <table style="width:100%; border-collapse:collapse; min-width:700px;">
                 <thead>
                     <tr style="background:#f1f1f1;">
