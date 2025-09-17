@@ -113,7 +113,7 @@ table {
         <form method="GET" action="participants.php" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
             <input type="text" name="filter_name" placeholder="Search by name" value="<?= htmlspecialchars($filter_name) ?>" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc; flex:1;">
             <select name="filter_paid" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
-                <option value=""></option>
+                <option value="">Payment</option>
                 <option value="1" <?= ($to_print === '1') ? 'selected' : '' ?>>Paid</option>
                 <option value="0" <?= ($to_print === '0') ? 'selected' : '' ?>>Not Paid</option>
             </select>
