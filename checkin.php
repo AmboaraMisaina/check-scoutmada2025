@@ -14,6 +14,10 @@ $evenements = getEvenementsDuJour($pdo, $aujourdhui);
 
 include 'includes/header.php';
 
+if ($_SESSION['role'] !== 'print')  {
+    header("Location: participants.php");
+}
+
 ?>
 
 <div class="container">
