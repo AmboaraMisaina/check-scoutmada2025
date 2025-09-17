@@ -148,7 +148,7 @@ table {
         } ?>
 
         <div class="card" style="overflow-x:auto;">
-            <p><?php echo $totalParticipants; ?></p>
+            <p><?php echo "Total:". $totalParticipants; ?></p>
             <table style="width:100%; border-collapse:collapse; min-width:700px;">
                 <thead>
                     <tr style="background:#f1f1f1;">
@@ -208,11 +208,9 @@ table {
 
                                     <td>
                                         <button type="button" class="btn btn-danger" onclick="if(confirm('Supprimer ce participant ?')) window.location.href='participants.php?delete=<?= $p['id']; ?>'">🗑️</button>
-                                    </td>
-                                    
-                                    <td>
                                         <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                     </td>
+                                    
                                     
                                 <?php } if ($_SESSION['role'] == 'registration') {
                                     ?>
@@ -221,6 +219,9 @@ table {
                                         <input type="file" id="photoInput-<?= $p['id'] ?>" data-id="<?= $p['id'] ?>" accept="image/*" capture="environment" style="display:none;">
 
                                         <button type="button" class="btn btn-success" onclick="togglePay(<?= $p['id']; ?>, this)">💰</button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-secondary" onclick="window.location.href='edit_participant.php?id=<?= $p['id']; ?>'">✏️</button>
                                     </td>
                                 <?php } if ($_SESSION['role'] == 'kit') {
                                     ?>
