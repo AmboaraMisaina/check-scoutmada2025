@@ -35,6 +35,11 @@ function getNavigation($role)
                 'checkin.php' => '✅ Check-in',
                 
             ];
+        case 'print':
+            return [
+                'participants.php' => '👥 Participants',
+                
+            ];
         default:
             return [];
     }   

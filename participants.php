@@ -139,7 +139,7 @@ table {
     <!-- Table des participants -->
     <form method="post" action="functions/print_badge.php" id="printForm">
         <?php
-        if ($_SESSION['role'] == 'admin' ) {
+        if ($_SESSION['role'] == 'print' || $_SESSION['role'] == 'admin') {
             ?>
             <div style="display:flex; justify-content:flex-end; margin-bottom:0.5rem;">
                 <button type="submit" class="btn btn-success">🖨️ Print Selected Badges</button>
