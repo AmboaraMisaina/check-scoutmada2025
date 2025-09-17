@@ -3,7 +3,7 @@ require_once 'functions/functions.php';
 checkAuthOrRedirect();
 
 // Vérifier les droits
-if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration' && $_SESSION['role'] !== 'kit') {
+if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'registration' && $_SESSION['role'] !== 'kit') && $_SESSION['role'] !== 'print' {
     include 'includes/header.php';
 ?>
     <div style="display:flex; align-items:center; justify-content:center; height:100vh; background:#f9f9f9;">
