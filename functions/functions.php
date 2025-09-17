@@ -91,7 +91,7 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print =
         $sql .= " AND type = :type";
         $params[':type'] = $filter_type;
     }
-    
+
     // Filtre par payé
     if ($filter_paid === '1') {
         $sql .= " AND paid = 1";
@@ -193,11 +193,11 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $
     }
 
     // Vérifier si l'email existe déjà pour un autre participant
-    $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ? AND id != ?");
-    $stmt->execute([$email, $id]);
-    if ($stmt->rowCount() > 0) {
-        return ['success' => false, 'message' => 'Another participant with this email already exists.'];
-    }
+    // $stmt = $pdo->prepare("SELECT id FROM participants WHERE email = ? AND id != ?");
+    // $stmt->execute([$email, $id]);
+    // if ($stmt->rowCount() > 0) {
+    //     return ['success' => false, 'message' => 'Another participant with this email already exists.'];
+    // }
 
     // Mettre à jour le participant
     $stmt = $pdo->prepare("UPDATE participants SET nom = ?, email = ?, type = ?, pays = ?, photo = ? WHERE id = ?");
@@ -209,6 +209,7 @@ function updateParticipant(PDO $pdo, $id, $nom, $prenom, $email, $type, $pays, $
         return ['success' => false, 'message' => 'Error updating participant.'];
     }
 }
+
 function updatePhotoParticipant(PDO $pdo, $id, $photoPath)
 {
     $stmt = $pdo->prepare("UPDATE participants SET photo = ? WHERE id = ?");
