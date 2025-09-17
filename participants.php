@@ -30,6 +30,7 @@ if (isset($_GET['delete'])) {
 // Récupérer les filtres
 $filter_name = trim($_GET['filter_name'] ?? '');
 $filter_type = $_GET['filter_type'] ?? '';
+$filter_paid = $_GET['filter_paid'] ?? '';
 $to_print = $_GET['to_print'] ?? 0;
 
 // Pagination
@@ -37,7 +38,7 @@ $perPage = 20;
 $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
-$participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $perPage, $offset);
+$participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid, $perPage, $offset);
 $totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type);
 $totalPages = ceil($totalParticipants / $perPage);
 
@@ -111,11 +112,11 @@ table {
     <div class="card" style="padding:1rem; margin-bottom:1rem;">
         <form method="GET" action="participants.php" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
             <input type="text" name="filter_name" placeholder="Search by name" value="<?= htmlspecialchars($filter_name) ?>" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc; flex:1;">
-            <!-- <select name="to_print" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
+            <select name="filter_paid" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">
                 <option value=""></option>
-                <option value="1" <?= ($to_print === '1') ? 'selected' : '' ?>>Printed</option>
-                <option value="0" <?= ($to_print === '0') ? 'selected' : '' ?>>Not Printed</option>
-            </select> -->
+                <option value="1" <?= ($to_print === '1') ? 'selected' : '' ?>>Paid</option>
+                <option value="0" <?= ($to_print === '0') ? 'selected' : '' ?>>Not Paid</option>
+            </select>
 
 
             <select name="filter_type" style="padding:0.5rem; border-radius:5px; border:1px solid #ccc;">

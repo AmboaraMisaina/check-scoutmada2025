@@ -20,7 +20,7 @@ function getAllParticipants(PDO $pdo)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '', $filter_type = '', $limit = 20, $offset = 0) {
+function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '', $filter_type = '', $filter_paid = '', $limit = 20, $offset = 0) {
     $sql = "SELECT * FROM participants WHERE 1=1";
     $params = [];
 
@@ -31,19 +31,26 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '
     }
 
     // Filtre to Print
-if ($to_print == '1') {
-    $sql .= " AND isPrinted = 0";
-    $sql .= " AND ( 
-        (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
-        OR 
-        (type NOT IN ('delegate','observer')) 
-    )";
-}
+    if ($to_print == '1') {
+        $sql .= " AND isPrinted = 0";
+        $sql .= " AND ( 
+            (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
+            OR 
+            (type NOT IN ('delegate','observer')) 
+        )";
+    }
 
     // Filtre par type
     if (!empty($filter_type)) {
         $sql .= " AND type = :type";
         $params[':type'] = $filter_type;
+    }
+
+    // Filtre par payé
+    if ($filter_paid === '1') {
+        $sql .= " AND paid = 1";
+    } elseif ($filter_paid === '0') {
+        $sql .= " AND (paid = 0 OR paid IS NULL)";
     }
 
     $sql .= " ORDER BY nom ASC, prenom ASC";
