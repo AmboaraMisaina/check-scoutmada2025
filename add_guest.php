@@ -59,13 +59,7 @@ include 'includes/header.php';
 
         <form method="POST" autocomplete="off">
             <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label for="prenom" style="display:block; margin-bottom:0.4rem; font-weight:500;">First name</label>
-                <input type="text" id="prenom" name="prenom" required
-                    style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1.2rem;">
-                <label for="nom" style="display:block; margin-bottom:0.4rem; font-weight:500;">Last name</label>
+                <label for="nom" style="display:block; margin-bottom:0.4rem; font-weight:500;">Name</label>
                 <input type="text" id="nom" name="nom" required
                     style="width:100%; padding:0.6rem; border-radius:7px; border:1px solid #ccc; font-size:1rem;">
             </div>
