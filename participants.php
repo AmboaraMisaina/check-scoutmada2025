@@ -34,7 +34,7 @@ $filter_paid = $_GET['filter_paid'] ?? '';
 $to_print = $_GET['to_print'] ?? 0;
 
 // Pagination
-$perPage = 20;
+$perPage = 30;
 $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
