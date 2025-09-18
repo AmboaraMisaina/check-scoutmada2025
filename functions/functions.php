@@ -78,15 +78,15 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print =
         $params[':name'] = '%' . $filter_name . '%';
     }
 
-    // if ($to_print == '1') {
-    //     $sql .= " AND isPrinted = 0";
-    //     $sql .= " AND ( 
-    //         (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
-    //         OR 
-    //         (type NOT IN ('delegate','observer')) 
-    //     )";
-    // }
-    
+    if ($to_print == '1') {
+        $sql .= " AND isPrinted = 0";
+        // $sql .= " AND ( 
+        //     (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
+        //     OR 
+        //     (type NOT IN ('delegate','observer')) 
+        // )";
+    }
+
     // Filtre par type
     if (!empty($filter_type)) {
         $sql .= " AND type = :type";
