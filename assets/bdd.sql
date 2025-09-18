@@ -31,6 +31,7 @@ alter table participants add column withPhoto BOOLEAN DEFAULT FALSE;
 alter table participants add column isPrinted BOOLEAN DEFAULT FALSE;
 alter table participants add column pays VARCHAR(100) NULL;
 alter table participants add column events VARCHAR(100) NULL;
+alter table participants add column badge BOOLEAN DEFAULT FALSE;
 
 
 -- Table pour les événements d'une journée

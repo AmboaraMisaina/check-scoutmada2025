@@ -207,6 +207,7 @@ table {
                                     <?= !empty($p['withPhoto']) ? '📸' : '' ?> 
                                     <?= !empty($p['kit']) ? '👕' : '' ?>
                                     <?= !empty($p['paid']) ? '💰' : '' ?>
+                                    <?= !empty($p['badge']) ? '🪪' : '' ?>
                                 </td>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
                                     <td>
@@ -244,6 +245,7 @@ table {
                                     ?>
                                     <td>
                                         <button type="button" class="btn btn-warning" onclick="toggleKit(<?= $p['id']; ?>, this)">👕</button>
+                                        <button type="button" class="btn btn-warning" onclick="toggleBadge(<?= $p['id']; ?>, this)">🪪</button>
                                     </td>
                                     <?php
                                 } ?>
@@ -405,6 +407,29 @@ function toggleKit(id, btn) {
 
 function togglePay(id, btn) {
     fetch('functions/updatePay.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+    })
+    // .then(res => res.json()) 
+    .then(async res => {
+        console.log("Raw response :", res);
+        const txt = await res.text();
+        console.log("Raw response text:", txt);
+        return JSON.parse(txt); // essaie de parser
+    })
+    .then(resp => {
+        console.log(resp)
+        if (resp.success) {
+            location.reload();
+        } else {
+            alert("❌ Erreur : " + resp.message);
+        }
+    })
+    .catch(err => alert("Erreur réseau : " + err));
+}
+function toggleBadge(id, btn) {
+    fetch('functions/updateBadge.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=' + encodeURIComponent(id)
