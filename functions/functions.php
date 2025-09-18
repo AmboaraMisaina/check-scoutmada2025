@@ -33,11 +33,11 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '
     // Filtre to Print
     if ($to_print == '1') {
         $sql .= " AND isPrinted = 0";
-        $sql .= " AND ( 
-            (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
-            OR 
-            (type NOT IN ('delegate','observer')) 
-        )";
+        // $sql .= " AND ( 
+        //     (type IN ('delegate','observer') AND withPhoto = 1 AND paid = 1) 
+        //     OR 
+        //     (type NOT IN ('delegate','observer')) 
+        // )";
     }
 
     // Filtre par type
