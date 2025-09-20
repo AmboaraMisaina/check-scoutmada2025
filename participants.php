@@ -260,13 +260,13 @@ table {
     <div style="display:flex; justify-content:center; align-items:center; margin-top:1rem; gap:0.3rem; flex-wrap:wrap;">
         <!-- Bouton Précédent -->
         <?php if ($pages > 1): ?>
-            <a href="?page=<?= $pages-1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
+            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>&filter_type=<?= urlencode($filter_type) ?>&filter_paid=<?= urlencode($filter_paid) ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">« Précédent</a>
         <?php endif; ?>
 
         <!-- Numéros de page -->
         <?php for ($p = 1; $p <= $totalPages; $p++): ?>
-            <a href="?page=<?= $p ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
+            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>&filter_type=<?= urlencode($filter_type) ?>&filter_paid=<?= urlencode($filter_paid) ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:<?= ($p === $pages) ? '#2ecc71' : '#f1f1f1' ?>; color:<?= ($p === $pages) ? 'white' : '#333' ?>; font-weight:<?= ($p === $pages) ? 'bold' : 'normal' ?>;">
                <?= $p ?>
             </a>
@@ -274,7 +274,7 @@ table {
 
         <!-- Bouton Suivant -->
         <?php if ($pages < $totalPages): ?>
-            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>"
+            <a href="?page=<?= $pages+1 ?>&filter_name=<?= urlencode($filter_name) ?>&to_print=<?= $to_print ?>&filter_type=<?= urlencode($filter_type) ?>&filter_paid=<?= urlencode($filter_paid) ?>"
                style="padding:0.4rem 0.8rem; border-radius:5px; text-decoration:none; background:#3498db; color:white; font-weight:bold;">Suivant »</a>
         <?php endif; ?>
     </div>
