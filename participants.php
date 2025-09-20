@@ -39,17 +39,11 @@ $pages = max(1, intval($_GET['page'] ?? 1));
 $offset = ($pages - 1) * $perPage;
 
 $participants = getAllParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid, $perPage, $offset);
-$totalParticipants = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid);
+$totalResults = getTotalParticipantsWithFilter($pdo, $filter_name, $to_print, $filter_type, $filter_paid);
+$totalParticipants = $totalResults["totalParticipants"];
 $totalPages = ceil($totalParticipants / $perPage);
 
-// Récupération des pays dans un tableau
-$paysList = array_column($participants, 'pays');
-
-// Suppression des doublons
-$distinctCountries = array_unique($paysList);
-
-// Nombre de pays distincts
-$totalCountries = count($distinctCountries);
+$totalCountries = $totalResults["totalCountries"];
 
 
 include 'includes/header.php';

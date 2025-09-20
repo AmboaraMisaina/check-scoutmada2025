@@ -69,7 +69,7 @@ function getAllParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '
 
 
 function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print = '' , $filter_type = '', $filter_paid = '') {
-    $sql = "SELECT COUNT(*) as total FROM participants WHERE 1=1";
+    $sql = "SELECT COUNT(*) as totalParticipants, count(distinct(soundex(pays))) as totalCountries FROM participants WHERE 1=1";
     $params = [];
 
     // Filtre par nom (nom ou prénom)
@@ -104,7 +104,7 @@ function getTotalParticipantsWithFilter(PDO $pdo, $filter_name = '', $to_print =
     $stmt->execute($params);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return intval($result['total'] ?? 0);
+    return $result;
 }
 
 // Récupère un participant par ID
