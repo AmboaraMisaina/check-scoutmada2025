@@ -85,7 +85,7 @@ jobs:
           password: scoutmada2025
           port: 21                              # parfois 22, teste les deux
           script: |
-            cd /public_html/symfony || exit 1
+            cd symfony || exit 1
 
             echo "🚀 Composer install en prod..."
             composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --quiet
