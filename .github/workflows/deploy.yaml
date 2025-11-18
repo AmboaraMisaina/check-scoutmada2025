@@ -24,7 +24,6 @@
 
 
 
-
 name: 🚀 Deploy Symfony via FTP
 
 on:
@@ -48,10 +47,13 @@ jobs:
           php-version: '8.3' # correspond à ta version de Symfony
           extensions: mbstring, intl, pdo_mysql
 
+      # 3️⃣ Installer les dépendances Composer dans le dossier symfony
       - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: |
+          cd symfony
+          composer install --no-dev --optimize-autoloader
 
-      # 3️⃣ Déployer tous les fichiers (y compris vendor) via FTP
+      # 4️⃣ Déployer tous les fichiers (y compris vendor) via FTP
       - name: 📤 FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
