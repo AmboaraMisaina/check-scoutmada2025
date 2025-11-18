@@ -53,7 +53,7 @@ jobs:
 
       # === FTP : on upload tout SAUF vendor/ et var/ ===
       - name: 📤 FTP Deploy (rapide et sans timeout)
-        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
