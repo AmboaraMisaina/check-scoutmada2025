@@ -1,18 +1,57 @@
-name: 🚀 FTP Deploy
+# name: 🚀 FTP Deploy
+
+# on:
+#   push:
+#     branches:
+#       - migration-symfony
+
+# jobs:
+#   ftp-deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: 📥 Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: 📤 FTP Deploy
+#         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+#         with:
+#           server: scoutmada2025.mg
+#           username: checkin@scoutmada2025.mg
+#           password: scoutmada2025
+#           server-dir: /public_html/symfony/
+#           local-dir: ./symfony/
+
+
+
+
+name: 🚀 Deploy Symfony via FTP
 
 on:
   push:
     branches:
-      - migration-symfony
+      - migration-symfony  # branche qui déclenche le déploiement
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout code
+      # 1️⃣ Récupérer le code du dépôt
+      - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Installer PHP et Composer sur le runner
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # correspond à ta version de Symfony
+          extensions: mbstring, intl, pdo_mysql
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      # 3️⃣ Déployer tous les fichiers (y compris vendor) via FTP
       - name: 📤 FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -21,3 +60,8 @@ jobs:
           password: scoutmada2025
           server-dir: /public_html/symfony/
           local-dir: ./symfony/
+          exclude: |
+            .git*
+            tests/
+            .github/
+            node_modules/
