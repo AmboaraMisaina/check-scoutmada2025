@@ -21,7 +21,7 @@
 #           password: scoutmada2025
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
-name: 🚀 Deploy Symfony (No SSH)
+name: 🚀 Deploy Symfony (Fast)
 
 on:
   push:
@@ -42,16 +42,23 @@ jobs:
           php-version: '8.3'
           extensions: mbstring, intl, pdo_mysql, zip, gd
 
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: 🎼 Composer install (prod)
         run: |
           cd symfony
           composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
 
-      - name: 📤 Deploy via FTP
+      - name: 📤 Deploy via FTP (fast)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
-          username: checkin@scoutmada2025.mg   # même user que FTP très souvent
+          username: checkin@scoutmada2025.mg
           password: scoutmada2025
 
           protocol: ftps
@@ -62,7 +69,11 @@ jobs:
 
           timeout: 600000
           dangerous-clean-slate: false
-          log-level: verbose
+          log-level: minimal
+          security: strict
+
+          # KEY FOR FAST DEPLOY
+          state-name: .ftp-deploy-sync-state.json
 
           exclude: |
             **/.git**
@@ -71,3 +82,5 @@ jobs:
             **/var/**
             .env.local*
             *.log
+            # après le premier déploiement
+            # **/vendor/**
