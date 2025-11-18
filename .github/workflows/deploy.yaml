@@ -22,57 +22,82 @@
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
 
-name: 🚀 Deploy Symfony via FTP
+
+name: 🚀 Deploy Symfony
 
 on:
   push:
     branches:
       - migration-symfony
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # 2️⃣ Set up PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, intl, pdo_mysql
+          extensions: mbstring, intl, pdo_mysql, zip, gd
 
-      # 3️⃣ Install Composer dependencies
-      - name: Install Composer dependencies
-        run: |
-          cd symfony
-          composer install --no-dev --optimize-autoloader
+      # On génère l'autoloader et les assets si besoin (mais sans vendor en prod)
+      - name: Composer install (dev local pour générer ce qu'il faut)
+        run: composer install --optimize-autoloader --no-interaction
 
-      # 4️⃣ Deploy project excluding vendor
-      - name: FTP Deploy (without vendor)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # Optionnel : build assets si tu utilises Webpack Encore ou asset-mapper
+      # - name: Build assets
+      #   run: npm ci && npm run build
+
+      # === FTP : on upload tout SAUF vendor/ et var/ ===
+      - name: 📤 FTP Deploy (rapide et sans timeout)
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
           password: scoutmada2025
+          protocol: ftps
+          port: 21
+          local-dir: ./
           server-dir: /public_html/symfony/
-          local-dir: ./symfony/
+          timeout: 900000
+          keep-alive-interval: 8000               # très agressif → évite le 421
           exclude: |
-            .git*
-            tests/
-            .github/
-            node_modules/
-            vendor/
+            **.git**
+            **.github/**
+            **tests/**
+            **node_modules/**
+            **var/**
+            **vendor/**
+            .env.local*
+            *.log
+            public/build/**     # si tu buildes localement
+            !public/build/      # garde le dossier vide
 
-      # 5️⃣ Deploy vendor separately
-      - name: FTP Deploy vendor only
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # === SSH : on se connecte et on lance les commandes Symfony sur le serveur ===
+      - name: 🚀 Exécuter composer install + cache clear + migrations via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          server: scoutmada2025.mg
-          username: checkin@scoutmada2025.mg
+          host: scoutmada2025.mg
+          username: checkin@scoutmada2025.mg   # même user que FTP très souvent
           password: scoutmada2025
-          server-dir: /public_html/symfony/vendor/
-          local-dir: ./symfony/vendor/
+          port: 21                              # parfois 22, teste les deux
+          script: |
+            cd /home/checkin/public_html/symfony || cd /public_html/symfony || exit 1
+
+            echo "🚀 Composer install en prod..."
+            composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --quiet
+
+            echo "🧹 Cache clear..."
+            php bin/console cache:clear --env=prod --no-warmup
+            php bin/console cache:warmup --env=prod
+
+            # echo "🔄 Migrations..."
+            # php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || echo "Aucune migration"
+
+            # Si tu as des assets statiques
+            # php bin/console assets:install --symlink public
+
+            echo "✅ Déploiement terminé avec succès !"

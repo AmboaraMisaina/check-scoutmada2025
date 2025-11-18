@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "registration_followups")]
+#[ORM\Table(name: "S_registration_followups")]
 class RegistrationFollowup
 {
     #[ORM\Id]
