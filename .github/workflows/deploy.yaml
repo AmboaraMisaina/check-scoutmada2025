@@ -63,16 +63,16 @@ jobs:
 
           protocol: ftp
           port: 21
+          security: loose
 
           local-dir: ./symfony/
           server-dir: /public_html/symfony/
 
+          max-concurrency: 8    # ⚡ ULTRA IMPORTANT
           timeout: 600000
           dangerous-clean-slate: false
           log-level: minimal
-          security: loose
 
-          # KEY FOR FAST DEPLOY
           state-name: .ftp-deploy-sync-state.json
 
           exclude: |
@@ -80,7 +80,7 @@ jobs:
             **/.github/**
             **/node_modules/**
             **/var/**
+            **/vendor/**        # active !
+            **/tests/**
             .env.local*
             *.log
-            # après le premier déploiement
-            # **/vendor/**
