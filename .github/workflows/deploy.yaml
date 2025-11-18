@@ -42,25 +42,18 @@ jobs:
           php-version: '8.3'
           extensions: mbstring, intl, pdo_mysql, zip, gd
 
-      # Composer install EN PROD (vendor inclus)
       - name: 🎼 Composer install (prod)
         run: |
           cd symfony
           composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
 
-      # Optionnel : build des assets si tu utilises encore
-      # - name: Build assets
-      #   run: |
-      #     cd symfony
-      #     npm ci
-      #     npm run build
-
       - name: 📤 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: scoutmada2025.mg
+          server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg   # même user que FTP très souvent
           password: scoutmada2025
+
           protocol: ftps
           port: 21
 
@@ -68,13 +61,13 @@ jobs:
           server-dir: /public_html/symfony/
 
           timeout: 600000
-          keep-alive-interval: 1000
-          max-retries: 5
           dangerous-clean-slate: false
+          log-level: verbose
 
           exclude: |
             **/.git**
             **/.github/**
             **/node_modules/**
+            **/var/**
             .env.local*
             *.log
