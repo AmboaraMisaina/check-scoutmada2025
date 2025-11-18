@@ -22,7 +22,6 @@
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
 
-
 name: 🚀 Deploy Symfony via FTP
 
 on:
@@ -35,17 +34,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # ⛔ Ignore vendor et node_modules
-      - name: Cleanup unnecessary files
-        run: |
-          rm -rf symfony/vendor
-          rm -rf symfony/node_modules
+      # 2️⃣ Set up PHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo_mysql
 
-      # 📤 FTP Upload (sans vendor)
-      - name: 📤 FTP Upload (Safe Mode)
+      # 3️⃣ Install Composer dependencies
+      - name: Install Composer dependencies
+        run: |
+          cd symfony
+          composer install --no-dev --optimize-autoloader
+
+      # 4️⃣ Deploy project excluding vendor
+      - name: FTP Deploy (without vendor)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
@@ -55,21 +62,17 @@ jobs:
           local-dir: ./symfony/
           exclude: |
             .git*
+            tests/
             .github/
-            vendor/
             node_modules/
+            vendor/
 
-      # 📦 Installer vendor directement sur le serveur
-      - name: Run composer install on server
-        uses: appleboy/ssh-action@v0.1.10
+      # 5️⃣ Deploy vendor separately
+      - name: FTP Deploy vendor only
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: scoutmada2025.mg
+          server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
           password: scoutmada2025
-          script: |
-            cd /home/scoutmada2025/public_html/symfony
-            composer install --no-dev --optimize-autoloader
-
-
-
-
+          server-dir: /public_html/symfony/vendor/
+          local-dir: ./symfony/vendor/
