@@ -54,7 +54,7 @@ jobs:
           cd symfony
           composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
 
-      - name: 📤 Deploy via FTP (fast)
+      - name: 📤 Deploy via FTP (incremental)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
@@ -63,24 +63,21 @@ jobs:
 
           protocol: ftp
           port: 21
-          security: loose
 
           local-dir: ./symfony/
           server-dir: /public_html/symfony/
 
-          max-concurrency: 8    # ⚡ ULTRA IMPORTANT
-          timeout: 600000
-          dangerous-clean-slate: false
-          log-level: minimal
-
+          # mode incremental = upload uniquement ce qui a changé
           state-name: .ftp-deploy-sync-state.json
+
+          timeout: 600000
+          log-level: minimal
 
           exclude: |
             **/.git**
             **/.github/**
             **/node_modules/**
-            **/var/**
-            **/vendor/**        # active !
             **/tests/**
+            **/var/**
             .env.local*
             *.log
