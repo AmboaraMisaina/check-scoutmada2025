@@ -22,39 +22,45 @@
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
 
-
 name: 🚀 Deploy Symfony
 
 on:
   push:
     branches:
       - migration-symfony
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # -------------------------------
+      # 1) Récupération du code
+      # -------------------------------
+      - name: 📦 Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up PHP
+      # -------------------------------
+      # 2) Setup PHP
+      # -------------------------------
+      - name: 🔧 Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, intl, pdo_mysql, zip, gd
 
-      # On génère l'autoloader et les assets si besoin (mais sans vendor en prod)
-      - name: Composer install (dev local pour générer ce qu'il faut)
+      # -------------------------------
+      # 3) Composer install local
+      # -------------------------------
+      - name: 🎼 Composer install (local)
         run: |
           cd symfony
           composer install --optimize-autoloader --no-interaction
 
-      # Optionnel : build assets si tu utilises Webpack Encore ou asset-mapper
-      # - name: Build assets
-      #   run: npm ci && npm run build
-
-      # === FTP : on upload tout SAUF vendor/ et var/ ===
-      - name: 📤 FTP Deploy (rapide et sans timeout)
+      # -------------------------------
+      # 4) Upload FTP (sécurisé + anti timeout)
+      # -------------------------------
+      - name: 📤 FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
@@ -62,44 +68,60 @@ jobs:
           password: scoutmada2025
           protocol: ftps
           port: 21
-          local-dir: ./
+
+
+          local-dir: ./symfony/
           server-dir: /public_html/symfony/
-          timeout: 900000
-          keep-alive-interval: 8000               # très agressif → évite le 421
+
+          timeout: 600000              # 10 minutes
+          keep-alive-interval: 1000    # ping toutes les 1 sec
+          max-retries: 5
+          log-level: verbose           # logs détaillés
+          dangerous-clean-slate: false # NE PAS supprimer tout avant upload
+
           exclude: |
-            **.git**
-            **.github/**
-            **tests/**
-            **node_modules/**
-            **var/**
-            **vendor/**
+            **/.git**
+            **/.github/**
+            **/tests/**
+            **/node_modules/**
+            **/var/**
+            **/vendor/**
             .env.local*
             *.log
-            public/build/**     # si tu buildes localement
-            !public/build/      # garde le dossier vide
+            public/build/**
+            !public/build/
 
-      # === SSH : on se connecte et on lance les commandes Symfony sur le serveur ===
-      - name: 🚀 Exécuter composer install + cache clear + migrations via SSH
+      # -------------------------------
+      # 5) Commandes serveur (via SSH)
+      # -------------------------------
+      - name: 🚀 SSH – Composer install + clear cache + migrations
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: scoutmada2025.mg
           username: checkin@scoutmada2025.mg   # même user que FTP très souvent
           password: scoutmada2025
-          port: 21                              # parfois 22, teste les deux
+
+          port: 22                    # SSH correct (PAS 21)
+
           script: |
             cd /home/checkin/public_html/symfony || cd /public_html/symfony || exit 1
 
-            echo "🚀 Composer install en prod..."
-            composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --quiet
+            echo "🚀 Composer install (prod)..."
+            composer install \
+              --no-dev \
+              --optimize-autoloader \
+              --classmap-authoritative \
+              --no-interaction \
+              --quiet
 
-            echo "🧹 Cache clear..."
+            echo "🧹 Nettoyage cache..."
             php bin/console cache:clear --env=prod --no-warmup
             php bin/console cache:warmup --env=prod
 
-            # echo "🔄 Migrations..."
+            # echo "🔄 Exécution des migrations..."
             # php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || echo "Aucune migration"
 
-            # Si tu as des assets statiques
+            # echo "📸 Installation des assets statiques..."
             # php bin/console assets:install --symlink public
 
             echo "✅ Déploiement terminé avec succès !"
