@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Organisations{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <h2 class="mb-4 text-primary">
+        <i class="bi bi-building"></i> Liste des organisations
+    </h2>
+
+    {% if organizations is empty %}
+        <div class="alert alert-info">Aucune organisation enregistrée.</div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Créé le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for org in organizations %}
+                        <tr>
+                            <td>{{ org.id }}</td>
+                            <td>{{ org.name }}</td>
+                            <td>{{ org.description }}</td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
