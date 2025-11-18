@@ -45,7 +45,9 @@ jobs:
 
       # On génère l'autoloader et les assets si besoin (mais sans vendor en prod)
       - name: Composer install (dev local pour générer ce qu'il faut)
-        run: composer install --optimize-autoloader --no-interaction
+        run: |
+          cd symfony
+          composer install --optimize-autoloader --no-interaction
 
       # Optionnel : build assets si tu utilises Webpack Encore ou asset-mapper
       # - name: Build assets
@@ -85,7 +87,7 @@ jobs:
           password: scoutmada2025
           port: 21                              # parfois 22, teste les deux
           script: |
-            cd symfony || exit 1
+            cd /home/checkin/public_html/symfony || cd /public_html/symfony || exit 1
 
             echo "🚀 Composer install en prod..."
             composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction --quiet
