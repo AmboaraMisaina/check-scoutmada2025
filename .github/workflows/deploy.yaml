@@ -21,8 +21,7 @@
 #           password: scoutmada2025
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
-
-name: 🚀 Deploy Symfony
+name: 🚀 Deploy Symfony (No SSH)
 
 on:
   push:
@@ -34,94 +33,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # -------------------------------
-      # 1) Récupération du code
-      # -------------------------------
       - name: 📦 Checkout code
         uses: actions/checkout@v4
 
-      # -------------------------------
-      # 2) Setup PHP
-      # -------------------------------
-      - name: 🔧 Set up PHP
+      - name: 🔧 Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: mbstring, intl, pdo_mysql, zip, gd
 
-      # -------------------------------
-      # 3) Composer install local
-      # -------------------------------
-      - name: 🎼 Composer install (local)
+      # Composer install EN PROD (vendor inclus)
+      - name: 🎼 Composer install (prod)
         run: |
           cd symfony
-          composer install --optimize-autoloader --no-interaction
+          composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
 
-      # -------------------------------
-      # 4) Upload FTP (sécurisé + anti timeout)
-      # -------------------------------
-      - name: 📤 FTP Deploy
+      # Optionnel : build des assets si tu utilises encore
+      # - name: Build assets
+      #   run: |
+      #     cd symfony
+      #     npm ci
+      #     npm run build
+
+      - name: 📤 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: scoutmada2025.mg
-          username: checkin@scoutmada2025.mg
-          password: scoutmada2025
-          protocol: ftps
-          port: 21
-
-
-          local-dir: ./symfony/
-          server-dir: /public_html/symfony/
-
-          timeout: 600000              # 10 minutes
-          keep-alive-interval: 1000    # ping toutes les 1 sec
-          max-retries: 5
-          log-level: verbose           # logs détaillés
-          dangerous-clean-slate: false # NE PAS supprimer tout avant upload
-
-          exclude: |
-            **/.git**
-            **/.github/**
-            **/tests/**
-            **/node_modules/**
-            **/var/**
-            **/vendor/**
-            .env.local*
-            *.log
-            public/build/**
-            !public/build/
-
-      # -------------------------------
-      # 5) Commandes serveur (via SSH)
-      # -------------------------------
-      - name: 🚀 SSH – Composer install + clear cache + migrations
-        uses: appleboy/ssh-action@v1.0.3
         with:
           host: scoutmada2025.mg
           username: checkin@scoutmada2025.mg   # même user que FTP très souvent
           password: scoutmada2025
+          protocol: ftps
+          port: 21
 
-          port: 22                    # SSH correct (PAS 21)
+          local-dir: ./symfony/
+          server-dir: /public_html/symfony/
 
-          script: |
-            cd /home/checkin/public_html/symfony || cd /public_html/symfony || exit 1
+          timeout: 600000
+          keep-alive-interval: 1000
+          max-retries: 5
+          dangerous-clean-slate: false
 
-            echo "🚀 Composer install (prod)..."
-            composer install \
-              --no-dev \
-              --optimize-autoloader \
-              --classmap-authoritative \
-              --no-interaction \
-              --quiet
-
-            echo "🧹 Nettoyage cache..."
-            php bin/console cache:clear --env=prod --no-warmup
-            php bin/console cache:warmup --env=prod
-
-            # echo "🔄 Exécution des migrations..."
-            # php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration || echo "Aucune migration"
-
-            # echo "📸 Installation des assets statiques..."
-            # php bin/console assets:install --symlink public
-
-            echo "✅ Déploiement terminé avec succès !"
+          exclude: |
+            **/.git**
+            **/.github/**
+            **/node_modules/**
+            .env.local*
+            *.log
