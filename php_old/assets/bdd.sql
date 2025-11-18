@@ -106,3 +106,14 @@ INSERT INTO participants (nom, prenom, email, type, qr_code) VALUES
 ('Rasolon', 'Sofia', 'sofia.rasolon@test.com', 'observateur', NULL);
 
 
+INSERT INTO organizations (id, name, description, program_id) VALUES
+(1, 'Scouts Catholiques', 'Organisation catholique nationale', 1),
+(2, 'Scouts Protestants', 'Organisation protestante engagée dans l’éducation des jeunes', 1),
+(3, 'Scouts Adventistes', 'Organisation adventiste pour la jeunesse', 1),
+(4, 'Éclaireurs de Madagascar', 'Mouvement laïque pour les jeunes scouts', 2),
+(5, 'Jeunes Volontaires', 'Organisation centrée sur le volontariat et l’aide communautaire', 2),
+(6, 'Explorateurs Anglicans', 'Organisation scout anglicane', 3),
+(7, 'Association Guide Fille Madagascar', 'Organisation destinée au développement des jeunes filles', 3),
+(8, 'Mouvement Jamboree Local', 'Organisation dédiée aux grands événements scouts', 1),
+(9, 'Groupe Nature & Aventure', 'Organisation centrée sur les activités plein air', 2),
+(10, 'Union Scouts Universitaires', 'Organisation regroupant les jeunes scouts universitaires', 3);
