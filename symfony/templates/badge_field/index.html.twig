@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BadgeField index{% endblock %}
+
+{% block body %}
+    <h1>BadgeField index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>FieldName</th>
+                <th>PosX</th>
+                <th>PosY</th>
+                <th>FontSize</th>
+                <th>FontColor</th>
+                <th>Width</th>
+                <th>Height</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for badge_field in badge_fields %}
+            <tr>
+                <td>{{ badge_field.id }}</td>
+                <td>{{ badge_field.fieldName }}</td>
+                <td>{{ badge_field.posX }}</td>
+                <td>{{ badge_field.posY }}</td>
+                <td>{{ badge_field.fontSize }}</td>
+                <td>{{ badge_field.fontColor }}</td>
+                <td>{{ badge_field.width }}</td>
+                <td>{{ badge_field.height }}</td>
+                <td>
+                    <a href="{{ path('app_badge_field_show', {'id': badge_field.id}) }}">show</a>
+                    <a href="{{ path('app_badge_field_edit', {'id': badge_field.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_badge_field_new') }}">Create new</a>
+{% endblock %}

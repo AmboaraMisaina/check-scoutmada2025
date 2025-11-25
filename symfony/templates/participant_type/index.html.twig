@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ParticipantType index{% endblock %}
+
+{% block body %}
+    <h1>ParticipantType index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for participant_type in participant_types %}
+            <tr>
+                <td>{{ participant_type.id }}</td>
+                <td>{{ participant_type.name }}</td>
+                <td>{{ participant_type.description }}</td>
+                <td>{{ participant_type.createdAt ? participant_type.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ participant_type.updatedAt ? participant_type.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_participant_type_show', {'id': participant_type.id}) }}">show</a>
+                    <a href="{{ path('app_participant_type_edit', {'id': participant_type.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_participant_type_new') }}">Create new</a>
+{% endblock %}

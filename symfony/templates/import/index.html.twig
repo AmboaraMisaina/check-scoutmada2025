@@ -1,0 +1,47 @@
+{# templates/import/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Importer {{ entity_name }}s{% endblock %}
+
+{% block body %}
+    <h2>Importation des {{ entity_name }}s</h2>
+
+    {# Affichage des messages flash (succès/erreur globale) #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.file) }}
+        <button type="submit" class="btn btn-primary">Importer</button>
+    {{ form_end(form) }}
+
+    {# Affichage détaillé des erreurs par ligne #}
+    {% if errors is not empty %}
+        <h3>Détails des erreurs ({{ errors|length }} lignes non importées)</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Ligne du fichier</th>
+                    <th>Erreur de Validation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for error in errors %}
+                    <tr>
+                        <td>{{ error.line }}</td>
+                        <td>{{ error.message }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

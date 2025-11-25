@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RegistrationFollowup index{% endblock %}
+
+{% block body %}
+    <h1>RegistrationFollowup index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for registration_followup in registration_followups %}
+            <tr>
+                <td>{{ registration_followup.id }}</td>
+                <td>{{ registration_followup.status }}</td>
+                <td>{{ registration_followup.createdAt ? registration_followup.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_registration_followup_show', {'id': registration_followup.id}) }}">show</a>
+                    <a href="{{ path('app_registration_followup_edit', {'id': registration_followup.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_registration_followup_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit RegistrationFollowup{% endblock %}
+
+{% block body %}
+    <h1>Edit RegistrationFollowup</h1>
+
+    {{ include('registration_followup/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_registration_followup_index') }}">back to list</a>
+
+    {{ include('registration_followup/_delete_form.html.twig') }}
+{% endblock %}

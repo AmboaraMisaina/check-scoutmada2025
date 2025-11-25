@@ -21,6 +21,8 @@
 #           password: scoutmada2025
 #           server-dir: /public_html/symfony/
 #           local-dir: ./symfony/
+
+
 name: 🚀 Deploy Symfony (Fast)
 
 on:
@@ -54,7 +56,7 @@ jobs:
           cd symfony
           composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
 
-      - name: 📤 Deploy via FTP (incremental)
+      - name: 📤 Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: scoutmada2025.mg
@@ -67,11 +69,12 @@ jobs:
           local-dir: ./symfony/
           server-dir: /public_html/symfony/
 
-          # mode incremental = upload uniquement ce qui a changé
-          state-name: .ftp-deploy-sync-state.json
-
           timeout: 600000
+          dangerous-clean-slate: false
           log-level: minimal
+          security: loose
+
+          state-name: .ftp-deploy-sync-state.json
 
           exclude: |
             **/.git**
@@ -79,5 +82,6 @@ jobs:
             **/node_modules/**
             **/tests/**
             **/var/**
+            **/vendor/**
             .env.local*
             *.log

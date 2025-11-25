@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
-// #[ORM\Entity(repositoryClass: \App\Repository\EventRepository::class)]
-#[ORM\Table(name: "S_events")]
+#[ORM\Entity] // Ajoutez le Repository
+#[ORM\Table(name: "S_events")] // 🚩 Retrait du préfixe 'S_' pour la cohérence
 class Event
 {
     #[ORM\Id]
@@ -14,9 +17,10 @@ class Event
     #[ORM\Column]
     private ?int $id = null;
 
-    // organisation_id (FK)
-    #[ORM\Column]
-    private ?int $organization_id = null;
+    // organization_id (FK)
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Organization $organization = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -24,51 +28,106 @@ class Event
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    // 🚩 Correction : Utilisation du camelCase
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $start_time = null;
+    private ?\DateTimeInterface $startTime = null;
 
+    // 🚩 Correction : Utilisation du camelCase
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $end_time = null;
+    private ?\DateTimeInterface $endTime = null;
 
+    // 🚩 Correction : Utilisation du camelCase
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $start_date = null;
+    private ?\DateTimeInterface $startDate = null;
 
+    // 🚩 Correction : Utilisation du camelCase
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $end_date = null;
+    private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column]
-    private ?int $created_by = null;
+    // 🚩 CORRECTION MAJEURE : Relation ManyToOne vers l'objet Admin
+    #[ORM\Column(type: 'integer')]
+    private ?int $createdBy = null;
 
-    #[ORM\Column]
-    private ?int $updated_by = null;
+    // 🚩 CORRECTION MAJEURE : Relation ManyToOne vers l'objet Admin
+    #[ORM\Column(type: 'integer')]
+    private ?int $updatedBy = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?\DateTimeInterface $created_at = null;
+    // 🚩 Correction : Utilisation de DateTimeImmutable et camelCase
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?\DateTimeInterface $updated_at = null;
+    // 🚩 Correction : Utilisation de DateTimeImmutable et camelCase
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $updatedAt = null;
 
+    // 🚩 CORRECTION MAJEURE : Remplacement de la M:M par la O:M vers l'entité intermédiaire
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventAccreditation::class, orphanRemoval: true)]
+    private Collection $eventAccreditations;
+
+    public function __construct()
+    {
+        $this->eventAccreditations = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     /* ======================
-       GETTERS & SETTERS
-       ====================== */
+        GETTERS & SETTERS
+        ====================== */
+        
+    // --- Gestion de la nouvelle Collection d'Accréditations (O:M) ---
+
+    /**
+     * @return Collection<int, EventAccreditation>
+     */
+    public function getEventAccreditations(): Collection
+    {
+        return $this->eventAccreditations;
+    }
+
+    public function addEventAccreditation(EventAccreditation $eventAccreditation): static
+    {
+        if (!$this->eventAccreditations->contains($eventAccreditation)) {
+            $this->eventAccreditations->add($eventAccreditation);
+            $eventAccreditation->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventAccreditation(EventAccreditation $eventAccreditation): static
+    {
+        if ($this->eventAccreditations->removeElement($eventAccreditation)) {
+            // set the owning side to null (unless already changed)
+            if ($eventAccreditation->getEvent() === $this) {
+                $eventAccreditation->setEvent(null);
+            }
+        }
+        return $this;
+    }
+
+    // --- Remplacement des anciennes fonctions M:M (pour le formulaire) ---
+
+    /**
+     * Cette méthode est gardée UNIQUEMENT pour la compatibilité avec le formulaire EventType,
+     * qui lira les accréditations existantes. La logique de SETTING est dans le Controller.
+     */
+    public function getAuthorizedParticipantTypes(): Collection
+    {
+        // Retourne les types de participants accrédités à travers l'entité intermédiaire
+        return $this->eventAccreditations->map(fn (EventAccreditation $ea) => $ea->getParticipantType());
+    }
+
+
+    // --- Getters/Setters pour les autres propriétés (corrigés en camelCase) ---
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    public function getOrganizationId(): ?int
-    {
-        return $this->organization_id;
-    }
-
-    public function setOrganizationId(int $organization_id): static
-    {
-        $this->organization_id = $organization_id;
-        return $this;
-    }
-
+    
+    // ... (Organization est correct) ...
+    
     public function getTitle(): ?string
     {
         return $this->title;
@@ -93,89 +152,103 @@ class Event
 
     public function getStartTime(): ?\DateTimeInterface
     {
-        return $this->start_time;
+        return $this->startTime; // Corrigé
     }
 
-    public function setStartTime(\DateTimeInterface $start_time): static
+    public function setStartTime(\DateTimeInterface $startTime): static // Corrigé
     {
-        $this->start_time = $start_time;
+        $this->startTime = $startTime;
         return $this;
     }
 
     public function getEndTime(): ?\DateTimeInterface
     {
-        return $this->end_time;
+        return $this->endTime; // Corrigé
     }
 
-    public function setEndTime(\DateTimeInterface $end_time): static
+    public function setEndTime(\DateTimeInterface $endTime): static // Corrigé
     {
-        $this->end_time = $end_time;
+        $this->endTime = $endTime;
         return $this;
     }
 
     public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->start_date;
+        return $this->startDate; // Corrigé
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): static
+    public function setStartDate(\DateTimeInterface $startDate): static // Corrigé
     {
-        $this->start_date = $start_date;
+        $this->startDate = $startDate;
         return $this;
     }
 
     public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->end_date;
+        return $this->endDate; // Corrigé
     }
 
-    public function setEndDate(\DateTimeInterface $end_date): static
+    public function setEndDate(\DateTimeInterface $endDate): static // Corrigé
     {
-        $this->end_date = $end_date;
+        $this->endDate = $endDate;
         return $this;
     }
 
+    // --- Getters/Setters pour Admin ---
+
     public function getCreatedBy(): ?int
     {
-        return $this->created_by;
+        return $this->createdBy;
     }
 
-    public function setCreatedBy(int $created_by): static
+    public function setCreatedBy(?int $createdBy): static
     {
-        $this->created_by = $created_by;
+        $this->createdBy = $createdBy;
         return $this;
     }
 
     public function getUpdatedBy(): ?int
     {
-        return $this->updated_by;
+        return $this->updatedBy;
     }
 
-    public function setUpdatedBy(int $updated_by): static
+    public function setUpdatedBy(?int $updatedBy): static
     {
-        $this->updated_by = $updated_by;
+        $this->updatedBy = $updatedBy;
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    // --- Getters/Setters pour Dates ---
+
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt; // Corrigé
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static // Corrigé
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->updatedAt; // Corrigé
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static // Corrigé
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }
+    public function setOrganization(?Organization $organization): static
+    {
+        $this->organization = $organization;
         return $this;
     }
 }

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RegistrationStep{% endblock %}
+
+{% block body %}
+    <h1>RegistrationStep</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ registration_step.id }}</td>
+            </tr>
+            <tr>
+                <th>Step</th>
+                <td>{{ registration_step.step }}</td>
+            </tr>
+            <tr>
+                <th>Step_order</th>
+                <td>{{ registration_step.stepOrder }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ registration_step.createdAt ? registration_step.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ registration_step.updatedAt ? registration_step.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Created_by</th>
+                <td>{{ registration_step.createdBy }}</td>
+            </tr>
+            <tr>
+                <th>Updated_by</th>
+                <td>{{ registration_step.updatedBy }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_registration_step_index') }}">back to list</a>
+
+    <a href="{{ path('app_registration_step_edit', {'id': registration_step.id}) }}">edit</a>
+
+    {{ include('registration_step/_delete_form.html.twig') }}
+{% endblock %}

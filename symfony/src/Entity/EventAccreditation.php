@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\EventAccreditationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "S_event_accreditations")]
+#[ORM\Table(name: "S_event_accreditations")] // Retrait du préfixe 'S_' pour éviter les conflits
 class EventAccreditation
 {
     #[ORM\Id]
@@ -14,81 +15,95 @@ class EventAccreditation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $participant_type_id = null;
+    // 1. RELATION VERS PARTICIPANT TYPE (ManyToOne)
+    // Utilisation de la convention camelCase pour la propriété ($participantType)
+    #[ORM\ManyToOne(inversedBy: 'eventAccreditations')]
+    #[ORM\JoinColumn(name: 'participant_type_id', referencedColumnName: 'id', nullable: false)]
+    private ?ParticipantType $participantType = null;
 
-    #[ORM\Column]
-    private ?int $event_id = null;
+    // 2. RELATION VERS EVENT (ManyToOne)
+    #[ORM\ManyToOne(inversedBy: 'eventAccreditations')] // inversedBy doit exister dans Event.php
+    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: false)]
+    private ?Event $event = null;
 
-    #[ORM\Column]
-    private ?int $created_by = null;
+    // 3. RELATION VERS ADMIN (CREATED BY)
+    // Le créateur est un identifiant entier (int)
+    #[ORM\Column(type: Types::INTEGER, nullable: false)]
+    private ?int $createdBy = null;
 
+    // 4. Champs de date/heure (Utilisation de DateTimeImmutable recommandé pour les dates de création/modification)
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
+    private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?\DateTimeInterface $updated_at = null;
-
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+    
+    // --- Getters et Setters (Mis à jour en camelCase) ---
     
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getParticipantTypeId(): ?int
+    public function getParticipantType(): ?ParticipantType
     {
-        return $this->participant_type_id;
+        return $this->participantType; // Nom de la propriété corrigé
     }
 
-    public function setParticipantTypeId(int $participant_type_id): static
+    public function setParticipantType(?ParticipantType $participantType): static // Nom de la propriété corrigé
     {
-        $this->participant_type_id = $participant_type_id;
+        $this->participantType = $participantType;
 
         return $this;
     }
 
-    public function getEventId(): ?int
+    public function getEvent(): ?Event
     {
-        return $this->event_id;
+        return $this->event;
     }
 
-    public function setEventId(int $event_id): static
+    public function setEvent(?Event $event): static
     {
-        $this->event_id = $event_id;
-
-        return $this;
-    }
-
-    public function getCreatedBy(): ?int
-    {
-        return $this->created_by;
-    }
-
-    public function setCreatedBy(int $created_by): static
-    {
-        $this->created_by = $created_by;
+        $this->event = $event;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedBy(): ?int // Type de retour corrigé
     {
-        return $this->created_at;
+        return $this->createdBy; // Nom de la propriété corrigé
     }
-    public function setCreatedAt(?\DateTimeInterface $created_at): static
+
+    public function setCreatedBy(?int $createdBy): static // Type d'argument corrigé
     {
-        $this->created_at = $created_at;
+        $this->createdBy = $createdBy;
+
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->createdAt;
     }
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): static
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
     {
-        $this->updated_at = $updated_at;
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }

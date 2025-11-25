@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 #[ORM\Table(name: "S_participant_types")]
@@ -25,6 +27,9 @@ class ParticipantType
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'participant_type', targetEntity: EventAccreditation::class, orphanRemoval: true)]
+    private Collection $eventAccreditations;
 
     public function getId(): ?int
     {
@@ -75,6 +80,44 @@ class ParticipantType
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function __construct()
+    {
+            ;
+        // Assurez-vous d'initialiser d'autres collections si elles existent
+    }
+
+    // 🚩 AJOUTER LES MÉTHODES D'ACCÈS 🚩
+
+    /**
+     * @return Collection<int, EventAccreditation>
+     */
+    public function getEventAccreditations(): Collection
+    {
+        return $this->eventAccreditations;
+    }
+
+    public function addEventAccreditation(EventAccreditation $eventAccreditation): static
+    {
+        if (!$this->eventAccreditations->contains($eventAccreditation)) {
+            $this->eventAccreditations->add($eventAccreditation);
+            $eventAccreditation->setParticipantType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventAccreditation(EventAccreditation $eventAccreditation): static
+    {
+        if ($this->eventAccreditations->removeElement($eventAccreditation)) {
+            // set the owning side to null (unless already changed)
+            if ($eventAccreditation->getParticipantType() === $this) {
+                $eventAccreditation->setParticipantType(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,31 @@
+{# templates/event/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouvel Événement{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <h1>Créer un nouvel Événement</h1>
+
+    {# Affichage des messages Flash (si le contrôleur envoie des messages de succès) #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success mt-3" role="alert">{{ message }}</div>
+    {% endfor %}
+
+    {# Démarrage du formulaire (La variable 'form' doit être passée par le contrôleur) #}
+    {{ form_start(form) }}
+
+        {# INCLUSION DU PARTIEL _form.html.twig #}
+        {{ include('event/_form.html.twig', {'button_label': 'Créer l\'Événement'}) }}
+
+    {# Fin du formulaire #}
+    {{ form_end(form) }}
+
+    <div class="mt-3">
+        <a href="{{ path('app_event_index') }}">Retour à la liste des événements</a>
+    </div>
+</div>
+
+{% endblock %}

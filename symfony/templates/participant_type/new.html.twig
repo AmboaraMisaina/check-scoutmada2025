@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ParticipantType{% endblock %}
+
+{% block body %}
+    <h1>Create new ParticipantType</h1>
+
+    {{ include('participant_type/_form.html.twig') }}
+
+    <a href="{{ path('app_participant_type_index') }}">back to list</a>
+{% endblock %}

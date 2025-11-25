@@ -1,0 +1,93 @@
+{# templates/event/_form.html.twig #}
+
+<div class="card shadow-sm p-4 mt-3">
+
+    <div class="row">
+        {# Champ Organization #}
+        <div class="col-md-12 mb-3">
+            {{ form_row(form.organization, {
+                'label': 'Organisation hôte', 
+                'attr': {'class': 'form-select'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+    </div>
+    
+    {# Champ Types de participants autorisés (Sélection Multiple) #}
+    <div class="mb-3 border p-3 rounded">
+        <fieldset>
+            <legend class="fs-6 fw-bold mb-3">{{ form.authorizedParticipantTypes.vars.label }}</legend>
+            
+            {# form_widget(form.authorizedParticipantTypes) rend l'ensemble des cases à cocher #}
+            {{ form_widget(form.authorizedParticipantTypes) }}
+            
+        </fieldset>
+    </div>
+
+    {# Champ Titre #}
+    <div class="mb-3">
+        {{ form_row(form.title, {
+            'label': 'Titre de l\'événement',
+            'attr': {'class': 'form-control'}, 
+            'label_attr': {'class': 'form-label'}
+        }) }}
+    </div>
+
+    {# Champ Description #}
+    <div class="mb-3">
+        {{ form_row(form.description, {
+            'label': 'Description détaillée',
+            'attr': {'class': 'form-control', 'rows': 4}, 
+            'label_attr': {'class': 'form-label'}
+        }) }}
+    </div>
+
+    <div class="row">
+        {# Date de début #}
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.startDate, {
+                'label': 'Date de début',
+                'attr': {'class': 'form-control'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+        
+        {# Date de fin #}
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.endDate, {
+                'label': 'Date de fin',
+                'attr': {'class': 'form-control'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+    </div>
+    
+    <div class="row">
+        {# Heure de début #}
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.startTime, {
+                'label': 'Heure de début',
+                'attr': {'class': 'form-control'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+        
+        {# Heure de fin #}
+        <div class="col-md-6 mb-3">
+            {{ form_row(form.endTime, {
+                'label': 'Heure de fin',
+                'attr': {'class': 'form-control'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        {# Bouton de soumission #}
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        
+        {# Bouton Annuler/Retour #}
+        <a href="{{ path('app_event_index') }}" class="btn btn-outline-secondary">Annuler et Retour</a>
+    </div>
+    
+</div>

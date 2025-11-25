@@ -4,8 +4,9 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Organization;
 
-// #[ORM\Entity(repositoryClass: \App\Repository\RegistrationStepRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: "S_registration_steps")]
 class RegistrationStep
 {
@@ -14,8 +15,9 @@ class RegistrationStep
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $organization_id = null;
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    #[ORM\JoinColumn(nullable: false)] // Si l'organisation est obligatoire
+    private ?Organization $organization = null; // Remarquez le nom de la propriété, sans "Id"
 
     #[ORM\Column(length: 255)]
     private ?string $step = null;
@@ -40,17 +42,18 @@ class RegistrationStep
         return $this->id;
     }
 
-    public function getOrganizationId(): ?int
+
+    public function getOrganization(): ?Organization
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
-    public function setOrganizationId(int $organization_id): static
+    public function setOrganization(?Organization $organization): static
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
         return $this;
     }
-
+    
     public function getStep(): ?string
     {
         return $this->step;

@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Participant;
+use App\Entity\Program;
 
-// #[ORM\Entity(repositoryClass: \App\Repository\RegistrationRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: "S_registrations")]
 class Registration
 {
@@ -14,12 +16,14 @@ class Registration
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $participant_id = null;
+    #[ORM\ManyToOne(targetEntity: Participant::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participant $participant = null;
 
-    #[ORM\Column]
-    private ?int $program_id = null;
-
+    #[ORM\ManyToOne(targetEntity: Program::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Program $program = null;
+    
     #[ORM\Column]
     private ?int $created_by = null;
 
@@ -36,25 +40,25 @@ class Registration
         return $this->id;
     }
 
-    public function getParticipantId(): ?int
+    public function getParticipant(): ?Participant
     {
-        return $this->participant_id;
+        return $this->participant;
     }
 
-    public function setParticipantId(int $participant_id): static
+    public function setParticipant(Participant $participant): static
     {
-        $this->participant_id = $participant_id;
+        $this->participant = $participant;
         return $this;
     }
 
-    public function getProgramId(): ?int
+    public function getProgram(): ?Program
     {
-        return $this->program_id;
+        return $this->program;
     }
 
-    public function setProgramId(int $program_id): static
+    public function setProgram(Program $program): static
     {
-        $this->program_id = $program_id;
+        $this->program = $program;
         return $this;
     }
 

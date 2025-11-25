@@ -1,0 +1,33 @@
+{# templates/organization/_form.html.twig #}
+
+<div class="card shadow-sm p-4 mt-3">
+
+    {# Champ Nom de l'Organisation #}
+    <div class="mb-3">
+        {{ form_row(form.name, {
+            'label': 'Nom de l\'Organisation',
+            'attr': {'class': 'form-control'}, 
+            'label_attr': {'class': 'form-label'}
+        }) }}
+    </div>
+    
+    {# Champ Description #}
+    <div class="mb-3">
+        {{ form_row(form.description, {
+            'label': 'Description',
+            'attr': {'class': 'form-control', 'rows': 5}, 
+            'label_attr': {'class': 'form-label'}
+        }) }}
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        {# Bouton de soumission (utilise la variable button_label passée par le template appelant) #}
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        
+        {# Bouton Annuler/Retour (adaptez la route si nécessaire) #}
+        <a href="{{ path('app_organization_index') }}" class="btn btn-outline-secondary">Annuler et Retour</a>
+    </div>
+    
+    {# Rendu des champs restants (s'il y en a) et du token CSRF #}
+    {{ form_rest(form) }} 
+</div>

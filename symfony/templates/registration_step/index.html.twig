@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RegistrationStep index{% endblock %}
+
+{% block body %}
+    <h1>RegistrationStep index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Step</th>
+                <th>Step_order</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>Created_by</th>
+                <th>Updated_by</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for registration_step in registration_steps %}
+            <tr>
+                <td>{{ registration_step.id }}</td>
+                <td>{{ registration_step.step }}</td>
+                <td>{{ registration_step.stepOrder }}</td>
+                <td>{{ registration_step.createdAt ? registration_step.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ registration_step.updatedAt ? registration_step.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ registration_step.createdBy }}</td>
+                <td>{{ registration_step.updatedBy }}</td>
+                <td>
+                    <a href="{{ path('app_registration_step_show', {'id': registration_step.id}) }}">show</a>
+                    <a href="{{ path('app_registration_step_edit', {'id': registration_step.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_registration_step_new') }}">Create new</a>
+{% endblock %}

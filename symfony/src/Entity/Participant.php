@@ -41,8 +41,8 @@ class Participant
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $created_by = null;
 
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $participant_type_id = null;
+    #[ORM\ManyToOne(targetEntity: ParticipantType::class)]
+    private ?ParticipantType $participant_type = null;
 
     public function getId(): ?int
     {
@@ -133,15 +133,38 @@ class Participant
         return $this;
     }
 
-    public function getParticipantTypeId(): ?int
+    public function getParticipantType(): ?ParticipantType
     {
-        return $this->participant_type_id;
+        return $this->participant_type;
     }
 
-    public function setParticipantTypeId(int $participant_type_id): static
+    public function setParticipantType(?ParticipantType $participant_type): static
     {
-        $this->participant_type_id = $participant_type_id;
+        $this->participant_type = $participant_type;
 
         return $this;
     }
+
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }   
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }   
 }

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ParticipantType{% endblock %}
+
+{% block body %}
+    <h1>ParticipantType</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ participant_type.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ participant_type.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ participant_type.description }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ participant_type.createdAt ? participant_type.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ participant_type.updatedAt ? participant_type.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_participant_type_index') }}">back to list</a>
+
+    <a href="{{ path('app_participant_type_edit', {'id': participant_type.id}) }}">edit</a>
+
+    {{ include('participant_type/_delete_form.html.twig') }}
+{% endblock %}

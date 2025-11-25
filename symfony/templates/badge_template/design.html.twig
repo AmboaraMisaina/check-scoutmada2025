@@ -1,0 +1,234 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Design du Badge : {{ badge_template.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .draggable-field {
+            cursor: grab;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            user-select: none;
+            border-radius: 4px;
+        }
+        #design-area {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: transparent;
+        }
+        .badge-field {
+            position: absolute;
+            padding: 8px 12px;
+            border: 2px dashed #007bff;
+            background: rgba(255,255,255,0.95);
+            cursor: move;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+            min-width: 80px;
+            min-height: 30px;
+            line-height: 1.4;
+            user-select: none;
+            touch-action: none; /* Important pour mobile */
+        }
+        .badge-field:hover { border-color: #0056b3; }
+        .resizer {
+            position: absolute;
+            right: 0; bottom: 0;
+            width: 16px; height: 16px;
+            background: #007bff;
+            cursor: se-resize;
+            border-radius: 4px 0 0 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<h2 class="mb-4">Design du badge : {{ badge_template.name }}</h2>
+
+<div class="row">
+    <div class="col-md-9">
+        <div id="design-container" style="position: relative; background:#f8f9fa; border-radius:8px; overflow:hidden;">
+            <img src="{{ asset(badge_template.filePath) }}" style="width:100%; display:block;" alt="Badge">
+            <div id="design-area"></div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <h4>Champs disponibles</h4>
+        <div id="toolbox">
+            {% for key, label in available_fields %}
+                <div class="draggable-field" draggable="true" data-field="{{ key }}">
+                    {{ label }} <small class="text-muted">({{ key }})</small>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button id="save-btn" class="btn btn-success mt-4 w-100">
+            Enregistrer le design
+        </button>
+    </div>
+</div>
+
+<!-- DONNÉES POUR LE JS -->
+<script>
+    window.existingFields = {{ existing_fields|json_encode|raw }};
+    window.availableFields = {{ available_fields|json_encode|raw }};
+</script>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("JS démarré – tout est prêt");
+
+    const designArea = document.getElementById('design-area');
+    const saveBtn = document.getElementById('save-btn');
+
+    // 1. Charger les champs existants
+    if (window.existingFields && window.existingFields.length > 0) {
+        window.existingFields.forEach(field => addField(field));
+    }
+
+    // 2. Drag & Drop depuis la toolbox
+    document.querySelectorAll('.draggable-field').forEach(el => {
+        el.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('fieldName', el.dataset.field);
+        });
+    });
+
+    designArea.addEventListener('dragover', e => e.preventDefault());
+
+    designArea.addEventListener('drop', e => {
+        e.preventDefault();
+        const fieldName = e.dataTransfer.getData('fieldName');
+        if (!fieldName) return;
+
+        const rect = designArea.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        addField({
+            fieldName: fieldName,
+            posX: x - 75,  // centrer un peu le champ au drop
+            posY: y - 20,
+            fontSize: 18,
+            fontColor: '#000000',
+            width: 150,
+            height: 40
+        });
+    });
+
+    // 3. Créer un champ visible
+    function addField(data) {
+        const div = document.createElement('div');
+        div.className = 'badge-field';
+        div.textContent = window.availableFields[data.fieldName] || `{${data.fieldName}}`;
+        div.style.left = (data.posX || 50) + 'px';
+        div.style.top = (data.posY || 50) + 'px';
+        div.style.fontSize = (data.fontSize || 18) + 'px';
+        div.style.color = data.fontColor || '#000000';
+        div.style.width = (data.width || 150) + 'px';
+        div.style.height = (data.height || 40) + 'px';
+        div.style.lineHeight = (data.height || 40) + 'px';
+
+        const resizer = document.createElement('div');
+        resizer.className = 'resizer';
+        div.appendChild(resizer);
+
+        makeDraggable(div);
+        makeResizable(div, resizer);
+        designArea.appendChild(div);
+    }
+
+    // 4. DÉPLACEMENT (version qui marche à 100%)
+    function makeDraggable(el) {
+        let startX, startY, initialLeft, initialTop;
+
+        el.addEventListener('mousedown', e => {
+            if (e.target.classList.contains('resizer')) return;
+
+            startX = e.clientX;
+            startY = e.clientY;
+            initialLeft = parseInt(el.style.left || 0);
+            initialTop = parseInt(el.style.top || 0);
+
+            const move = e => {
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                el.style.left = (initialLeft + dx) + 'px';
+                el.style.top = (initialTop + dy) + 'px';
+            };
+
+            const up = () => {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', up);
+            };
+
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', up);
+        });
+    }
+
+    // 5. REDIMENSIONNEMENT (version corrigée)
+    function makeResizable(el, resizer) {
+        resizer.addEventListener('mousedown', e => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const startWidth = el.offsetWidth;
+            const startHeight = el.offsetHeight;
+
+            const resize = e => {
+                const newWidth = startWidth + (e.clientX - startX);
+                const newHeight = startHeight + (e.clientY - startY);
+                el.style.width = Math.max(80, newWidth) + 'px';
+                el.style.height = Math.max(30, newHeight) + 'px';
+                el.style.lineHeight = Math.max(30, newHeight) + 'px';
+            };
+
+            const stop = () => {
+                document.removeEventListener('mousemove', resize);
+                document.removeEventListener('mouseup', stop);
+            };
+
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stop);
+        });
+    }
+
+    // 6. SAUVEGARDE
+    saveBtn.addEventListener('click', async () => {
+        const fields = [];
+        document.querySelectorAll('.badge-field').forEach(div => {
+            fields.push({
+                fieldName: div.textContent.trim(),
+                posX: parseInt(div.style.left || 0),
+                posY: parseInt(div.style.top || 0),
+                fontSize: parseInt(div.style.fontSize || 18),
+                fontColor: div.style.color || '#000000',
+                width: div.offsetWidth,
+                height: div.offsetHeight
+            });
+        });
+
+        try {
+            const response = await fetch('{{ path('app_badge_template_save_fields', {id: badge_template.id}) }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fields })
+            });
+            const result = await response.json();
+            alert(result.success ? 'Sauvegardé !' : 'Erreur');
+        } catch (err) {
+            alert('Erreur réseau');
+        }
+    });
+});
+</script>
+{% endblock %}

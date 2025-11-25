@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BadgeField{% endblock %}
+
+{% block body %}
+    <h1>BadgeField</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ badge_field.id }}</td>
+            </tr>
+            <tr>
+                <th>FieldName</th>
+                <td>{{ badge_field.fieldName }}</td>
+            </tr>
+            <tr>
+                <th>PosX</th>
+                <td>{{ badge_field.posX }}</td>
+            </tr>
+            <tr>
+                <th>PosY</th>
+                <td>{{ badge_field.posY }}</td>
+            </tr>
+            <tr>
+                <th>FontSize</th>
+                <td>{{ badge_field.fontSize }}</td>
+            </tr>
+            <tr>
+                <th>FontColor</th>
+                <td>{{ badge_field.fontColor }}</td>
+            </tr>
+            <tr>
+                <th>Width</th>
+                <td>{{ badge_field.width }}</td>
+            </tr>
+            <tr>
+                <th>Height</th>
+                <td>{{ badge_field.height }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_badge_field_index') }}">back to list</a>
+
+    <a href="{{ path('app_badge_field_edit', {'id': badge_field.id}) }}">edit</a>
+
+    {{ include('badge_field/_delete_form.html.twig') }}
+{% endblock %}

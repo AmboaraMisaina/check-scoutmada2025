@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Titre{% endblock %}</title>
+
+    {# Inclure uniquement les assets nécessaires #}
+    {% include 'assets/css.html.twig' %}
+</head>
+<body>
+
+    {# Contenu principal dynamique #}
+    {% block body %}{% endblock %}
+
+    {# JS #}
+    {% include 'assets/js.html.twig' %}
+</body>
+</html>

@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: "S_admins")]
-class Admin
+class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,8 +22,9 @@ class Admin
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
-    private ?int $role_id = null;
+    #[ORM\ManyToOne(targetEntity: Role::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $created_at = null;
@@ -29,23 +32,33 @@ class Admin
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $updated_at = null;
 
+    // -----------------------------
+    // UserInterface
+    // -----------------------------
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    public function getRoles(): array
+    {
+        // Retourne le rôle au format ROLE_XXX
+        return [$this->role ? $this->role->getLabel() : 'ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si tu stockes des champs sensibles temporaires (ex: plainPassword)
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): static
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
+    // -----------------------------
+    // PasswordAuthenticatedUserInterface
+    // -----------------------------
     public function getPassword(): ?string
     {
         return $this->password;
@@ -54,38 +67,19 @@ class Admin
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    public function getRoleId(): ?int
-    {
-        return $this->role_id;
-    }
+    // -----------------------------
+    // Autres getters / setters
+    // -----------------------------
 
-    public function setRoleId(int $role_id): static
-    {
-        $this->role_id = $role_id;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->created_at;
-    }
-    public function setCreatedAt(?\DateTimeInterface $created_at): static
-    {
-        $this->created_at = $created_at;
-        return $this;
-    }
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): static
-    {
-        $this->updated_at = $updated_at;
-        return $this;
-    }
+    public function getUsername(): ?string { return $this->username; }
+    public function setUsername(string $username): static { $this->username = $username; return $this; }
+    public function getRole(): ?Role { return $this->role; }
+    public function setRole(?Role $role): static { $this->role = $role; return $this; }
+    public function getCreatedAt(): ?\DateTimeInterface { return $this->created_at; }
+    public function setCreatedAt(?\DateTimeInterface $created_at): static { $this->created_at = $created_at; return $this; }
+    public function getUpdatedAt(): ?\DateTimeInterface { return $this->updated_at; }
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): static { $this->updated_at = $updated_at; return $this; }
 }

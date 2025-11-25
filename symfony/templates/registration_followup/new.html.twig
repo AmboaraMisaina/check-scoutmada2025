@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New RegistrationFollowup{% endblock %}
+
+{% block body %}
+    <h1>Create new RegistrationFollowup</h1>
+
+    {{ include('registration_followup/_form.html.twig') }}
+
+    <a href="{{ path('app_registration_followup_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,31 @@
+{# templates/organization/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une Organisation{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <h1>Créer une nouvelle Organisation</h1>
+
+    {# Affichage des messages Flash #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success mt-3" role="alert">{{ message }}</div>
+    {% endfor %}
+
+    {# Démarrage du formulaire #}
+    {{ form_start(form) }}
+
+        {# INCLUSION DU PARTIEL _form.html.twig #}
+        {{ include('organization/_form.html.twig', {'button_label': 'Créer l\'Organisation'}) }}
+
+    {# Fin du formulaire #}
+    {{ form_end(form) }}
+
+    <div class="mt-3">
+        <a href="{{ path('app_organization_index') }}">Retour à la liste</a>
+    </div>
+</div>
+
+{% endblock %}

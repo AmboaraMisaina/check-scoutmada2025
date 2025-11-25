@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New RegistrationStep{% endblock %}
+
+{% block body %}
+    <h1>Create new RegistrationStep</h1>
+
+    {{ include('registration_step/_form.html.twig') }}
+
+    <a href="{{ path('app_registration_step_index') }}">back to list</a>
+{% endblock %}

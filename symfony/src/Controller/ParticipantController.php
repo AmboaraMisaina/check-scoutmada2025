@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\ParticipantType;
-use App\Repository\ParticipantRepository;
+use App\Service\ParticipantService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +14,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/participant')]
 final class ParticipantController extends AbstractController
 {
-    #[Route(name: 'app_participant_index', methods: ['GET'])]
-    public function index(ParticipantRepository $participantRepository): Response
+    private ParticipantService $participantService;
+
+    public function __construct(ParticipantService $participantService)
     {
+        $this->participantService = $participantService;
+    }
+
+    #[Route(name: 'app_participant_index', methods: ['GET'])]
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        $participants = $entityManager
+            ->getRepository(Participant::class)
+            ->findAll();
+
         return $this->render('participant/index.html.twig', [
-            'participants' => $participantRepository->findAll(),
+            'participants' => $participants,
         ]);
     }
 
@@ -26,12 +37,19 @@ final class ParticipantController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $participant = new Participant();
+        $now = new \DateTimeImmutable();
+        $participant->setCreatedAt($now);
+        $participant->setUpdatedAt($now);
+        $participant->setCreatedBy($this->getUser()?->getId());
+        
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($participant);
             $entityManager->flush();
+
+            $this->participantService->updateQrCodes([$participant]);
 
             return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
         }

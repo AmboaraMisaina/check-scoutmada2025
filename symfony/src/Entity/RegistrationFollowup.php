@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\RegistrationFollowupRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,86 +15,102 @@ class RegistrationFollowup
     #[ORM\Column]
     private ?int $id = null;
 
+    // Relation ManyToOne vers Participant
+    #[ORM\ManyToOne(targetEntity: Participant::class, inversedBy: 'registrationFollowups')]
+    #[ORM\JoinColumn(name: 'participant_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Participant $participant = null;
+
+    // Relation ManyToOne vers RegistrationStep
+    #[ORM\ManyToOne(targetEntity: RegistrationStep::class, inversedBy: 'registrationFollowups')]
+    #[ORM\JoinColumn(name: 'step_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?RegistrationStep $step = null;
+
+
+    #[ORM\ManyToOne(targetEntity: Program::class)]
+    #[ORM\JoinColumn(name: 'program_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Program $program = null;
+
+    // Statut (ex: pending, approved, rejected, etc.)
     #[ORM\Column]
-    private ?int $participant_id = null;
+    private ?string $status = null;
 
     #[ORM\Column]
-    private ?int $step_id = null;
-
-    #[ORM\Column]
-    private ?int $status = null;
-
-    #[ORM\Column]
-    private ?int $created_by = null;
-
+    private ?int $createdBy = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
-    private ?\DateTimeInterface $created_at = null;
+    private ?\DateTimeInterface $createdAt = null;
 
+    // ========================
+    // GETTERS & SETTERS
+    // ========================
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getParticipantId(): ?int
+    public function getParticipant(): ?Participant
     {
-        return $this->participant_id;
+        return $this->participant;
     }
 
-    public function setParticipantId(int $participant_id): static
+    public function setParticipant(?Participant $participant): static
     {
-        $this->participant_id = $participant_id;
-
+        $this->participant = $participant;
         return $this;
     }
 
-    public function getStepId(): ?int
+    public function getStep(): ?RegistrationStep
     {
-        return $this->step_id;
+        return $this->step;
     }
 
-    public function setStepId(int $step_id): static
+    public function setStep(?RegistrationStep $step): static
     {
-        $this->step_id = $step_id;
-
+        $this->step = $step;
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?String
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): static
+    public function setStatus(string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
     public function getCreatedBy(): ?int
     {
-        return $this->created_by;
+        return $this->createdBy;
     }
 
-    public function setCreatedBy(int $created_by): static
+    public function setCreatedBy(?int $createdBy): static
     {
-        $this->created_by = $created_by;
-
+        $this->createdBy = $createdBy;
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
-        $this->created_at = $created_at;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 
+    public function getProgram(): ?Program
+    {
+        return $this->program;
+    }
+    public function setProgram(?Program $program): static
+    {
+        $this->program = $program;
+        return $this;
+    }   
 }

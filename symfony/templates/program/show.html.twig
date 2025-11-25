@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Program{% endblock %}
+
+{% block body %}
+    <h1>Program</h1>
+
+    <table class="table">
+    <a href="{{ path('app_program_edit', {'id': program.id}) }}" 
+                   class="btn btn-sm btn-primary"
+                   onclick="event.stopPropagation();">Edit</a>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ program.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ program.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ program.description }}</td>
+            </tr>
+            <tr>
+                <th>Start_time</th>
+                <td>{{ program.startTime ? program.startTime|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>End_time</th>
+                <td>{{ program.endTime ? program.endTime|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Start_date</th>
+                <td>{{ program.startDate ? program.startDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>End_date</th>
+                <td>{{ program.endDate ? program.endDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Created_by</th>
+                <td>{{ program.createdBy }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ program.createdAt ? program.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ program.updatedAt ? program.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_program_index') }}">back to list</a>
+
+    <a href="{{ path('app_program_edit', {'id': program.id}) }}">edit</a>
+
+    {{ include('program/_delete_form.html.twig') }}
+{% endblock %}
