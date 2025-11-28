@@ -114,7 +114,8 @@ jobs:
 
       # 3. Installer les dépendances
       - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: cd symfony &&
+          composer install --no-dev --optimize-autoloader
 
       # 4. Compiler les assets (si Webpack Encore)
       - name: Build Frontend assets
