@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Organization;
 use App\Entity\Program;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,6 +15,10 @@ class ProgramType extends AbstractType
     {
         $builder
             ->add('title')
+            ->add('organization', EntityType::class, [
+                'class' => Organization::class,
+                'choice_label' => 'name',
+            ])
             ->add('description')
             ->add('start_time')
             ->add('end_time')

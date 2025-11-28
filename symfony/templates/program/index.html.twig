@@ -5,68 +5,64 @@
 {% block body %}
 
 <div class="container py-4">
+
     <h1 class="h3 fw-bold mb-4">
-        <i class="fas fa-calendar-alt me-3"></i>List of programs
+        <i class="fas fa-calendar-alt me-3"></i>Programs Timeline
     </h1>
+    <form id="programFilterForm" class="mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label for="statusFilter" class="col-form-label">Statut :</label>
+            </div>
+            <div class="col-auto">
+                <select id="statusFilter" class="form-select" name="status">
+                    <option value="">Tous</option>
+                    <option value="upcoming">À venir</option>
+                    <option value="in_progress">En cours</option>
+                    <option value="past">Passés</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </div>
+        </div>
+    </form>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Titre</th>
-                    <th>Début</th>
-                    <th>Fin</th>
-                    <th class="text-center">Inscription</th>
-                    <th class="text-center">Participants</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for program in programs %}
-                <tr>
-                    <td>
-                        <a href="{{ path('app_program_show', {'id': program.id}) }}">
-                            {{ program.title }}
-                        </a>
-                    </td>
-                    <td>{{ program.startDate ? program.startDate|date('d/m/Y') : '' }}</td>
-                    <td>{{ program.endDate ? program.endDate|date('d/m/Y') : '' }}</td>
-
-                    <td class="text-center">
-                        <button type="button"
-                                class="btn btn-success btn-sm rounded-circle"
-                                data-bs-toggle="offcanvas"
-                                data-bs-target="#registrationOffcanvas"
-                                data-program-id="{{ program.id }}"
-                                data-program-title="{{ program.title }}">
-                            <i class="fas fa-user-plus"></i>
-                        </button>
-                    </td>
-
-                    <td class="text-center">
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-view-participants"
-                            data-program-id="{{ program.id }}"
-                            data-program-title="{{ program.title }}"
-                            data-bs-toggle="modal"
-                            data-bs-target="#participantsModal">
-                            Voir
-                        </button>
-                    </td>
-                </tr>
-            {% else %}
-                <tr><td colspan="5" class="text-center py-5">Aucun programme</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div id="timeline-container" class="timeline position-relative ms-4">
+        <!-- Les programmes seront chargés ici via AJAX -->
     </div>
+
+    <div class="text-center mt-3">
+        <button id="loadMoreBtn" class="btn btn-outline-primary">Charger plus</button>
+    </div>
+
 </div>
 
+<style>
+/* Ligne verticale de la timeline */
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #d0d7de;
+    border-radius: 4px;
+}
+
+.timeline {
+    margin-left: 12px !important;
+}
+
+.timeline-item:first-child .timeline-dot {
+    top: 0px !important; 
+}
+</style>
 
 <!-- =============================== -->
 <!-- MODAL : LISTE DES PARTICIPANTS -->
 <!-- =============================== -->
-
 <div class="modal fade" id="participantsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
@@ -91,10 +87,10 @@
                                 <th>Email</th>
                                 <th>Pays</th>
                                 <th>Type</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="participants-tbody">
-                        </tbody>
+                        <tbody id="participants-tbody"></tbody>
                     </table>
                 </div>
 
@@ -112,74 +108,179 @@
 
 {% endblock %}
 
-
-
 {% block javascripts %}
 {{ parent() }}
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    // ================================
-    // ÉVÉNEMENT : ouverture du modal
-    // ================================
-    document.querySelectorAll(".btn-view-participants").forEach(btn => {
-        btn.addEventListener("click", async () => {
-            const programId = btn.dataset.programId;
-            const programTitle = btn.dataset.programTitle;
+    let offset = 0;
+    const limit = 5;
+    const timelineContainer = document.getElementById('timeline-container');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    let pastSeparatorRendered = false;
 
+    async function loadPrograms() {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = "Chargement...";
 
+        try {
+            const response = await fetch(`{{ path('app_programs_load') }}?offset=${offset}`);
+            const data = await response.json();
 
-            document.getElementById("participantsModalTitle").textContent =
-                "Participants - " + programTitle;
-
-            const loading = document.getElementById("participants-loading");
-            const empty = document.getElementById("participants-empty");
-            const table = document.getElementById("participants-table");
-            const tbody = document.getElementById("participants-tbody");
-
-            // Reset affichage
-            loading.style.display = "block";
-            empty.style.display = "none";
-            table.style.display = "none";
-            tbody.innerHTML = "";
-
-            // URL API Symfony
-            const url = `program/${programId}/participants`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-
-                loading.style.display = "none";
-
-                if (!data || data.length === 0) {
-                    empty.style.display = "block";
-                    return;
-                }
-
-                table.style.display = "table";
-
-                data.forEach(p => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${p.id}</td>
-                            <td>${p.lastName}</td>
-                            <td>${p.firstName}</td>
-                            <td>${p.email}</td>
-                            <td>${p.country ?? ""}</td>
-                            <td>${p.participantType ?? ""}</td>
-                        </tr>
-                    `;
-                });
-
-            } catch (e) {
-                loading.style.display = "none";
-                empty.style.display = "block";
-                empty.innerHTML = `Erreur lors du chargement`;
+            // Prévenir affichage double séparateur
+            if (pastSeparatorRendered) {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = data.html;
+                tmp.querySelectorAll('.timeline-separator').forEach(el => el.remove());
+                timelineContainer.insertAdjacentHTML('beforeend', tmp.innerHTML);
+            } else {
+                timelineContainer.insertAdjacentHTML('beforeend', data.html);
+                pastSeparatorRendered = true;
             }
+
+            offset += data.count;
+
+            if (!data.hasMore) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.textContent = "Charger plus";
+            }
+
+            attachParticipantButtons();
+
+        } catch (err) {
+            console.error(err);
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = "Erreur, réessayer";
+        }
+    }
+
+    loadMoreBtn.addEventListener('click', loadPrograms);
+
+    // Charger la première page
+    loadPrograms();
+
+
+    // Bouton “Load More”
+    loadMoreBtn.addEventListener('click', loadPrograms);
+
+    // Fonction pour gérer le clic sur les boutons “Participants”
+    function attachParticipantButtons() {
+        document.querySelectorAll(".btn-view-participants").forEach(btn => {
+            if (btn.dataset.listenerAttached) return; // éviter double attachement
+            btn.dataset.listenerAttached = true;
+
+            btn.addEventListener("click", async () => {
+                const programId = btn.dataset.programId;
+                const programTitle = btn.dataset.programTitle;
+
+                document.getElementById("participantsModalTitle").textContent = "Participants - " + programTitle;
+
+                const loading = document.getElementById("participants-loading");
+                const empty = document.getElementById("participants-empty");
+                const table = document.getElementById("participants-table");
+                const tbody = document.getElementById("participants-tbody");
+
+                loading.style.display = "block";
+                empty.style.display = "none";
+                table.style.display = "none";
+                tbody.innerHTML = "";
+
+                try {
+                    const url = `program/${programId}/participants`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    loading.style.display = "none";
+
+                    const participants = data.participants ?? [];
+                    const steps = data.registrationSteps ?? [];
+
+                    if (participants.length === 0) {
+                        empty.style.display = "block";
+                        return;
+                    }
+
+                    table.style.display = "table";
+
+                    participants.forEach(p => {
+                        let stepsHtml = "";
+                        steps.forEach(step => {
+                            if (!p.completedStepIds.includes(step.id)) {
+                                stepsHtml += `
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-success me-1 mb-1 complete-step-btn"
+                                            data-participant-id="${p.id}"
+                                            data-program-id="${programId}"
+                                            data-step-id="${step.id}">
+                                        ${step.step} (${step.stepOrder})
+                                    </button>
+                                `;
+                            }
+                        });
+
+                        if (stepsHtml === "") {
+                            stepsHtml = `<span class="badge bg-success">Inscription validée</span>`;
+                        }
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${p.id}</td>
+                                <td>${p.lastName}</td>
+                                <td>${p.firstName}</td>
+                                <td>${p.email}</td>
+                                <td>${p.country ?? ""}</td>
+                                <td>${p.participantType ?? ""}</td>
+                                <td>${stepsHtml}</td>
+                            </tr>
+                        `;
+                    });
+
+                    // Attacher événements étapes
+                    tbody.querySelectorAll('.complete-step-btn').forEach(btnStep => {
+                        btnStep.addEventListener('click', async () => {
+                            const participantId = btnStep.dataset.participantId;
+                            const stepId = btnStep.dataset.stepId;
+
+                            try {
+                                const res = await fetch('registration-followup/api/new', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token('followup') }}'
+                                    },
+                                    body: JSON.stringify({
+                                        participant_id: participantId,
+                                        program_id: programId,
+                                        step_id: stepId
+                                    })
+                                });
+                                const result = await res.json();
+
+                                if (result.success) {
+                                    btnStep.classList.remove('btn-outline-success');
+                                    btnStep.classList.add('btn-success');
+                                    btnStep.disabled = true;
+                                } else {
+                                    console.error(result.message || "Erreur lors de la complétion de l'étape.");
+                                }
+
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        });
+                    });
+
+                } catch (e) {
+                    loading.style.display = "none";
+                    empty.style.display = "block";
+                    empty.innerHTML = "Erreur lors du chargement des participants.";
+                }
+            });
         });
-    });
+    }
 
 });
 </script>

@@ -22,6 +22,10 @@ class Event
     #[ORM\JoinColumn(nullable: false)]
     private ?Organization $organization = null;
 
+    #[ORM\ManyToOne(targetEntity: Program::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Program $program = null;
+
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
@@ -249,6 +253,16 @@ class Event
     public function setOrganization(?Organization $organization): static
     {
         $this->organization = $organization;
+        return $this;
+    }
+
+    public function getProgram(): ?Program
+    {
+        return $this->program;
+    }   
+    public function setProgram(?Program $program): static
+    {
+        $this->program = $program;
         return $this;
     }
 }

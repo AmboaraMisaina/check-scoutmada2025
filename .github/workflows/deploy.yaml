@@ -1,4 +1,29 @@
-# name: 🚀 FTP Deploy
+# # name: 🚀 FTP Deploy
+
+# # on:
+# #   push:
+# #     branches:
+# #       - migration-symfony
+
+# # jobs:
+# #   ftp-deploy:
+# #     runs-on: ubuntu-latest
+
+# #     steps:
+# #       - name: 📥 Checkout code
+# #         uses: actions/checkout@v3
+
+# #       - name: 📤 FTP Deploy
+# #         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+# #         with:
+# #           server: scoutmada2025.mg
+# #           username: checkin@scoutmada2025.mg
+# #           password: scoutmada2025
+# #           server-dir: /public_html/symfony/
+# #           local-dir: ./symfony/
+
+
+# name: 🚀 Deploy Symfony (Fast)
 
 # on:
 #   push:
@@ -6,82 +31,106 @@
 #       - migration-symfony
 
 # jobs:
-#   ftp-deploy:
+#   deploy:
 #     runs-on: ubuntu-latest
 
 #     steps:
-#       - name: 📥 Checkout code
-#         uses: actions/checkout@v3
+#       - name: 📦 Checkout code
+#         uses: actions/checkout@v4
 
-#       - name: 📤 FTP Deploy
+#       - name: 🔧 Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.3'
+#           extensions: mbstring, intl, pdo_mysql, zip, gd
+
+#       - name: Cache Composer
+#         uses: actions/cache@v4
+#         with:
+#           path: ~/.composer/cache
+#           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+#           restore-keys: ${{ runner.os }}-composer-
+
+#       - name: 🎼 Composer install (prod)
+#         run: |
+#           cd symfony
+#           composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
+
+#       - name: 📤 Deploy via FTP
 #         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
 #         with:
 #           server: scoutmada2025.mg
 #           username: checkin@scoutmada2025.mg
 #           password: scoutmada2025
-#           server-dir: /public_html/symfony/
+
+#           protocol: ftp
+#           port: 21
+
 #           local-dir: ./symfony/
+#           server-dir: /public_html/symfony/
+
+#           timeout: 600000
+#           dangerous-clean-slate: false
+#           log-level: minimal
+#           security: loose
+
+#           state-name: .ftp-deploy-sync-state.json
+
+#           exclude: |
+#             **/.git**
+#             **/.github/**
+#             **/node_modules/**
+#             **/tests/**
+#             **/var/**
+#             **/vendor/**
+#             .env.local*
+#             *.log
 
 
-name: 🚀 Deploy Symfony (Fast)
+
+name: Deploy Symfony App via FTP
 
 on:
   push:
     branches:
-      - migration-symfony
+      - migration-symfony   # déclenche sur un push sur migration-symfony
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout code
-        uses: actions/checkout@v4
+      # 1. Récupération du code
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: 🔧 Setup PHP
+      # 2. Installation PHP + Composer
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
-          extensions: mbstring, intl, pdo_mysql, zip, gd
+          php-version: 8.2
+          tools: composer
+          extensions: mbstring, intl, pdo_mysql
 
-      - name: Cache Composer
-        uses: actions/cache@v4
-        with:
-          path: ~/.composer/cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      # 3. Installer les dépendances
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-      - name: 🎼 Composer install (prod)
+      # 4. Compiler les assets (si Webpack Encore)
+      - name: Build Frontend assets
         run: |
-          cd symfony
-          composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction
+          if [ -f "package.json" ]; then
+            npm install
+            npm run build
+          fi
 
-      - name: 📤 Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # 5. Déploiement FTP
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: scoutmada2025.mg
           username: checkin@scoutmada2025.mg
           password: scoutmada2025
-
-          protocol: ftp
-          port: 21
-
-          local-dir: ./symfony/
-          server-dir: /public_html/symfony/
-
-          timeout: 600000
-          dangerous-clean-slate: false
-          log-level: minimal
-          security: loose
-
-          state-name: .ftp-deploy-sync-state.json
-
-          exclude: |
-            **/.git**
-            **/.github/**
-            **/node_modules/**
-            **/tests/**
-            **/var/**
-            **/vendor/**
-            .env.local*
-            *.log
+          server-dir: /public_html/
+          local-dir: ./symfony/     # mets ici TON dossier sur le serveur
+          dangerous-clean-slate: false    # évite de supprimer tout le site

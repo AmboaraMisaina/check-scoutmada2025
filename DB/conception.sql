@@ -68,6 +68,7 @@ create table participants (
 
 create table programs (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  organization_id INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   description TEXT,
   start_time TIME NOT NULL,
@@ -87,7 +88,6 @@ CREATE TABLE program_registrations (
   CONSTRAINT fk_reg_participant FOREIGN KEY (participant_id) REFERENCES participants(id) ON DELETE CASCADE,
   CONSTRAINT fk_reg_program FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE,
 ) ENGINE=InnoDB;
-
 
 create table events (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,11 +109,11 @@ create table events (
   CONSTRAINT fk_event_organization FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
-
 create table event_accreditations (
   id INT AUTO_INCREMENT PRIMARY KEY,
   participant_type_id INT NOT NULL,
   event_id INT NOT NULL,
+  status VARCHAR(50) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by INT NOT NULL,
@@ -122,6 +122,7 @@ create table event_accreditations (
   CONSTRAINT fk_event_accr_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- etape a suivre pour completer l'inscription a un programme
 create table registration_steps (
   id INT AUTO_INCREMENT PRIMARY KEY,
   organization_id INT NOT NULL,
@@ -131,6 +132,7 @@ create table registration_steps (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_step_organization FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
 
 create table registrations (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -148,7 +150,7 @@ create table registrations (
 create table registration_followups (
   id INT AUTO_INCREMENT PRIMARY KEY,
   participant_id INT NOT NULL, -- Le participant
-  program_id INT NOT NULL, -- 💡 NOUVEAU : L'événement pour lequel l'étape est requise
+  program_id INT NOT NULL, -- 💡 NOUVEAU : Le programme pour lequel l'étape est requise
   step_id INT NOT NULL, 
   status INT NOT NULL,
   status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -206,3 +208,6 @@ insert into S_admins (username, password, created_at, updated_at, role_id) value
 insert into S_roles (label, description, created_at, updated_at) values
 ('ROLE_ADMIN', 'Accès complet à toutes les fonctionnalités et données.', NOW(), NOW()),
 ('ROLE_MODERATOR', 'Peut surveiller les inscriptions et la participation aux événements.', NOW(), NOW());
+
+insert into S_program_registrations (participant_id, program_id,created_by) values
+(2, 2 , 1);

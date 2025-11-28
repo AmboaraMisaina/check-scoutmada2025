@@ -1,0 +1,73 @@
+{% set now = "now"|date('U') %}
+
+{% for program in programs %}
+
+    {# --- Déterminer le statut --- #}
+    {% set start_timestamp = program.startDate|date('U') ~ ' ' ~ program.startTime|date('U') %}
+    {% set end_timestamp = program.endDate|date('U') ~ ' ' ~ program.endTime|date('U') %}
+    {% set status = program.status ?? 'upcoming' %}
+
+    {% set badge_class = status == 'upcoming' ? 'bg-success' : (status == 'in_progress' ? 'bg-warning text-dark' : 'bg-danger') %}
+    {% set badge_text = status == 'upcoming' ? 'À VENIR' : (status == 'in_progress' ? 'EN COURS' : 'TERMINÉ') %}
+    {% set dot_color = status == 'upcoming' ? 'bg-primary' : (status == 'in_progress' ? 'bg-warning' : 'bg-danger') %}
+    {% set dot_icon = status == 'in_progress' ? '<i class="fas fa-sync-alt text-dark" style="font-size:10px;"></i>' : (status == 'past' ? '<i class="fas fa-check text-white" style="font-size:10px;"></i>' : '') %}
+
+    {# --- Séparateur "Programmes Passés" (uniquement sur la première occurrence) --- #}
+    {% if status == 'past' and loop.first %}
+        <div class="timeline-separator my-5 text-center position-relative">
+            <hr class="w-100 my-0 border-top border-4 border-danger opacity-75">
+            <h2 class="h5 position-absolute top-50 start-50 translate-middle bg-body px-3 py-2 border border-danger rounded-pill shadow-sm text-danger fw-bold">
+                <i class="fas fa-history me-2"></i> Programmes Passés
+            </h2>
+        </div>
+    {% endif %}
+
+    {# --- Timeline Item --- #}
+    <div class="timeline-item mb-5 position-relative">
+        <div class="timeline-dot position-absolute start-0 translate-middle {{ dot_color }} rounded-circle d-flex align-items-center justify-content-center"
+            style="width:24px; height:24px; left:-12px; top:10px;">
+            {{ dot_icon|raw }}
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-3 ms-4">
+            <div class="card-body">
+                <div class="position-relative">
+                    <span class="badge {{ badge_class }} position-absolute top-0 end-0 m-2">{{ badge_text }}</span>
+                </div>
+
+                <h4 class="fw-bold">
+                    <a href="{{ path('app_program_show', {'id': program.id}) }}" class="text-decoration-none text-dark">
+                        {{ program.title }}
+                    </a>
+                </h4>
+
+                <div class="small text-muted mb-2">
+                    <i class="far fa-clock me-1"></i>
+                    {{ program.startDate|date('d M Y') }} {{ program.startTime|date('H:i') }} — 
+                    {{ program.endDate|date('d M Y') }} {{ program.endTime|date('H:i') }}
+                </div>
+
+                <p class="text-muted mb-3">{{ program.description }}</p>
+
+                <div class="d-flex gap-2">
+                    {% if status != 'past' %}
+                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="offcanvas"
+                                data-bs-target="#registrationOffcanvas"
+                                data-program-id="{{ program.id }}"
+                                data-program-title="{{ program.title }}">
+                            <i class="fas fa-user-plus me-1"></i> Register
+                        </button>
+                    {% endif %}
+                    <button type="button" class="btn btn-primary btn-sm btn-view-participants"
+                            data-program-id="{{ program.id }}"
+                            data-program-title="{{ program.title }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#participantsModal">
+                        <i class="fas fa-users me-1"></i> Participants
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}

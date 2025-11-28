@@ -5,36 +5,88 @@
 {% block body %}
     <h1>List of events</h1>
 
+    <!-- FILTRES -->
+    <form method="get" action="{{ path('app_event_index') }}" class="row g-3 mb-4">
+
+
+        <!-- Filtre Program -->
+        <div class="col-md-4">
+            <label class="form-label">Program</label>
+            <select name="program" class="form-select">
+                <option value="">-- All programs --</option>
+
+                {% for program in programs %}
+                    <option value="{{ program.id }}"
+                        {% if app.request.get('program') == program.id ~ '' %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ program.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Filtre Start Date -->
+        <div class="col-md-3">
+            <label class="form-label">Start date</label>
+            <input type="date" name="startDate" class="form-control"
+                   value="{{ app.request.get('startDate') }}">
+        </div>
+
+        <!-- Filtre End Date -->
+        <div class="col-md-3">
+            <label class="form-label">End date</label>
+            <input type="date" name="endDate" class="form-control"
+                   value="{{ app.request.get('endDate') }}">
+        </div>
+
+        <!-- Bouton Filtrer -->
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100">Filter</button>
+        </div>
+
+    </form>
+
+    <!-- TABLEAU -->
     <table class="table">
         <thead>
             <tr>
                 <th>Title</th>
+                <th>Program</th>
                 <th>Start_date</th>
                 <th>End_date</th>
                 <th>Start_time</th>
                 <th>End_time</th>
             </tr>
         </thead>
+
         <tbody>
         {% for event in events %}
-            <tr> 
+            <tr>
                 <td>
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">
                         {{ event.title }}
                     </a>
                 </td>
+
+                <td>
+                    {{ event.program ? event.program.title : '-' }}
+                </td>
+
                 <td>{{ event.startDate ? event.startDate|date('Y-m-d') : '' }}</td>
                 <td>{{ event.endDate ? event.endDate|date('Y-m-d') : '' }}</td>
                 <td>{{ event.startTime ? event.startTime|date('H:i:s') : '' }}</td>
                 <td>{{ event.endTime ? event.endTime|date('H:i:s') : '' }}</td>
             </tr>
+
         {% else %}
             <tr>
-                <td colspan="12">no records found</td>
+                <td colspan="12">No events found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_event_new') }}">Create new</a>
+    <a href="{{ path('app_event_new') }}" class="btn btn-success">Create new</a>
 {% endblock %}

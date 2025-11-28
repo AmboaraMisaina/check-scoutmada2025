@@ -31,6 +31,9 @@ class EventAccreditation
     #[ORM\Column(type: Types::INTEGER, nullable: false)]
     private ?int $createdBy = null;
 
+    #[ORM\Column(type: Types::STRING, length: 50, nullable: false)]
+    private string $status;
+
     // 4. Champs de date/heure (Utilisation de DateTimeImmutable recommandé pour les dates de création/modification)
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -104,6 +107,17 @@ class EventAccreditation
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }  
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
         return $this;
     }
 }

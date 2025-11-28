@@ -27,6 +27,11 @@ class EventType extends AbstractType
                 'label' => 'Organisation liée',
             ])
             
+            ->add('program', EntityType::class, [
+                'class' => 'App\Entity\Program',
+                'choice_label' => 'title',
+                'label' => 'Programme lié',
+            ])
             // 2. Champs de Texte
             ->add('title', TextType::class, [
                 'label' => 'Titre de l\'événement',

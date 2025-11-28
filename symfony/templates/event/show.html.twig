@@ -3,60 +3,138 @@
 {% block title %}Event{% endblock %}
 
 {% block body %}
-    <h1>Event</h1>
+<h1>Event</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ event.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ event.description }}</td>
-            </tr>
-            <tr>
-                <th>Start_time</th>
-                <td>{{ event.startTime ? event.startTime|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>End_time</th>
-                <td>{{ event.endTime ? event.endTime|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Start_date</th>
-                <td>{{ event.startDate ? event.startDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>End_date</th>
-                <td>{{ event.endDate ? event.endDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Created_by</th>
-                <td>{{ event.createdBy }}</td>
-            </tr>
-            <tr>
-                <th>Updated_by</th>
-                <td>{{ event.updatedBy }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ event.createdAt ? event.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ event.updatedAt ? event.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ event.id }}</td>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <td>{{ event.title }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ event.description }}</td>
+        </tr>
+        <tr>
+            <th>Start_time</th>
+            <td>{{ event.startTime ? event.startTime|date('H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>End_time</th>
+            <td>{{ event.endTime ? event.endTime|date('H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Start_date</th>
+            <td>{{ event.startDate ? event.startDate|date('Y-m-d') : '' }}</td>
+        </tr>
+        <tr>
+            <th>End_date</th>
+            <td>{{ event.endDate ? event.endDate|date('Y-m-d') : '' }}</td>
+        </tr>
+    </tbody>
+</table>
 
-    <a href="{{ path('app_event_index') }}">back to list</a>
+<h2>Accréditation des participants</h2>
 
-    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+<div class="row g-3">
+    {% if participantTypes is not empty %}
+        {% for type in participantTypes %}
+            {% set status = accreditedTypeStatuses[type.id] ?? 'disabled' %}
+            <div class="col-md-4">
+                <div class="card p-3 h-100 d-flex flex-column justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong>{{ type.name }}</strong>
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input accreditation-switch"
+                                   type="checkbox"
+                                   data-type-id="{{ type.id }}"
+                                   data-status-target="accreditation-status-{{ type.id }}"
+                                   {% if status == 'enabled' %}checked{% endif %}>
+                        </div>
+                    </div>
+                    <small id="accreditation-status-{{ type.id }}" class="text-muted">
+                        {{ status == 'enabled' ? 'Autorisé' : 'Non autorisé' }}
+                    </small>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aucun type de participant trouvé</p>
+    {% endif %}
+</div>
 
+<div class="mt-4">
+    <button id="validate-accreditations" class="btn btn-success" style="display:none;">
+        Valider les changements
+    </button>
+    <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Back to list</a>
+    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-primary">Edit</a>
     {{ include('event/_delete_form.html.twig') }}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+const eventId = {{ event.id }};
+const changes = {}; // Stocke les changements
+const validateBtn = document.getElementById('validate-accreditations');
+
+// Détecte les changements et les stocke
+document.querySelectorAll('.accreditation-switch').forEach(switchEl => {
+    switchEl.addEventListener('change', () => {
+        const typeId = switchEl.dataset.typeId;
+        const status = switchEl.checked ? 'enabled' : 'disabled';
+
+        // Stocke le changement
+        changes[typeId] = status;
+
+        // Affiche le bouton si au moins un changement
+        validateBtn.style.display = Object.keys(changes).length > 0 ? 'inline-block' : 'none';
+    });
+});
+
+// Bouton de validation
+validateBtn.addEventListener('click', async () => {
+    if (Object.keys(changes).length === 0) return;
+
+    try {
+        const response = await fetch(`/api/event/${eventId}/accreditations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': '{{ csrf_token('accreditation') }}'
+            },
+            body: JSON.stringify(changes)
+        });
+
+        if (!response.ok) throw new Error('Erreur serveur');
+
+        const result = await response.json();
+        if (!result.success) {
+            alert(result.message || 'Erreur lors de la mise à jour');
+        } else {
+            // Mise à jour du texte et cache le bouton
+            for (const typeId in changes) {
+                const statusEl = document.getElementById(`accreditation-status-${typeId}`);
+                statusEl.textContent = changes[typeId] === 'enabled' ? 'Autorisé' : 'Non autorisé';
+            }
+            // Réinitialise les changements
+            Object.keys(changes).forEach(key => delete changes[key]);
+            validateBtn.style.display = 'none';
+            alert('Changements enregistrés avec succès');
+        }
+
+    } catch (e) {
+        console.error(e);
+        alert('Erreur lors de la mise à jour');
+    }
+});
+</script>
 {% endblock %}

@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\EventAccreditation;
+use App\Entity\ParticipantType;
+use App\Entity\Program;
+use App\Repository\EventRepository; 
 use App\Form\EventType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/event')]
 final class EventController extends AbstractController
@@ -24,17 +28,63 @@ final class EventController extends AbstractController
     }
 
 
-    #[Route(name: 'app_event_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/events', name: 'app_event_index', methods: ['GET'])]
+    public function index(Request $request, EventRepository $eventRepository): Response
     {
-        $events = $entityManager
-            ->getRepository(Event::class)
-            ->findAll();
+        $programRepository = $this->entityManager->getRepository(Program::class);
+
+        // Filtres
+        $startDate = $request->query->get('startDate');
+        $endDate   = $request->query->get('endDate');
+        $programId = $request->query->get('program');  // 👈 ID du programme depuis la liste déroulante
+
+        $qb = $eventRepository->createQueryBuilder('e');
+
+        // Filtre titre
+        if (!empty($title)) {
+            $qb->andWhere('e.title LIKE :title')
+            ->setParameter('title', '%' . $title . '%');
+        }
+
+        // Filtre date début
+        if (!empty($startDate)) {
+            try {
+                $qb->andWhere('e.startDate >= :startDate')
+                ->setParameter('startDate', new \DateTime($startDate));
+            } catch (\Exception $e) {}
+        }
+
+        // Filtre date fin
+        if (!empty($endDate)) {
+            try {
+                $qb->andWhere('e.endDate <= :endDate')
+                ->setParameter('endDate', new \DateTime($endDate));
+            } catch (\Exception $e) {}
+        }
+
+        // ✅ Filtre par programme (lié par ID)
+        if (!empty($programId)) {
+            $qb->andWhere('e.program = :programId')
+            ->setParameter('programId', $programId);
+        }
+
+        $events = $qb->orderBy('e.startDate', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+
+        $programs = $programRepository->findAll();
 
         return $this->render('event/index.html.twig', [
-            'events' => $events,
+            'events'   => $events,
+            'programs' => $programs,
+            'filters'  => [
+                'startDate' => $startDate,
+                'endDate'   => $endDate,
+                'program'   => $programId,
+            ]
         ]);
     }
+
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
@@ -69,6 +119,7 @@ final class EventController extends AbstractController
                 // Le type de participant sélectionné
                 $accreditation->setParticipantType($participantType); 
                 
+                $accreditation->setStatus('enabled'); // Statut par défaut
                 // L'administrateur connecté pour la traçabilité
                 $accreditation->setCreatedBy($admin->getId()); 
                 
@@ -87,13 +138,33 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show(Event $event): Response
-    {
-        return $this->render('event/show.html.twig', [
-            'event' => $event,
-        ]);
+#[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
+public function show(Event $event, EntityManagerInterface $em): Response
+{
+    // Tous les types de participants
+    $participantTypes = $em->getRepository(ParticipantType::class)->findAll();
+
+    // Les accréditations de cet event
+    $accreditations = $em->getRepository(EventAccreditation::class)
+        ->createQueryBuilder('ea')
+        ->select('IDENTITY(ea.participantType) as typeId, ea.status')
+        ->where('ea.event = :event')
+        ->setParameter('event', $event)
+        ->getQuery()
+        ->getArrayResult();
+
+    // Transformer en tableau associatif typeId => status
+    $accreditedTypeStatuses = [];
+    foreach ($accreditations as $accr) {
+        $accreditedTypeStatuses[$accr['typeId']] = $accr['status'];
     }
+
+    return $this->render('event/show.html.twig', [
+        'event' => $event,
+        'participantTypes' => $participantTypes,
+        'accreditedTypeStatuses' => $accreditedTypeStatuses,
+    ]);
+}
 
 #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -127,6 +198,7 @@ final class EventController extends AbstractController
                 $accreditation->setEvent($event);
                 $accreditation->setParticipantType($participantType);
                 $accreditation->setCreatedBy($admin->getId()); 
+                $accreditation->setStatus('enabled');
                 $accreditation->setCreatedAt($now); // Recréer la date de création pour le suivi
                 $accreditation->setUpdatedAt($now);
                 $entityManager->persist($accreditation);

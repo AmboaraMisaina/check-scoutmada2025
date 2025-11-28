@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
+use App\Entity\Program;
 use App\Entity\RegistrationFollowup;
+use App\Entity\RegistrationStep;
 use App\Form\RegistrationFollowupType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -13,6 +18,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/registration-followup')]
 final class RegistrationFollowupController extends AbstractController
 {
+
+    #[Route('/api/new', name: 'api_registration_followup', methods: ['POST'])]
+    public function completeStep(Request $request, EntityManagerInterface $em, Security $security): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $participantId = $data['participant_id'] ?? null;
+        $programId = $data['program_id'] ?? null;
+        $stepId = $data['step_id'] ?? null;
+
+        if (!$participantId || !$programId || !$stepId) {
+            return $this->json(['success' => false, 'message' => 'Paramètres manquants']);
+        }
+
+        $followup = new RegistrationFollowup();
+        $followup->setCreatedAt(new \DateTimeImmutable());
+        $followup->setCreatedBy($this->getUser()->getId());
+        $followup->setParticipant($em->getReference(Participant::class, $participantId));
+        $followup->setProgram($em->getReference(Program::class, $programId));
+        $followup->setStep($em->getReference(RegistrationStep::class, $stepId));
+        $followup->setStatus("completed");
+
+        $em->persist($followup);
+        $em->flush();
+
+        return $this->json(['success' => true]);
+    }
+
+
     #[Route(name: 'app_registration_followup_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {

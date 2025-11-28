@@ -14,6 +14,9 @@ class Program
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(targetEntity: Organization::class)]
+    private ?Organization $organization = null;
+
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
@@ -44,6 +47,18 @@ class Program
 
 
     /* ========= GETTERS & SETTERS ========= */
+
+    public function getOrganization(): ?Organization
+    {
+        return $this->organization;
+    }   
+
+    public function setOrganization(?Organization $organization): static
+    {
+        $this->organization = $organization;
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

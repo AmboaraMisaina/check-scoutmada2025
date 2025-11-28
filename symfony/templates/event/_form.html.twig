@@ -12,6 +12,16 @@
             }) }}
         </div>
     </div>
+    <div class="row">
+        {# Champ program #}
+        <div class="col-md-12 mb-3">
+            {{ form_row(form.program, {
+                'label': 'Programme lié', 
+                'attr': {'class': 'form-select'}, 
+                'label_attr': {'class': 'form-label'}
+            }) }}
+        </div>
+    </div>
     
     {# Champ Types de participants autorisés (Sélection Multiple) #}
     <div class="mb-3 border p-3 rounded">
