@@ -132,5 +132,5 @@ jobs:
           username: checkin@scoutmada2025.mg
           password: scoutmada2025
           server-dir: /public_html/
-          local-dir: ./symfony/     # mets ici TON dossier sur le serveur
+          local-dir: ./symfony     # mets ici TON dossier sur le serveur
           dangerous-clean-slate: false    # évite de supprimer tout le site
