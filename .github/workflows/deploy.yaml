@@ -85,9 +85,6 @@
 #             **/vendor/**
 #             .env.local*
 #             *.log
-
-
-
 name: Deploy Symfony App via FTP
 
 on:
@@ -112,14 +109,16 @@ jobs:
           tools: composer
           extensions: mbstring, intl, pdo_mysql
 
-      # 3. Installer les dépendances
+      # 3. Installer les dépendances Symfony
       - name: Install Composer dependencies
-        run: cd symfony &&
+        run: |
+          cd symfony
           composer install --no-dev --optimize-autoloader
 
       # 4. Compiler les assets (si Webpack Encore)
       - name: Build Frontend assets
         run: |
+          cd symfony
           if [ -f "package.json" ]; then
             npm install
             npm run build
@@ -133,5 +132,5 @@ jobs:
           username: checkin@scoutmada2025.mg
           password: scoutmada2025
           server-dir: /public_html/
-          local-dir: ./symfony     # mets ici TON dossier sur le serveur
-          dangerous-clean-slate: false    # évite de supprimer tout le site
+          local-dir: ./symfony
+          dangerous-clean-slate: false
